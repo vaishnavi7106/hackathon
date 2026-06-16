@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Alembic compiled
+backend/alembic/versions/__pycache__/
+
+# Media / uploads
+backend/media/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Docker volumes / local data
+postgres_data/
+redis_data/
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Node (frontend, if added later)
+node_modules/
+dist/
+.next/
