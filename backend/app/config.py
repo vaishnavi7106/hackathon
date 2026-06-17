@@ -47,6 +47,22 @@ class Settings(BaseSettings):
     app_env: str = "development"
     log_level: str = "info"
 
+    # Pillar 5 — Outbreak Alert
+    outbreak_detection_interval_hours: int = 6
+    outbreak_cluster_radius_km: float = 10.0
+    outbreak_lookback_days: int = 7
+    outbreak_min_reports: int = 3
+    outbreak_confidence_threshold: float = 0.70
+    # FCM — set FCM_SERVER_KEY to enable real push notifications
+    fcm_server_key: str = ""
+    # TN Agriculture Dept webhook — set to real URL to enable
+    tn_agri_webhook_url: str = ""
+    # Twilio (CRITICAL severity SMS) — set all three to enable
+    twilio_account_sid: str = ""
+    twilio_auth_token: str = ""
+    twilio_from_number: str = ""
+    tn_agri_officer_phone: str = ""
+
     @property
     def allowed_origins_list(self) -> list[str]:
         return [o.strip() for o in self.allowed_origins.split(",")]

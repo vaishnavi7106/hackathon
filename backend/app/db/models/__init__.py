@@ -10,6 +10,7 @@ from app.db.models.fertilizer import FertilizerRecommendation
 from app.db.models.irrigation import IrrigationPlan
 from app.db.models.prescription import Prescription  # deprecated — kept for compat
 from app.db.models.market import Mandi, MandiPrice, MarketForecast, PriceForecast
+from app.db.models.outbreak import DiseaseReport, OutbreakAlert
 from app.db.models.scheme import (
     GovernmentScheme,
     EligibilityResult,
@@ -46,4 +47,7 @@ __all__ = [
     "EligibilityResult",
     "SchemeQuery",
     "SchemeDeadlineAlert",
+    # Pillar 5 — Outbreak Alert
+    "DiseaseReport",
+    "OutbreakAlert",
 ]

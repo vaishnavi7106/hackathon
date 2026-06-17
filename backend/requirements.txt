@@ -40,5 +40,14 @@ Pillow==11.0.0
 python-dateutil==2.9.0
 haversine==2.9.0
 
+# Scheduling — Pillar 5 outbreak detection cron
+apscheduler==3.10.4
+
 # Logging
 structlog==24.4.0
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+httpx==0.28.1
+anyio[trio]==4.7.0

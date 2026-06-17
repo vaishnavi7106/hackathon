@@ -1,19 +1,21 @@
 import uuid
 from datetime import date, datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
+
+# ── Farmer-facing eligibility / chat ──────────────────────────────────────────
 
 class EligibleSchemeOut(BaseModel):
     scheme_id: str
     name_ta: str
     name_en: str
-    benefit_amount: str | None
-    benefit_amount_num: float | None
-    application_deadline: str | None
+    benefit_amount: str | None = None
+    benefit_amount_num: float | None = None
+    application_deadline: str | None = None
     deadline_urgent: bool = False
     documents_required: list[str]
-    application_url: str | None
+    application_url: str | None = None
     description_ta: str
 
 
@@ -45,19 +47,85 @@ class SchemeChatResponse(BaseModel):
     latency_ms: int
 
 
-class SchemeDetailOut(BaseModel):
-    scheme_id: str
-    name_en: str
-    name_ta: str
-    level: str | None
-    benefit_amount: str | None
-    eligibility_ta: str | None
-    documents_required: list[str]
-    documents_ta: list[str] | None
-    application_deadline: str | None
-    application_url: str | None
-    office_type: str | None
-    last_verified: date
+# ── Admin / catalog ───────────────────────────────────────────────────────────
 
-    class Config:
-        from_attributes = True
+class GovernmentSchemeCreate(BaseModel):
+    scheme_id: str = Field(..., min_length=3, max_length=60, pattern=r"^[a-z0-9_]+$")
+    name_en: str = Field(..., max_length=200)
+    name_ta: str = Field(..., max_length=200)
+    level: str | None = Field(None, pattern=r"^(central|state|district)$")
+    state: str = Field("All India", max_length=60)
+    benefit_amount: str | None = Field(None, max_length=200)
+    benefit_amount_num: float | None = Field(None, ge=0)
+    min_land_acres: float = Field(0.0, ge=0)
+    max_land_acres: float | None = Field(None, ge=0)
+    requires_aadhaar: bool = False
+    eligible_crops: list[str] | None = None
+    eligible_districts: list[str] | None = None
+    income_band_max: str | None = None
+    eligible_income_bands: list[str] | None = None
+    documents_required: list[str] = []
+    application_deadline: str | None = None
+    application_deadline_date: date | None = None
+    application_url: str | None = None
+    office_type: str | None = None
+    description_ta: str
+    eligibility_ta: str | None = None
+    documents_ta: list[str] | None = None
+    last_verified: date
+    is_active: bool = True
+
+
+class GovernmentSchemeUpdate(BaseModel):
+    """All fields optional for PATCH semantics."""
+
+    name_en: str | None = None
+    name_ta: str | None = None
+    level: str | None = None
+    benefit_amount: str | None = None
+    benefit_amount_num: float | None = None
+    min_land_acres: float | None = None
+    max_land_acres: float | None = None
+    requires_aadhaar: bool | None = None
+    eligible_crops: list[str] | None = None
+    eligible_districts: list[str] | None = None
+    income_band_max: str | None = None
+    eligible_income_bands: list[str] | None = None
+    documents_required: list[str] | None = None
+    application_deadline: str | None = None
+    application_deadline_date: date | None = None
+    application_url: str | None = None
+    description_ta: str | None = None
+    eligibility_ta: str | None = None
+    last_verified: date | None = None
+    is_active: bool | None = None
+
+
+class GovernmentSchemeOut(GovernmentSchemeCreate):
+    model_config = ConfigDict(from_attributes=True)
+
+    created_at: datetime
+    updated_at: datetime
+
+
+# Backward-compat alias used by older router code
+SchemeDetailOut = GovernmentSchemeOut
+
+
+# ── EligibilityResult ─────────────────────────────────────────────────────────
+
+class EligibilityResultOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    result_id: uuid.UUID
+    farmer_id: uuid.UUID
+    scheme_id: str
+    is_eligible: bool
+    criteria_results: dict
+    query_text: str | None = None
+    llm_response: str | None = None
+    language: str
+    latency_ms: int | None = None
+    deadline_date: date | None = None
+    days_to_deadline: int | None = None
+    checked_at: datetime

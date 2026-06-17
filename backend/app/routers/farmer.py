@@ -50,7 +50,7 @@ def _to_profile(farmer) -> FarmerProfile:
     from app.schemas.farmer import CropOut, SoilTestOut
     from app.crud.farmer import detect_deficiencies
 
-    crops = [CropOut(id=c.id, crop=c.crop, acres=float(c.acres), season=c.season) for c in (farmer.crops or [])]
+    crops = [CropOut.model_validate(c, from_attributes=True) for c in (farmer.crops or [])]
 
     latest = getattr(farmer, "latest_soil_test", None)
     soil_out = None

@@ -1,45 +1,58 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
-from app.db.session import AsyncSessionLocal
+from app.deps import DbDep
+from app.services.llm_client import get_llm_client
 from app.services.redis_client import get_redis
 
 router = APIRouter(tags=["health"])
 
 
 @router.get("/health")
-async def health():
-    status = {
-        "status": "ok",
-        "components": {},
-        "version": "0.1.0",
-    }
+async def health(db: DbDep):
+    components: dict = {}
+    overall = "ok"
 
-    # Check PostgreSQL
+    # PostgreSQL — uses the injected session (testable via dep override)
     try:
-        async with AsyncSessionLocal() as db:
-            await db.execute(text("SELECT 1"))
-        status["components"]["database"] = "ok"
+        await db.execute(text("SELECT 1"))
+        components["database"] = "ok"
     except Exception as exc:
-        status["components"]["database"] = f"error: {exc}"
-        status["status"] = "degraded"
+        components["database"] = f"error: {exc}"
+        overall = "degraded"
 
-    # Check Redis
+    # Redis
     try:
         redis = get_redis()
         await redis.ping()
-        status["components"]["redis"] = "ok"
+        components["redis"] = "ok"
     except Exception as exc:
-        status["components"]["redis"] = f"error: {exc}"
-        status["status"] = "degraded"
+        components["redis"] = f"error: {exc}"
+        overall = "degraded"
 
-    # ML model stubs — will be updated when models are loaded
-    status["components"]["crop_sentinel_model"] = "not_loaded"
-    status["components"]["xgboost_model"] = "not_loaded"
-    status["components"]["lstm_model"] = "not_loaded"
-    status["components"]["prophet_models_loaded"] = 0
+    # LLM provider
+    try:
+        llm = get_llm_client()
+        components["llm"] = type(llm).__name__
+    except Exception as exc:
+        components["llm"] = f"error: {exc}"
 
-    return status
+    # ML model stubs — replaced when models are loaded on Day 6-9
+    components["crop_sentinel_model"] = "not_loaded"
+    components["xgboost_model"] = "not_loaded"
+    components["lstm_model"] = "not_loaded"
+    components["prophet_models_loaded"] = 0
+
+    body = {
+        "status": overall,
+        "components": components,
+        "version": "0.1.0",
+    }
+
+    if overall != "ok":
+        return JSONResponse(content=body, status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    return body
 
 
 @router.get("/")

@@ -24,6 +24,8 @@ class Farmer(Base):
     language: Mapped[str] = mapped_column(String(5), default="ta", nullable=False)
     aadhaar_linked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     income_band: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    # Pillar 5 — FCM push notification token (set from PWA on first app open)
+    fcm_token: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

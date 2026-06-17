@@ -30,6 +30,8 @@ async def diagnose_crop(
     db: DbDep,
     image: UploadFile = File(...),
     crop: str | None = Form(None),
+    latitude: float | None = Form(None),
+    longitude: float | None = Form(None),
 ):
     # Validate upload
     if image.content_type not in ALLOWED_MIME:
@@ -72,12 +74,30 @@ async def diagnose_crop(
         model_version="stub-v0",
     )
 
+    # Pillar 5 — geo-tag every high-confidence diagnosis as a disease report
+    if not low_confidence:
+        from app.crud.outbreak import create_disease_report
+        from app.schemas.outbreak import DiseaseReportCreate
+        await create_disease_report(
+            db,
+            farmer_id=farmer_id,
+            data=DiseaseReportCreate(
+                disease_class=inference_result["disease_id"],
+                disease_name_ta=inference_result.get("name_ta"),
+                crop_type=crop,
+                confidence=confidence,
+                latitude=latitude,
+                longitude=longitude,
+                diagnosis_id=diag.diagnosis_id,
+            ),
+        )
+
     if low_confidence:
         return DiagnoseResponse(
             diagnosis_id=diag.diagnosis_id,
             confidence=confidence,
             confidence_level="low",
-            low_confidence_prompt_ta="படம் தெளிவாக இல்லை. நோயுற்ற இலையை நெருக்கமாக, நல்ல வெளிச்சத்தில் படம் எடுக்கவும்.",
+            low_confidence_prompt_ta="படம் தெளிவாக இல்லை. நோயுற்ட இலையை நெருக்கமாக, நல்ல வெளிச்சத்தில் படம் எடுக்கவும்.",
             low_confidence_prompt_en="Image unclear. Please retake a close-up photo of the affected leaf in good daylight.",
         )
 

@@ -1,21 +1,33 @@
 import uuid
 from datetime import date, datetime
-from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class CropIn(BaseModel):
+class FarmerCropIn(BaseModel):
+    """Crop entry submitted by the farmer (update / registration)."""
+
+    crop_id: str | None = Field(None, max_length=40)
     crop: str = Field(..., min_length=2, max_length=60)
     acres: float = Field(..., gt=0, le=1000)
-    season: str | None = Field(None, pattern=r"^(kharif|rabi|summer)$")
+    season: str | None = Field(None, pattern=r"^(kharif|rabi|summer|annual)$")
+    sowing_date: date | None = None
+    expected_harvest_date: date | None = None
 
 
-class CropOut(CropIn):
+# Kept as backward-compat alias (older code imports CropIn)
+CropIn = FarmerCropIn
+
+
+class FarmerCropOut(FarmerCropIn):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
+    created_at: datetime
 
-    class Config:
-        from_attributes = True
+
+# Backward-compat alias
+CropOut = FarmerCropOut
 
 
 class SoilTestIn(BaseModel):
@@ -32,12 +44,11 @@ class SoilTestIn(BaseModel):
 
 
 class SoilTestOut(SoilTestIn):
+    model_config = ConfigDict(from_attributes=True)
+
     test_id: uuid.UUID
     source: str
     deficiencies: list[str] = []
-
-    class Config:
-        from_attributes = True
 
 
 class FarmerUpdate(BaseModel):
@@ -50,25 +61,26 @@ class FarmerUpdate(BaseModel):
     language: str | None = Field(None, pattern=r"^(ta|hi|en)$")
     aadhaar_linked: bool | None = None
     income_band: str | None = Field(None, pattern=r"^(below_1L|1L_2L|above_2L)$")
-    crops: list[CropIn] | None = None
+    crops: list[FarmerCropIn] | None = None
+    # Pillar 5 — FCM push token (set from PWA on first app open)
+    fcm_token: str | None = Field(None, max_length=500)
 
 
 class FarmerProfile(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     farmer_id: uuid.UUID
-    phone: str | None
-    name: str | None
+    phone: str | None = None
+    name: str | None = None
     district: str
-    village: str | None
-    land_size_acres: float | None
-    pump_type: str | None
-    storage_facility: str | None
+    village: str | None = None
+    land_size_acres: float | None = None
+    pump_type: str | None = None
+    storage_facility: str | None = None
     language: str
     aadhaar_linked: bool
-    income_band: str | None
-    crops: list[CropOut] = []
+    income_band: str | None = None
+    crops: list[FarmerCropOut] = []
     latest_soil_test: SoilTestOut | None = None
     created_at: datetime
     updated_at: datetime
-
-    class Config:
-        from_attributes = True

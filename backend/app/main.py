@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 import structlog
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -20,13 +21,29 @@ structlog.configure(
     )
 )
 
+_scheduler = AsyncIOScheduler()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Ensure media directory exists
     Path(settings.local_media_path).mkdir(parents=True, exist_ok=True)
+
+    # Pillar 5 — start outbreak detection cron
+    from app.services.outbreak_engine import outbreak_detection_job
+    _scheduler.add_job(
+        outbreak_detection_job,
+        "interval",
+        hours=settings.outbreak_detection_interval_hours,
+        id="outbreak_detection",
+        replace_existing=True,
+    )
+    _scheduler.start()
+
     yield
-    # Dispose DB connection pool on shutdown
+
+    # Shutdown
+    _scheduler.shutdown(wait=False)
     await engine.dispose()
 
 
@@ -62,7 +79,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 
 # Register routers
-from app.routers import auth, diagnose, farmer, forecast, health, prescribe, schemes  # noqa: E402
+from app.routers import auth, diagnose, farmer, forecast, health, outbreak, prescribe, schemes  # noqa: E402
 
 app.include_router(health.router, prefix="/v1")
 app.include_router(auth.router, prefix="/v1")
@@ -71,8 +88,10 @@ app.include_router(diagnose.router, prefix="/v1")
 app.include_router(prescribe.router, prefix="/v1")
 app.include_router(forecast.router, prefix="/v1")
 app.include_router(schemes.router, prefix="/v1/schemes", tags=["schemes"])
+app.include_router(outbreak.router, prefix="/v1")
 
-# Serve uploaded media files
+# Serve uploaded media files (directory is created here so StaticFiles doesn't raise on import)
+Path(settings.local_media_path).mkdir(parents=True, exist_ok=True)
 app.mount(
     "/media",
     StaticFiles(directory=settings.local_media_path),

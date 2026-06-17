@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from app.db.models.farmer import Farmer, FarmerCrop
 from app.db.models.soil import SoilTest
-from app.schemas.farmer import CropIn, FarmerUpdate, SoilTestIn
+from app.schemas.farmer import FarmerCropIn, FarmerUpdate, SoilTestIn
 
 
 async def get_farmer_by_id(db: AsyncSession, farmer_id: uuid.UUID) -> Farmer | None:
@@ -20,12 +20,7 @@ async def get_farmer_by_id(db: AsyncSession, farmer_id: uuid.UUID) -> Farmer | N
 
 
 async def get_farmer_with_latest_soil(db: AsyncSession, farmer_id: uuid.UUID) -> Farmer | None:
-    result = await db.execute(
-        select(Farmer)
-        .options(selectinload(Farmer.crops))
-        .where(Farmer.farmer_id == farmer_id)
-    )
-    farmer = result.scalar_one_or_none()
+    farmer = await get_farmer_by_id(db, farmer_id)
     if farmer:
         farmer.latest_soil_test = await get_latest_soil_test(db, farmer_id)
     return farmer
@@ -58,22 +53,28 @@ async def create_farmer(
     return farmer
 
 
-async def update_farmer(
-    db: AsyncSession, farmer: Farmer, data: FarmerUpdate
-) -> Farmer:
+async def update_farmer(db: AsyncSession, farmer: Farmer, data: FarmerUpdate) -> Farmer:
     update_data = data.model_dump(exclude_none=True, exclude={"crops"})
     for field, value in update_data.items():
         setattr(farmer, field, value)
 
+    new_crops: list[FarmerCrop] = []
     if data.crops is not None:
-        # Replace crops wholesale
         await db.execute(
             FarmerCrop.__table__.delete().where(FarmerCrop.farmer_id == farmer.farmer_id)
         )
         for crop_in in data.crops:
-            db.add(FarmerCrop(farmer_id=farmer.farmer_id, **crop_in.model_dump()))
+            row = crop_in.model_dump()
+            # If crop_id omitted but crop name matches a known slug, auto-fill
+            if row.get("crop_id") is None and row.get("crop"):
+                row["crop_id"] = row["crop"].lower().replace(" ", "_")
+            crop = FarmerCrop(farmer_id=farmer.farmer_id, **row)
+            db.add(crop)
+            new_crops.append(crop)
 
     await db.flush()
+    for crop in new_crops:
+        await db.refresh(crop)
     await db.refresh(farmer)
     return farmer
 
@@ -100,12 +101,9 @@ async def get_latest_soil_test(db: AsyncSession, farmer_id: uuid.UUID) -> SoilTe
 
 def detect_deficiencies(test: SoilTest) -> list[str]:
     deficiencies = []
-    if test.zinc is not None and test.zinc < 0.6:
-        deficiencies.append("zinc")
-    if test.iron is not None and test.iron < 4.5:
-        deficiencies.append("iron")
-    if test.copper is not None and test.copper < 0.2:
-        deficiencies.append("copper")
-    if test.boron is not None and test.boron < 0.5:
-        deficiencies.append("boron")
+    thresholds = {"zinc": 0.6, "iron": 4.5, "copper": 0.2, "boron": 0.5}
+    for nutrient, threshold in thresholds.items():
+        value = getattr(test, nutrient, None)
+        if value is not None and value < threshold:
+            deficiencies.append(nutrient)
     return deficiencies
