@@ -36,6 +36,7 @@ class GovernmentScheme(Base):
     level: Mapped[str | None] = mapped_column(String(20), nullable=True)
     state: Mapped[str] = mapped_column(String(60), default="All India", nullable=False)
     benefit_amount: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    benefit_amount_ta: Mapped[str | None] = mapped_column(String(200), nullable=True)
     benefit_amount_num: Mapped[float | None] = mapped_column(Numeric(10, 2), nullable=True)
 
     # Eligibility criteria (used for SQL pre-filter)
@@ -48,6 +49,11 @@ class GovernmentScheme(Base):
     income_band_max: Mapped[str | None] = mapped_column(String(20), nullable=True)
     # eligible_income_bands replaces income_band_max for new code (added in migration 002)
     eligible_income_bands: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
+    # Structured eligibility constraints (added in migration 007)
+    min_age: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    max_age: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    requires_bank_account: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    eligible_land_ownership: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
 
     # Application info
     documents_required: Mapped[list[str]] = mapped_column(
@@ -61,6 +67,28 @@ class GovernmentScheme(Base):
     )  # machine-readable date (added in migration 002)
     application_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     office_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
+
+    # Department info (added in migration 005)
+    department_en: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    department_ta: Mapped[str | None] = mapped_column(String(200), nullable=True)
+
+    # Scheme metadata (added in migration 005)
+    scheme_code: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    year: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    source_scheme_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
+
+    # English content (added in migration 005)
+    description_en: Mapped[str | None] = mapped_column(Text, nullable=True)
+    eligibility_en: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    # Source provenance URL (separate from application_url; added in migration 005)
+    source_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+
+    # Application process detail (added in migration 006)
+    application_mode: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    application_portal_name: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    application_process_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    verification_status: Mapped[str | None] = mapped_column(String(200), nullable=True)
 
     # Tamil content
     description_ta: Mapped[str] = mapped_column(Text, nullable=False)
@@ -116,6 +144,7 @@ class EligibilityResult(Base):
 
     # Eligibility verdict
     is_eligible: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    eligibility_state: Mapped[str | None] = mapped_column(String(20), nullable=True)  # ELIGIBLE|NOT_ELIGIBLE|NEEDS_MORE_INFO
 
     # Per-criterion pass/fail breakdown
     # e.g. {"land_size": true, "aadhaar": true, "crop_match": false, "district_match": true}

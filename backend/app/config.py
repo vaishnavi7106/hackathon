@@ -22,11 +22,10 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expire_days: int = 7
 
-    # LLM provider — set LLM_PROVIDER to switch implementations
-    # Supported: "gemini" (default). Future: "openai", "anthropic", "ollama"
-    llm_provider: str = "gemini"
-    gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    # LLM provider
+    llm_provider: str = "groq"
+    groq_api_key: str = ""
+    groq_model: str = "llama-3.1-8b-instant"
 
     # External APIs
     enam_api_key: str = ""

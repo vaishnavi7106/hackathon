@@ -1,10 +1,10 @@
 import uuid
 from datetime import date, timedelta
 
-from sqlalchemy import and_, or_, select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models.scheme import GovernmentScheme, Scheme, SchemeDeadlineAlert, SchemeQuery
+from app.db.models.scheme import EligibilityResult, GovernmentScheme, Scheme, SchemeDeadlineAlert, SchemeQuery
 from app.schemas.schemes import GovernmentSchemeCreate, GovernmentSchemeUpdate
 
 
@@ -65,46 +65,9 @@ async def deactivate_scheme(db: AsyncSession, scheme: GovernmentScheme) -> Gover
     return scheme
 
 
-# ── Farmer-facing eligibility ──────────────────────────────────────────────────
-
-async def get_eligible_schemes(
-    db: AsyncSession,
-    *,
-    land_acres: float | None,
-    aadhaar_linked: bool,
-    crops: list[str],
-    district: str,
-) -> list[GovernmentScheme]:
-    conditions = [GovernmentScheme.is_active == True]
-
-    if land_acres is not None:
-        conditions.append(
-            or_(GovernmentScheme.max_land_acres == None, GovernmentScheme.max_land_acres >= land_acres)
-        )
-        conditions.append(
-            or_(GovernmentScheme.min_land_acres == None, GovernmentScheme.min_land_acres <= land_acres)
-        )
-
-    if not aadhaar_linked:
-        conditions.append(GovernmentScheme.requires_aadhaar == False)
-
-    result = await db.execute(
-        select(GovernmentScheme)
-        .where(and_(*conditions))
-        .order_by(GovernmentScheme.benefit_amount_num.desc().nullslast())
-    )
-    all_schemes = list(result.scalars().all())
-
-    # Python-side array overlap (ARRAY overlap is complex in SA without raw SQL)
-    filtered = []
-    for scheme in all_schemes:
-        if scheme.eligible_crops and not any(c in scheme.eligible_crops for c in crops):
-            continue
-        if scheme.eligible_districts and district not in scheme.eligible_districts:
-            continue
-        filtered.append(scheme)
-
-    return filtered
+# get_eligible_schemes() removed in migration 007 refactor.
+# The router now calls list_schemes() and applies _check_scheme_criteria() per scheme
+# to produce ELIGIBLE / NOT_ELIGIBLE / NEEDS_MORE_INFO results.
 
 
 def get_deadline_alerts(schemes: list[GovernmentScheme]) -> list[dict]:
@@ -134,6 +97,42 @@ def get_deadline_alerts(schemes: list[GovernmentScheme]) -> list[dict]:
                 }
             )
     return sorted(alerts, key=lambda x: x["days_remaining"])
+
+
+# ── EligibilityResult persistence ─────────────────────────────────────────────
+
+async def save_eligibility_result(
+    db: AsyncSession,
+    *,
+    farmer_id: uuid.UUID,
+    scheme_id: str,
+    is_eligible: bool,
+    eligibility_state: str = "ELIGIBLE",
+    criteria_results: dict,
+    query_text: str | None = None,
+    llm_response: str | None = None,
+    language: str = "ta",
+    latency_ms: int | None = None,
+    deadline_date: date | None = None,
+    days_to_deadline: int | None = None,
+) -> EligibilityResult:
+    result = EligibilityResult(
+        farmer_id=farmer_id,
+        scheme_id=scheme_id,
+        is_eligible=is_eligible,
+        eligibility_state=eligibility_state,
+        criteria_results=criteria_results,
+        query_text=query_text,
+        llm_response=llm_response,
+        language=language,
+        latency_ms=latency_ms,
+        deadline_date=deadline_date,
+        days_to_deadline=days_to_deadline,
+    )
+    db.add(result)
+    await db.flush()
+    await db.refresh(result)
+    return result
 
 
 # ── Audit log ──────────────────────────────────────────────────────────────────

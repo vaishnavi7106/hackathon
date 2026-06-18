@@ -84,31 +84,32 @@ async def test_deactivate_scheme(db, seed_scheme):
 
 @pytest.mark.asyncio
 async def test_eligibility_filter_basic(db, seed_scheme):
-    from app.crud.schemes import get_eligible_schemes
+    from types import SimpleNamespace
+    from app.routers.schemes import _check_scheme_criteria
 
-    # pm_kisan: no land restriction, requires_aadhaar=True
-    eligible = await get_eligible_schemes(
-        db,
-        land_acres=2.0,
-        aadhaar_linked=True,
-        crops=["rice"],
-        district="Coimbatore",
+    farmer = SimpleNamespace(
+        land_size_acres=2.0, aadhaar_linked=True, bank_account_linked=True,
+        crops=[], district="Coimbatore", income_band=None,
+        age=None, land_ownership=None,
     )
-    assert any(s.scheme_id == "pm_kisan" for s in eligible)
+    # pm_kisan: no land restriction, requires_aadhaar=True — should be ELIGIBLE
+    _, state = _check_scheme_criteria(seed_scheme, farmer)
+    assert state == "ELIGIBLE"
 
 
 @pytest.mark.asyncio
 async def test_eligibility_filter_excludes_aadhaar_required(db, seed_scheme):
-    from app.crud.schemes import get_eligible_schemes
+    from types import SimpleNamespace
+    from app.routers.schemes import _check_scheme_criteria
 
-    eligible = await get_eligible_schemes(
-        db,
-        land_acres=2.0,
-        aadhaar_linked=False,  # pm_kisan requires aadhaar
-        crops=["rice"],
-        district="Coimbatore",
+    farmer = SimpleNamespace(
+        land_size_acres=2.0, aadhaar_linked=False, bank_account_linked=True,
+        crops=[], district="Coimbatore", income_band=None,
+        age=None, land_ownership=None,
     )
-    assert not any(s.scheme_id == "pm_kisan" for s in eligible)
+    # pm_kisan requires aadhaar — aadhaar_linked=False → NOT_ELIGIBLE
+    _, state = _check_scheme_criteria(seed_scheme, farmer)
+    assert state == "NOT_ELIGIBLE"
 
 
 @pytest.mark.asyncio
