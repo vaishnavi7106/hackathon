@@ -1,0 +1,16 @@
+# Tell GitHub Linguist what to count for language stats
+
+# Exclude generated / dependency lock files
+frontend/package-lock.json linguist-generated=true
+frontend/package.json      linguist-generated=true
+frontend/postcss.config.js linguist-generated=true
+frontend/tailwind.config.ts linguist-generated=true
+frontend/vite.config.ts    linguist-generated=true
+
+# Explicitly mark frontend source as TypeScript / TSX
+frontend/src/**/*.ts  linguist-language=TypeScript
+frontend/src/**/*.tsx linguist-language=TypeScript
+
+# Exclude Alembic seed migrations from skewing Python stats
+backend/alembic/versions/*.py linguist-generated=true
+backend/seed_main_db.py       linguist-generated=true
