@@ -1,10 +1,8 @@
-import asyncio
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
 
 # Import all models so autogenerate can detect them
 from app.db.base import Base
@@ -40,31 +38,15 @@ def do_run_migrations(connection: Connection) -> None:
         context.run_migrations()
 
 
-async def run_async_migrations() -> None:
-    # Use sync URL for Alembic (asyncpg not supported by Alembic directly)
+def run_migrations_online() -> None:
     from app.config import get_settings
-    settings = get_settings()
-
-    configuration = config.get_section(config.config_ini_section, {})
-    configuration["sqlalchemy.url"] = settings.database_url_sync
-
-    connectable = async_engine_from_config(
-        configuration,
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-        # Override to sync driver for alembic
-    )
-
-    # Fall back to sync engine for migrations
     from sqlalchemy import create_engine
-    sync_engine = create_engine(settings.database_url_sync)
+
+    settings = get_settings()
+    sync_engine = create_engine(settings.database_url_sync, poolclass=pool.NullPool)
     with sync_engine.connect() as connection:
         do_run_migrations(connection)
     sync_engine.dispose()
-
-
-def run_migrations_online() -> None:
-    asyncio.run(run_async_migrations())
 
 
 if context.is_offline_mode():

@@ -1,4 +1,5 @@
 import logging
+import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -11,6 +12,13 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.db.session import engine
+
+# Ensure stdout/stderr use UTF-8 so structlog can print Tamil characters without
+# crashing on Windows systems that default to cp1252 or similar narrow encodings.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 settings = get_settings()
 
@@ -71,7 +79,11 @@ app.add_middleware(
 async def unhandled_exception_handler(request: Request, exc: Exception):
     import structlog
     log = structlog.get_logger()
-    log.error("unhandled_exception", path=request.url.path, error=str(exc), exc_info=exc)
+    try:
+        # Use repr() so Unicode characters never reach a narrow-encoding console.
+        log.error("unhandled_exception", path=request.url.path, error=repr(str(exc)))
+    except Exception:
+        pass  # never let logging crash request handling
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"error": {"code": "INTERNAL_ERROR", "message": "An unexpected error occurred."}},
@@ -87,7 +99,7 @@ app.include_router(farmer.router, prefix="/v1")
 app.include_router(diagnose.router, prefix="/v1")
 app.include_router(prescribe.router, prefix="/v1")
 app.include_router(forecast.router, prefix="/v1")
-app.include_router(schemes.router, prefix="/v1/schemes", tags=["schemes"])
+app.include_router(schemes.router, prefix="/v1")
 app.include_router(outbreak.router, prefix="/v1")
 
 # Serve uploaded media files (directory is created here so StaticFiles doesn't raise on import)

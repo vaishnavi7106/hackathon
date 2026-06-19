@@ -1,7 +1,7 @@
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Numeric, String, func
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Numeric, SmallInteger, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,6 +24,10 @@ class Farmer(Base):
     language: Mapped[str] = mapped_column(String(5), default="ta", nullable=False)
     aadhaar_linked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     income_band: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    # Eligibility fields (added in migration 007)
+    age: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
+    bank_account_linked: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    land_ownership: Mapped[str | None] = mapped_column(String(20), nullable=True)  # own|lease|tenant
     # Pillar 5 — FCM push notification token (set from PWA on first app open)
     fcm_token: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(

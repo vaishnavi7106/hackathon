@@ -65,9 +65,9 @@ async def update_farmer(db: AsyncSession, farmer: Farmer, data: FarmerUpdate) ->
         )
         for crop_in in data.crops:
             row = crop_in.model_dump()
-            # If crop_id omitted but crop name matches a known slug, auto-fill
-            if row.get("crop_id") is None and row.get("crop"):
-                row["crop_id"] = row["crop"].lower().replace(" ", "_")
+            # Leave crop_id NULL when not provided — the eligibility engine reads
+            # the crop varchar field directly; auto-filling an unverified slug
+            # causes FK violations when the catalog row doesn't exist.
             crop = FarmerCrop(farmer_id=farmer.farmer_id, **row)
             db.add(crop)
             new_crops.append(crop)

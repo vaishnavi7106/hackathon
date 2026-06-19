@@ -10,16 +10,14 @@ Adding a new provider (OpenAI, Anthropic, Ollama, …):
   3. Add the SDK to requirements.txt.
   4. Nothing outside this file needs to change.
 
-Current default: Gemini (google-genai SDK).
-Activated via: LLM_PROVIDER=gemini  GEMINI_API_KEY=...  GEMINI_MODEL=gemini-2.5-flash
+Current provider: Groq (groq SDK).
+Activated via: LLM_PROVIDER=groq  GROQ_API_KEY=...  GROQ_MODEL=llama-3.3-70b-versatile
 """
 
 from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from functools import lru_cache
-
 import structlog
 
 logger = structlog.get_logger()
@@ -38,7 +36,7 @@ class LLMClient(ABC):
         self,
         system_prompt: str,
         user_prompt: str,
-        max_tokens: int = 400,
+        max_tokens: int = 800,
     ) -> str:
         """Send a prompt pair and return the model's text response."""
 
@@ -48,33 +46,32 @@ class LLMClient(ABC):
 # ---------------------------------------------------------------------------
 
 
-class _GeminiClient(LLMClient):
-    """Gemini implementation via the google-genai SDK."""
+class _GroqClient(LLMClient):
+    """Groq implementation via the groq SDK."""
 
     def __init__(self, api_key: str, model: str) -> None:
-        from google import genai  # lazy import — SDK only needed when provider=gemini
-
-        self._client = genai.Client(api_key=api_key)
+        from groq import AsyncGroq
+        self._client = AsyncGroq(api_key=api_key)
         self._model = model
 
     async def generate(
         self,
         system_prompt: str,
         user_prompt: str,
-        max_tokens: int = 400,
+        max_tokens: int = 800,
     ) -> str:
-        from google.genai import types
-
-        response = await self._client.aio.models.generate_content(
+        response = await self._client.chat.completions.create(
             model=self._model,
-            contents=user_prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=system_prompt,
-                max_output_tokens=max_tokens,
-            ),
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=max_tokens,
+            temperature=0.3,
         )
-        logger.debug("gemini_generate", model=self._model, output_len=len(response.text or ""))
-        return response.text
+        text = response.choices[0].message.content or ""
+        logger.debug("groq_generate", model=self._model, output_len=len(text))
+        return text
 
 
 class _NullLLMClient(LLMClient):
@@ -90,7 +87,7 @@ class _NullLLMClient(LLMClient):
         self,
         system_prompt: str,
         user_prompt: str,
-        max_tokens: int = 400,
+        max_tokens: int = 800,
     ) -> str:
         from app.exceptions import ServiceUnavailableError
 
@@ -105,7 +102,6 @@ class _NullLLMClient(LLMClient):
 # ---------------------------------------------------------------------------
 
 
-@lru_cache(maxsize=1)
 def get_llm_client() -> LLMClient:
     """Return the configured LLMClient singleton.
 
@@ -120,22 +116,12 @@ def get_llm_client() -> LLMClient:
     settings = get_settings()
     provider = settings.llm_provider.lower()
 
-    if provider == "gemini":
-        if not settings.gemini_api_key:
-            return _NullLLMClient("GEMINI_API_KEY not set")
-        return _GeminiClient(settings.gemini_api_key, settings.gemini_model)
-
-    # ---- future providers (uncomment + install SDK) ----
-    # if provider == "openai":
-    #     from app.services._openai_impl import _OpenAIClient
-    #     return _OpenAIClient(settings.openai_api_key, settings.openai_model)
-    #
-    # if provider == "anthropic":
-    #     from app.services._anthropic_impl import _AnthropicClient
-    #     return _AnthropicClient(settings.anthropic_api_key, settings.anthropic_model)
-    #
-    # if provider == "ollama":
-    #     from app.services._ollama_impl import _OllamaClient
-    #     return _OllamaClient(settings.ollama_base_url, settings.ollama_model)
+    if provider == "groq":
+        if not settings.groq_api_key:
+            return _NullLLMClient("GROQ_API_KEY not set")
+        try:
+            return _GroqClient(settings.groq_api_key, settings.groq_model)
+        except (ImportError, ModuleNotFoundError) as e:
+            return _NullLLMClient(f"groq SDK not installed: {e}")
 
     return _NullLLMClient(f"unknown provider '{provider}'")

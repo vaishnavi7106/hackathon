@@ -61,6 +61,9 @@ class FarmerUpdate(BaseModel):
     language: str | None = Field(None, pattern=r"^(ta|hi|en)$")
     aadhaar_linked: bool | None = None
     income_band: str | None = Field(None, pattern=r"^(below_1L|1L_2L|above_2L)$")
+    age: int | None = Field(None, ge=1, le=120)
+    bank_account_linked: bool | None = None
+    land_ownership: str | None = Field(None, pattern=r"^(own|lease|tenant)$")
     crops: list[FarmerCropIn] | None = None
     # Pillar 5 — FCM push token (set from PWA on first app open)
     fcm_token: str | None = Field(None, max_length=500)
@@ -80,6 +83,9 @@ class FarmerProfile(BaseModel):
     language: str
     aadhaar_linked: bool
     income_band: str | None = None
+    age: int | None = None
+    bank_account_linked: bool | None = None
+    land_ownership: str | None = None
     crops: list[FarmerCropOut] = []
     latest_soil_test: SoilTestOut | None = None
     created_at: datetime
