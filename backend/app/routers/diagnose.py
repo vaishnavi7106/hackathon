@@ -54,7 +54,8 @@ async def diagnose_crop(
     # Replace this block with real MobileNetV2 inference on Day 7:
     #   from app.ml.crop_sentinel import infer
     #   result = await infer(contents)
-    inference_result = _stub_inference()
+    from app.ml.crop_sentinel import infer
+    inference_result = await infer(contents)
     # -------------------------
 
     confidence = inference_result["confidence"]

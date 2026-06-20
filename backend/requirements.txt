@@ -51,3 +51,9 @@ pytest==8.3.4
 pytest-asyncio==0.24.0
 httpx==0.28.1
 anyio[trio]==4.7.0
+
+# Pillar 1 — Crop Sentinel ML
+torch==2.5.1
+torchvision==0.20.1
+shap==0.46.0
+matplotlib==3.9.2
