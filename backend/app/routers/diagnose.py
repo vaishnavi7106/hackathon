@@ -72,7 +72,7 @@ async def diagnose_crop(
         confidence=confidence,
         low_confidence=low_confidence,
         heatmap_key=None,
-        model_version="stub-v0",
+        model_version="mobilenetv2-v1",
     )
 
     # Pillar 5 — geo-tag every high-confidence diagnosis as a disease report
