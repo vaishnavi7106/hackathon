@@ -1,4 +1,4 @@
-"""Pillar 1 — Crop Sentinel router."""
+﻿"""Pillar 1 — Crop Sentinel router."""
 
 import uuid
 from pathlib import Path
@@ -539,3 +539,4 @@ def _stub_inference() -> dict:
         "name_ta": "நெல் பாக்டீரியல் இலை கருக்கல்",
         "confidence": 0.91,
     }
+
