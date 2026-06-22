@@ -57,6 +57,32 @@ async def get_farmer_diagnoses(
     return list(result.scalars().all())
 
 
+async def update_diagnosis_result(
+    db: AsyncSession,
+    diagnosis_id: uuid.UUID,
+    *,
+    disease_id: str,
+    disease_name_en: str,
+    disease_name_ta: str,
+    confidence: float,
+    low_confidence: bool = False,
+) -> Diagnosis | None:
+    result = await db.execute(
+        select(Diagnosis).where(Diagnosis.diagnosis_id == diagnosis_id)
+    )
+    diag = result.scalar_one_or_none()
+    if diag is None:
+        return None
+    diag.disease_id = disease_id
+    diag.disease_name_en = disease_name_en
+    diag.disease_name_ta = disease_name_ta
+    diag.confidence = confidence
+    diag.low_confidence = low_confidence
+    await db.flush()
+    await db.refresh(diag)
+    return diag
+
+
 async def get_disease(db: AsyncSession, disease_id: str) -> Disease | None:
     result = await db.execute(select(Disease).where(Disease.disease_id == disease_id))
     return result.scalar_one_or_none()

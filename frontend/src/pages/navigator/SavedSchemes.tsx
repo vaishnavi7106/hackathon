@@ -37,7 +37,8 @@ export default function SavedSchemes() {
   const t = (ta: string, en: string) => lang === 'ta' ? ta : en
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="w-full max-w-[480px] flex flex-col min-h-screen">
       <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
         <button onClick={() => navigate(-1)} className="text-gray-600 p-1 -ml-1 text-lg">←</button>
         <h1 className="flex-1 font-semibold text-gray-900 text-sm">
@@ -54,7 +55,7 @@ export default function SavedSchemes() {
         </button>
       </header>
 
-      <div className="px-4 py-4 space-y-3">
+      <div className="px-4 py-4 pb-24 space-y-3">
         {loading && [1, 2].map((i) => <SchemeCardSkeleton key={i} />)}
 
         {!loading && savedIds.length === 0 && (
@@ -106,6 +107,7 @@ export default function SavedSchemes() {
         })}
       </div>
       <BottomNav />
+    </div>
     </div>
   )
 }

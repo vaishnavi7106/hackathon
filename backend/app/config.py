@@ -30,6 +30,12 @@ class Settings(BaseSettings):
     # External APIs
     enam_api_key: str = ""
     imd_api_key: str = ""
+    openweathermap_api_key: str = ""
+
+    # Web Push / VAPID
+    vapid_public_key: str = ""
+    vapid_private_key: str = ""
+    vapid_subject: str = "mailto:admin@uzhavar.ai"
 
     # Media storage
     media_storage: str = "local"
@@ -45,6 +51,15 @@ class Settings(BaseSettings):
     # App
     app_env: str = "development"
     log_level: str = "info"
+
+    # Inference engine
+    gemini_api_key: str = ""
+    inference_engine: str = "gemini"   # "gemini" | "mobilenet"
+
+    # Pillar 3 — Market Navigator pipeline
+    agmarknet_api_key: str = ""
+    pipeline_root: str = "./pillar3_data"
+    models_root: str = "./pillar3/models/models_all_horizons"
 
     # Pillar 5 — Outbreak Alert
     outbreak_detection_interval_hours: int = 6

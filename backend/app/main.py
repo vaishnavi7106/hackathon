@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import sys
 from contextlib import asynccontextmanager
@@ -46,7 +47,50 @@ async def lifespan(app: FastAPI):
         id="outbreak_detection",
         replace_existing=True,
     )
+
+    # Pillar 2 — 6am daily farm task push notifications
+    from app.services.push_notifier import send_daily_notifications
+    _scheduler.add_job(
+        send_daily_notifications,
+        "cron",
+        hour=6,
+        minute=0,
+        id="daily_push_notifications",
+        replace_existing=True,
+    )
+
+    # Pillar 3 — Market Navigator pipeline
+    from app.services.pipeline_runner import (
+        live_features_age_hours,
+        run_daily_pipeline,
+        run_monthly_retrain,
+    )
+    _scheduler.add_job(
+        run_daily_pipeline,
+        "cron",
+        hour=2,
+        minute=0,
+        id="pillar3_daily_pipeline",
+        replace_existing=True,
+        misfire_grace_time=3600,   # catch up if server restarted within 1h of 2am
+    )
+    _scheduler.add_job(
+        run_monthly_retrain,
+        "cron",
+        day=1,
+        hour=2,
+        minute=0,
+        id="pillar3_monthly_retrain",
+        replace_existing=True,
+        misfire_grace_time=86400,  # catch up within 24h of missing the monthly window
+    )
+
     _scheduler.start()
+
+    # Startup catch-up: if live_features.csv is stale (or missing), refresh now
+    # without blocking server startup — fire-and-forget via create_task
+    if live_features_age_hours(settings.pipeline_root) > 23:
+        asyncio.create_task(run_daily_pipeline())
 
     yield
 
@@ -91,7 +135,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 
 # Register routers
-from app.routers import auth, diagnose, farmer, forecast, health, outbreak, prescribe, schemes  # noqa: E402
+from app.routers import auth, diagnose, farmer, forecast, health, outbreak, prescribe, push, schemes  # noqa: E402
 
 app.include_router(health.router, prefix="/v1")
 app.include_router(auth.router, prefix="/v1")
@@ -101,6 +145,11 @@ app.include_router(prescribe.router, prefix="/v1")
 app.include_router(forecast.router, prefix="/v1")
 app.include_router(schemes.router, prefix="/v1")
 app.include_router(outbreak.router, prefix="/v1")
+app.include_router(push.router, prefix="/v1")
+
+# Pillar 2 — Soil & Water Optimizer (no database dependency)
+from pillar2.router import router as pillar2_router  # noqa: E402
+app.include_router(pillar2_router, prefix="/v2")
 
 # Serve uploaded media files (directory is created here so StaticFiles doesn't raise on import)
 Path(settings.local_media_path).mkdir(parents=True, exist_ok=True)

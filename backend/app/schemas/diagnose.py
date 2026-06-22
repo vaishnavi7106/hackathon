@@ -28,16 +28,44 @@ class DiseaseOut(BaseModel):
     name_ta: str
 
 
+class SimilarDiseaseOut(BaseModel):
+    name_en: str
+    name_ta: str
+    confidence: float
+
+
+class SymptomOption(BaseModel):
+    key: str
+    label_en: str
+    label_ta: str
+
+
+class RiceSymptomsRequest(BaseModel):
+    diagnosis_id: uuid.UUID
+    selected_symptoms: list[str]
+
+
 class DiagnoseResponse(BaseModel):
     diagnosis_id: uuid.UUID
     disease: DiseaseOut | None = None
     confidence: float | None = None
     confidence_level: str | None = None  # "high" | "medium" | "low"
+    source: str | None = None            # "ml_model" | "symptom_match"
     heatmap_url: str | None = None
     shap_label_ta: str | None = None
     treatment: TreatmentOut | None = None
     low_confidence_prompt_ta: str | None = None
     low_confidence_prompt_en: str | None = None
+    # Rejection details
+    rejection_reason: str | None = None          # "image_quality" | "similar_diseases"
+    similar_diseases: list[SimilarDiseaseOut] | None = None
+    # Rice symptom-check flow fields
+    requires_symptom_check: bool | None = None
+    prompt_en: str | None = None
+    prompt_ta: str | None = None
+    symptoms_to_show: list[SymptomOption] | None = None
+    matched_symptoms: list[str] | None = None
+    match_score: int | None = None
 
 
 class DiagnoseHistoryItem(BaseModel):

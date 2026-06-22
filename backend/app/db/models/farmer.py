@@ -28,6 +28,15 @@ class Farmer(Base):
     age: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
     bank_account_linked: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     land_ownership: Mapped[str | None] = mapped_column(String(20), nullable=True)  # own|lease|tenant
+    # Profile v2 — crop / season / soil fields (migration 011)
+    taluk: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    gender: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    primary_crop: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    secondary_crop: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    season: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    irrigation_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    soil_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    soil_health_card_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
     # Pillar 5 — FCM push notification token (set from PWA on first app open)
     fcm_token: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(

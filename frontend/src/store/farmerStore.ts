@@ -20,6 +20,9 @@ interface FarmerStore extends AuthSlice, ProfileSlice {
   // Profile actions
   setProfile: (profile: FarmerProfile) => void
 
+  // Fetch profile from server and seed into profileStore
+  fetchAndSeedProfile: () => Promise<void>
+
   // Derived
   isLoggedIn: () => boolean
 }
@@ -42,6 +45,20 @@ export const useFarmerStore = create<FarmerStore>()(
         set({ farmerId: null, token: null, expiresAt: null, profile: null }),
 
       setProfile: (profile) => set({ profile }),
+
+      fetchAndSeedProfile: async () => {
+        const { token } = get()
+        if (!token) return
+        try {
+          const { farmerApi } = await import('@/api/farmer')
+          const { useProfileStore } = await import('@/store/profileStore')
+          const serverProfile = await farmerApi.getProfile()
+          set({ profile: serverProfile })
+          useProfileStore.getState().seedFromServer(serverProfile)
+        } catch {
+          // Silently ignore — offline or auth failure handled elsewhere
+        }
+      },
 
       isLoggedIn: () => {
         const { token, expiresAt } = get()

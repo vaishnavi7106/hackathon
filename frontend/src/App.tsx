@@ -14,6 +14,7 @@ import ProfilePage from '@/pages/profile/ProfilePage'
 import CropSentinel from '@/pages/CropSentinel'
 import MarketNavigator from '@/pages/MarketNavigator'
 import OutbreakNetwork from '@/pages/OutbreakNetwork'
+import SoilOptimizer from '@/pages/SoilOptimizer'
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/crop-sentinel" element={<CropSentinel />} />
           <Route path="/market" element={<MarketNavigator />} />
           <Route path="/outbreak" element={<OutbreakNetwork />} />
+          <Route path="/soil-optimizer" element={<SoilOptimizer />} />
         </Route>
 
         {/* Navigator — self-contained pages */}

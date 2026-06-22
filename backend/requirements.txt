@@ -6,7 +6,7 @@ gunicorn==23.0.0
 sqlalchemy==2.0.36
 asyncpg==0.30.0
 alembic==1.14.0
-psycopg2-binary==2.9.10
+psycopg2-binary==2.9.12
 
 # Redis
 redis==5.2.1
@@ -23,9 +23,14 @@ python-dotenv==1.0.1
 # HTTP clients (for external APIs)
 httpx==0.28.1
 
+# Web Push notifications (VAPID)
+pywebpush>=2.0.0
+
 # LLM — provider-agnostic client (see app/services/llm_client.py)
-# Default provider: Gemini
 google-genai==1.16.0
+groq>=1.4.0
+
+# google-generativeai not needed — google-genai (above) covers Gemini Vision
 # Optional future providers (uncomment to enable):
 # anthropic==0.40.0
 # openai==1.57.0
@@ -50,10 +55,18 @@ structlog==24.4.0
 pytest==8.3.4
 pytest-asyncio==0.24.0
 httpx==0.28.1
-anyio[trio]==4.7.0
+anyio[trio]>=4.8.0
 
 # Pillar 1 — Crop Sentinel ML
-torch==2.5.1
-torchvision==0.20.1
-shap==0.46.0
-matplotlib==3.9.2
+torch==2.9.0
+torchvision==0.24.0
+# shap==0.46.0       # optional: heatmap generation (install when py3.14 wheels available)
+# matplotlib==3.9.2  # optional: heatmap generation
+
+# Pillar 3 — Market price forecasting (LightGBM models + pipeline)
+lightgbm>=4.0.0
+scikit-learn>=1.4.0
+pandas>=2.0.0
+numpy>=1.26.0
+requests>=2.31.0
+optuna>=3.0.0

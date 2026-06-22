@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { schemesApi } from '@/api/schemes'
 import { useFarmerStore } from '@/store/farmerStore'
 import { useSchemeStore } from '@/store/schemeStore'
+import { BottomNav } from '@/components/layout/BottomNav'
 import { cn } from '@/lib/utils'
 
 const QUICK_PROMPTS = {
@@ -73,7 +74,8 @@ export default function Chat() {
   const lastBotWithSchemes = [...msgs].reverse().find((m) => m.role === 'bot' && m.schemeIds && m.schemeIds.length > 0)
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="w-full max-w-[480px] flex flex-col min-h-screen">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
         <button onClick={() => navigate(-1)} className="text-gray-600 p-1 -ml-1 text-lg">←</button>
@@ -142,9 +144,9 @@ export default function Chat() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Floating eligible count */}
+      {/* Floating eligible count — above input bar (bottom-32 ≈ 128px clears nav + input) */}
       {lastBotWithSchemes && lastBotWithSchemes.schemeIds && lastBotWithSchemes.schemeIds.length > 0 && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-20">
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-20">
           <Link
             to="/navigator/eligible"
             className="bg-primary-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-lg flex items-center gap-2"
@@ -155,10 +157,10 @@ export default function Chat() {
         </div>
       )}
 
-      {/* Input bar */}
+      {/* Input bar — sits above BottomNav (bottom-14 = 56px) */}
       <form
         onSubmit={(e) => { e.preventDefault(); sendChat(input) }}
-        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-gray-200 px-4 py-3 flex gap-2 z-40"
+        className="fixed bottom-14 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-gray-200 px-4 py-3 flex gap-2 z-40"
       >
         <input
           className="input flex-1 text-sm"
@@ -175,6 +177,8 @@ export default function Chat() {
           ↑
         </button>
       </form>
+      <BottomNav />
+    </div>
     </div>
   )
 }
