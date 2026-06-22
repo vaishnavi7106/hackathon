@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Green Chilli,14,15749,2671,2115,15,5,20,100,779.97,607.2476,12.1796,0.406168,741.7385,560.2037,12.2905,0.352001

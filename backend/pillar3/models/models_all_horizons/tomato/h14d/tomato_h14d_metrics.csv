@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Tomato,14,15124,2192,1820,15,5,228,250,364.2759,271.2855,14.1325,0.616026,1713.2149,1618.9386,43.1549,-5.349876
