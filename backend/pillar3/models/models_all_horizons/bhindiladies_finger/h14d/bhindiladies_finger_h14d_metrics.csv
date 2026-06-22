@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Bhindi(Ladies Finger),14,15768,2662,2145,15,5,128,140,817.0538,654.5945,14.9025,0.126161,685.0278,530.4257,18.3955,0.391473

@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Mint(Pudina),1,15806,3066,2548,19,0,301,331,208.5569,115.669,3.3056,0.952502,268.1077,150.773,3.8668,0.938534

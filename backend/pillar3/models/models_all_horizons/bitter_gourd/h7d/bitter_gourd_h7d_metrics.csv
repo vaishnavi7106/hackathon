@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Bitter Gourd,7,14968,2364,2015,16,3,614,675,478.1052,361.5808,8.5133,0.724597,580.5674,430.05,9.7834,0.509108

@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Banana - Green,3,15758,2986,2462,14,2,512,563,180.834,104.7613,3.2797,0.948854,134.4641,75.9149,2.4553,0.961903
