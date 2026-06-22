@@ -6,6 +6,7 @@ import { useSchemeStore } from '@/store/schemeStore'
 import { SchemeDetailSkeleton } from '@/components/ui/Skeleton'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { ChatFAB } from '@/components/chat/ChatFAB'
+import { BottomNav } from '@/components/layout/BottomNav'
 import type { GovernmentSchemeOut, EligibilityResultOut } from '@/types/api'
 import { cn } from '@/lib/utils'
 
@@ -81,7 +82,8 @@ export default function SchemeDetail() {
   const applied = schemeId ? isApplied(schemeId) : false
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="w-full max-w-[480px] flex flex-col min-h-screen">
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg">
@@ -333,11 +335,11 @@ export default function SchemeDetail() {
             )}
           </div>
 
-          {/* Chat FAB — sits above sticky bottom bar (≈80px action bar) */}
-          <ChatFAB bottomOffset={88} />
+          {/* Chat FAB — sits above action bar + BottomNav */}
+          <ChatFAB bottomOffset={144} />
 
-          {/* Sticky bottom bar */}
-          <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-40">
+          {/* Sticky bottom bar — sits above BottomNav (bottom-14 = 56px) */}
+          <div className="fixed bottom-14 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-40">
             {detail.application_url ? (
               <a
                 href={detail.application_url}
@@ -363,6 +365,8 @@ export default function SchemeDetail() {
           </div>
         </>
       )}
+      <BottomNav />
+    </div>
     </div>
   )
 }

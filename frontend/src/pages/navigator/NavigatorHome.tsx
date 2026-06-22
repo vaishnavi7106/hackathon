@@ -118,7 +118,8 @@ export default function NavigatorHome() {
   const primaryCrop = profile?.crops?.[0]?.crop
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="w-full max-w-[480px] flex flex-col min-h-screen">
       {/* Toast */}
       {toast && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg transition-opacity">
@@ -355,6 +356,7 @@ export default function NavigatorHome() {
       {/* Floating Chat FAB */}
       <ChatFAB />
       <BottomNav />
+    </div>
     </div>
   )
 }

@@ -54,7 +54,9 @@ class SoilTestOut(SoilTestIn):
 class FarmerUpdate(BaseModel):
     name: str | None = Field(None, max_length=100)
     district: str | None = Field(None, min_length=2, max_length=60)
+    taluk: str | None = Field(None, max_length=100)
     village: str | None = Field(None, max_length=100)
+    gender: str | None = Field(None, pattern=r"^(male|female|other)$")
     land_size_acres: float | None = Field(None, gt=0, le=10000)
     pump_type: str | None = Field(None, pattern=r"^(diesel|electric|none)$")
     storage_facility: str | None = Field(None, pattern=r"^(home|warehouse|cold_storage)$")
@@ -64,6 +66,11 @@ class FarmerUpdate(BaseModel):
     age: int | None = Field(None, ge=1, le=120)
     bank_account_linked: bool | None = None
     land_ownership: str | None = Field(None, pattern=r"^(own|lease|tenant)$")
+    primary_crop: str | None = Field(None, max_length=60)
+    secondary_crop: str | None = Field(None, max_length=60)
+    season: str | None = Field(None, pattern=r"^(wet_season|dry_season|summer)$")
+    irrigation_type: str | None = Field(None, pattern=r"^(borewell|canal|tank|rainfed|drip)$")
+    soil_type: str | None = Field(None, pattern=r"^(clay|loamy|sandy|red|black|other)$")
     crops: list[FarmerCropIn] | None = None
     # Pillar 5 — FCM push token (set from PWA on first app open)
     fcm_token: str | None = Field(None, max_length=500)
@@ -76,7 +83,9 @@ class FarmerProfile(BaseModel):
     phone: str | None = None
     name: str | None = None
     district: str
+    taluk: str | None = None
     village: str | None = None
+    gender: str | None = None
     land_size_acres: float | None = None
     pump_type: str | None = None
     storage_facility: str | None = None
@@ -86,6 +95,12 @@ class FarmerProfile(BaseModel):
     age: int | None = None
     bank_account_linked: bool | None = None
     land_ownership: str | None = None
+    primary_crop: str | None = None
+    secondary_crop: str | None = None
+    season: str | None = None
+    irrigation_type: str | None = None
+    soil_type: str | None = None
+    soil_health_card_url: str | None = None
     crops: list[FarmerCropOut] = []
     latest_soil_test: SoilTestOut | None = None
     created_at: datetime

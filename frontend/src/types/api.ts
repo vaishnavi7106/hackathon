@@ -55,7 +55,9 @@ export interface FarmerProfile {
   phone: string | null
   name: string | null
   district: string
+  taluk: string | null
   village: string | null
+  gender: 'male' | 'female' | 'other' | null
   land_size_acres: number | null
   pump_type: 'diesel' | 'electric' | 'none' | null
   storage_facility: 'home' | 'warehouse' | 'cold_storage' | null
@@ -65,6 +67,12 @@ export interface FarmerProfile {
   age: number | null
   bank_account_linked: boolean | null
   land_ownership: 'own' | 'lease' | 'tenant' | null
+  primary_crop: string | null
+  secondary_crop: string | null
+  season: 'wet_season' | 'dry_season' | 'summer' | null
+  irrigation_type: 'borewell' | 'canal' | 'tank' | 'rainfed' | 'drip' | null
+  soil_type: 'clay' | 'loamy' | 'sandy' | 'red' | 'black' | 'other' | null
+  soil_health_card_url: string | null
   crops: FarmerCropOut[]
   latest_soil_test: SoilTestOut | null
   created_at: string

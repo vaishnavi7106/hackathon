@@ -1,4 +1,7 @@
-from fastapi import APIRouter, status
+import os
+import uuid as _uuid
+
+from fastapi import APIRouter, HTTPException, UploadFile, File, status
 
 from app.crud.farmer import (
     create_soil_test,
@@ -10,6 +13,10 @@ from app.deps import CurrentFarmerDep, DbDep
 from app.schemas.farmer import FarmerProfile, FarmerUpdate, SoilTestIn, SoilTestOut
 
 router = APIRouter(prefix="/farmer", tags=["farmer"])
+
+_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "uploads")
+_ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "application/pdf"}
+_MAX_BYTES = 10 * 1024 * 1024  # 10 MB
 
 
 @router.get("/me", response_model=FarmerProfile)
@@ -46,6 +53,43 @@ async def add_soil_test(body: SoilTestIn, farmer: CurrentFarmerDep, db: DbDep):
     )
 
 
+@router.post("/documents/soil-health-card", status_code=status.HTTP_200_OK)
+async def upload_soil_health_card(
+    farmer: CurrentFarmerDep,
+    db: DbDep,
+    file: UploadFile = File(...),
+):
+    """Upload a Soil Health Card (PDF or image). Stores the file and records the path."""
+    if file.content_type not in _ALLOWED_TYPES:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported file type: {file.content_type}. Allowed: JPEG, PNG, WebP, PDF",
+        )
+
+    content = await file.read()
+    if len(content) > _MAX_BYTES:
+        raise HTTPException(status_code=413, detail="File too large. Maximum 10 MB.")
+
+    os.makedirs(_UPLOAD_DIR, exist_ok=True)
+    ext = file.filename.rsplit(".", 1)[-1] if file.filename and "." in file.filename else "bin"
+    filename = f"shc_{farmer.farmer_id}_{_uuid.uuid4().hex[:8]}.{ext}"
+    path = os.path.join(_UPLOAD_DIR, filename)
+    with open(path, "wb") as f:
+        f.write(content)
+
+    farmer.soil_health_card_path = path
+    db.add(farmer)
+    await db.flush()
+    await db.refresh(farmer)
+
+    return {
+        "status": "uploaded",
+        "filename": filename,
+        "size_bytes": len(content),
+        "soil_health_card_url": f"/v1/farmer/documents/{filename}",
+    }
+
+
 def _to_profile(farmer) -> FarmerProfile:
     from app.schemas.farmer import CropOut, SoilTestOut
     from app.crud.farmer import detect_deficiencies
@@ -72,18 +116,34 @@ def _to_profile(farmer) -> FarmerProfile:
             deficiencies=deficiencies,
         )
 
+    shc_url = None
+    if farmer.soil_health_card_path:
+        fname = os.path.basename(farmer.soil_health_card_path)
+        shc_url = f"/v1/farmer/documents/{fname}"
+
     return FarmerProfile(
         farmer_id=farmer.farmer_id,
         phone=farmer.phone,
         name=farmer.name,
         district=farmer.district,
+        taluk=getattr(farmer, "taluk", None),
         village=farmer.village,
+        gender=getattr(farmer, "gender", None),
         land_size_acres=float(farmer.land_size_acres) if farmer.land_size_acres is not None else None,
         pump_type=farmer.pump_type,
         storage_facility=farmer.storage_facility,
         language=farmer.language,
         aadhaar_linked=farmer.aadhaar_linked,
         income_band=farmer.income_band,
+        age=getattr(farmer, "age", None),
+        bank_account_linked=getattr(farmer, "bank_account_linked", None),
+        land_ownership=getattr(farmer, "land_ownership", None),
+        primary_crop=getattr(farmer, "primary_crop", None),
+        secondary_crop=getattr(farmer, "secondary_crop", None),
+        season=getattr(farmer, "season", None),
+        irrigation_type=getattr(farmer, "irrigation_type", None),
+        soil_type=getattr(farmer, "soil_type", None),
+        soil_health_card_url=shc_url,
         crops=crops,
         latest_soil_test=soil_out,
         created_at=farmer.created_at,

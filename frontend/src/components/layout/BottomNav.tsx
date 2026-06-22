@@ -5,8 +5,8 @@ const navItems = [
   { to: '/', label: 'முகப்பு', icon: '🏠', end: true },
   { to: '/navigator', label: 'திட்டங்கள்', icon: '🏛️', end: false },
   { to: '/crop-sentinel', label: 'பயிர்', icon: '🌿', end: false },
+  { to: '/soil-optimizer', label: 'மண்', icon: '🌱', end: false },
   { to: '/market', label: 'சந்தை', icon: '📊', end: false },
-  { to: '/outbreak', label: 'நோய்', icon: '🔴', end: false },
 ]
 
 export function BottomNav() {

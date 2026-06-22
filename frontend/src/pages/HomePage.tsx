@@ -3,18 +3,106 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useFarmerStore } from '@/store/farmerStore'
 import { useSchemeStore } from '@/store/schemeStore'
 import { useProfileStore } from '@/store/profileStore'
+import { useDailyRecordStore } from '@/store/dailyRecordStore'
 import { farmerApi } from '@/api/farmer'
 import { ProfileSummaryCard } from '@/components/profile/ProfileSummaryCard'
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget'
+import { PushOptIn } from '@/components/common/PushOptIn'
+import { useDailyEngine } from '@/lib/pillar2/useDailyEngine'
+import { TN_CROPS } from '@/data/tn-options'
+import type { FarmerCrop } from '@/types/profile'
+import type { DailyRecord } from '@/types/dailyRecord'
+
+// Compact crop summary card for the home page
+function CropDailyCard({
+  crop,
+  record,
+  lang,
+}: {
+  crop: FarmerCrop
+  record: DailyRecord | null
+  lang: 'ta' | 'en'
+}) {
+  const t = (ta: string, en: string) => lang === 'ta' ? ta : en
+
+  const cropInfo = TN_CROPS.find((c) => c.value === crop.name)
+  const cropLabel = cropInfo ? (lang === 'ta' ? cropInfo.ta : cropInfo.en) : crop.name
+
+  const soilSummary = record
+    ? record.fertilizer_due
+      ? t('இன்று உரம் இட வேண்டும்!', 'Apply fertilizer today!')
+      : t('உரம் தேவையில்லை', 'No fertilizer today')
+    : null
+
+  const waterSummary = record
+    ? record.irrigation_recommended === 'irrigate'
+      ? `${t('நீர் பாய்ச்சவும்', 'Irrigate')} — ${record.irrigation_minutes} ${t('நிமிடம்', 'min')}`
+      : record.irrigation_recommended === 'skip_rain'
+      ? t('மழை — தவிர்', 'Rain — skip')
+      : t('நீர் தேவையில்லை', 'Skip irrigation')
+    : null
+
+  const stageLine = record
+    ? lang === 'ta'
+      ? `${record.display_stage_ta} · நாள் ${record.stage_days}`
+      : `${record.display_stage} · Day ${record.stage_days}`
+    : null
+
+  return (
+    <Link
+      to={`/soil-optimizer?crop=${crop.id}`}
+      className="block rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-white"
+    >
+      {/* Card header */}
+      <div className="px-4 py-3 flex items-center justify-between" style={{ background: '#1B4332' }}>
+        <div>
+          <p className="text-sm font-bold text-white">{cropLabel}</p>
+          {crop.acres > 0 && (
+            <p className="text-xs text-green-400">{crop.acres} {t('ஏக்கர்', 'acres')}</p>
+          )}
+        </div>
+        {stageLine && (
+          <span className="text-xs text-green-300">{stageLine}</span>
+        )}
+      </div>
+
+      {/* Task summary */}
+      {(soilSummary || waterSummary) ? (
+        <div className="px-4 py-3 grid grid-cols-2 gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-base">{record?.fertilizer_due ? '🟡' : '✅'}</span>
+            <p className="text-xs text-gray-700 font-medium leading-tight">{soilSummary}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-base">{record?.irrigation_recommended === 'irrigate' ? '💧' : '✅'}</span>
+            <p className="text-xs text-gray-700 font-medium leading-tight">{waterSummary}</p>
+          </div>
+        </div>
+      ) : (
+        <div className="px-4 py-3">
+          <p className="text-xs text-gray-400">{t('கணக்கிட்டு வருகிறது…', 'Calculating…')}</p>
+        </div>
+      )}
+
+      <div className="px-4 pb-2.5">
+        <p className="text-xs text-green-700 font-semibold">{t('விரிவாக காண →', 'View details →')}</p>
+      </div>
+    </Link>
+  )
+}
 
 export default function HomePage() {
   const navigate = useNavigate()
   const { isLoggedIn, profile, setProfile, clearAuth } = useFarmerStore()
   const { lang, toggleLang, savedIds, appliedIds, resetUserData } = useSchemeStore()
   const { profile: localProfile, completionPct, resetProfile } = useProfileStore()
+  const { todayByCrop, isCalculating } = useDailyRecordStore()
   const [loadingProfile, setLoadingProfile] = useState(false)
 
   const t = (ta: string, en: string) => lang === 'ta' ? ta : en
+
+  // Trigger daily engine for all crops
+  useDailyEngine()
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -121,7 +209,6 @@ export default function HomePage() {
             </p>
           )}
 
-          {/* Stats row */}
           {(savedIds.length > 0 || appliedIds.length > 0) && (
             <div className="flex gap-4 mt-3 pt-3 border-t border-primary-600">
               {savedIds.length > 0 && (
@@ -143,12 +230,37 @@ export default function HomePage() {
         {/* Profile summary card */}
         <ProfileSummaryCard lang={lang} />
 
+        {/* Daily crop cards — one per crop */}
+        {localProfile.crops.length > 0 && (
+          <div className="space-y-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide px-1">
+              {t('இன்றைய பண்ணை பணி', "Today's Farm Tasks")}
+              {isCalculating && (
+                <span className="ml-2 text-gray-300 font-normal normal-case">
+                  {t('கணக்கிட்டு வருகிறது…', 'Calculating…')}
+                </span>
+              )}
+            </p>
+            {localProfile.crops.map((crop) => (
+              <CropDailyCard
+                key={crop.id}
+                crop={crop}
+                record={todayByCrop[crop.id] ?? null}
+                lang={lang as 'ta' | 'en'}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Push notification opt-in */}
+        <PushOptIn lang={lang as 'ta' | 'en'} />
+
         {/* Profile completion widget */}
         {completionPct > 0 && completionPct < 80 && (
           <ProfileCompletionWidget pct={completionPct} lang={lang} />
         )}
 
-        {/* Onboarding nudge — shown only when profile is very new */}
+        {/* Onboarding nudge */}
         {!localProfile.onboardingComplete && completionPct < 20 && (
           <Link
             to="/profile/onboarding"
@@ -201,10 +313,7 @@ export default function HomePage() {
         </div>
 
         {/* Helpline */}
-        <a
-          href="tel:1800-425-1551"
-          className="block card p-4 flex items-center gap-3"
-        >
+        <a href="tel:1800-425-1551" className="block card p-4 flex items-center gap-3">
           <span className="text-3xl">📞</span>
           <div>
             <p className="text-sm font-medium text-gray-800">{t('கிசான் ஹெல்ப்லைன்', 'Kisan Helpline')}</p>

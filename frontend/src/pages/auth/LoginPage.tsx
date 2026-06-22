@@ -5,7 +5,6 @@ import { farmerApi } from '@/api/farmer'
 import { useFarmerStore } from '@/store/farmerStore'
 import { useProfileStore } from '@/store/profileStore'
 import { useSchemeStore } from '@/store/schemeStore'
-import { seedProfileFromBackend } from '@/lib/profileSync'
 import { Button } from '@/components/ui/Button'
 
 export default function LoginPage() {
@@ -31,11 +30,13 @@ export default function LoginPage() {
       resetProfile()
       resetUserData()
       setAuth(res.farmer_id, res.token, res.expires_at)
-      // Pre-populate local profile from whatever the backend already has
+      // Pre-populate local profile from server data (phone + all saved fields)
       try {
         const backendProfile = await farmerApi.getProfile()
-        setProfile(seedProfileFromBackend(backendProfile))
-      } catch { /* non-fatal — profile will be filled in later */ }
+        setProfile({ phone })
+        useFarmerStore.getState().setProfile(backendProfile)
+        useProfileStore.getState().seedFromServer(backendProfile)
+      } catch { /* non-fatal — profile will be filled in via onboarding */ }
       navigate('/', { replace: true })
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'உள்நுழைவு தோல்வி'

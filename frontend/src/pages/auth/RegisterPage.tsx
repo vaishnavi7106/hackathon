@@ -54,8 +54,14 @@ export default function RegisterPage() {
       resetProfile()
       resetUserData()
       setAuth(res.farmer_id, res.token, res.expires_at)
-      // Seed local profile with the registration data the user just entered
-      setProfile({ name: form.name, district: form.district, village: form.village })
+      // Seed local profile with registration data — phone is captured here and
+      // never re-entered by the user
+      setProfile({
+        name: form.name,
+        phone: form.phone,
+        district: form.district,
+        village: form.village,
+      })
       navigate('/', { replace: true })
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'பதிவு தோல்வி'

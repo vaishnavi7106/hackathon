@@ -31,13 +31,12 @@ const WARNINGS_EN: Record<string, string> = {
 }
 
 export function MissingFieldWarnings({ lang }: Props) {
-  const { getMissingRequired, getMissingRecommended } = useProfileStore()
+  const { getMissingRequired } = useProfileStore()
   const t = (ta: string, en: string) => lang === 'ta' ? ta : en
 
   const missingRequired = getMissingRequired()
-  const missingRecommended = getMissingRecommended()
 
-  if (missingRequired.length === 0 && missingRecommended.length === 0) return null
+  if (missingRequired.length === 0) return null
 
   const warnings = lang === 'ta' ? WARNINGS_TA : WARNINGS_EN
 

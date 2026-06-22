@@ -56,24 +56,26 @@ def _load_treatment_db() -> dict:
 
 def _build_payload(label: str, meta: dict, treatment: dict) -> DiseaseCreate:
     """Combine mapping metadata + treatment text into one DB-ready record."""
-
-    # indigenous_method (Text, no length cap) carries both the remedy
-    # and the prevention tip — the Disease table has no separate
-    # "prevention" column, so we fold it in here rather than truncating
-    # or misusing an unrelated field.
-    indigenous_full = treatment["indigenous"]
-    if treatment.get("prevention"):
-        indigenous_full += f"\n\nPrevention: {treatment['prevention']}"
+    is_healthy = treatment.get("healthy", False)
+    modern = treatment.get("modern") or {}
+    indigenous = treatment.get("indigenous") or {}
 
     return DiseaseCreate(
         disease_id=meta["disease_id"],
-        crop_id=meta["crop_id"],
-        crop=meta["crop_id"],          # varchar fallback column — keep in sync with crop_id
+        crop_id=None,          # FK nullable — crops table may not have all entries
+        crop=meta["crop_id"],  # varchar fallback used by list_diseases_by_crop
         name_en=meta["name_en"],
         name_ta=meta["name_ta"],
-        modern_chemical=treatment["modern"],     # fits under 200-char column (max seen: 169)
-        indigenous_method=indigenous_full,
-        icar_reference="TNAU field guide — Crop Sentinel treatment_db.json v1.0",
+        symptoms_en=treatment.get("symptoms_en"),
+        symptoms_ta=treatment.get("symptoms_ta"),
+        modern_chemical=modern.get("chemical") if not is_healthy else None,
+        modern_dosage=modern.get("dosage") if not is_healthy else None,
+        modern_cost_acre=modern.get("cost_per_acre") if not is_healthy else None,
+        supply_note=modern.get("supply_note") if not is_healthy else None,
+        indigenous_name=indigenous.get("name") if not is_healthy else None,
+        indigenous_method=indigenous.get("method") if not is_healthy else None,
+        indigenous_method_ta=indigenous.get("preparation_ta") if not is_healthy else None,
+        icar_reference="TNAU CPG 2020 / ICAR — Crop Sentinel treatment_db v1.0",
     )
 
 
