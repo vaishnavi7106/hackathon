@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Onion,14,15735,2675,2144,12,5,88,100,454.4594,375.0912,13.3231,-0.19924,249.3776,184.9525,7.0342,0.582823

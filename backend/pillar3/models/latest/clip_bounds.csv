@@ -1,0 +1,4 @@
+feature,clip_lower,clip_upper
+price_change_1d,-0.2222222222222222,0.2962962962962963
+price_change_7d,-0.3333333333333333,0.5
+price_change_30d,-0.5,99.0

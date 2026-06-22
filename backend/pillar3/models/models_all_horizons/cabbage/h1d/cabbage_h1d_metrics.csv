@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Cabbage,1,15949,3038,2571,17,0,530,583,183.4835,115.2878,4.8475,0.918865,270.7549,183.0228,5.5843,0.921153

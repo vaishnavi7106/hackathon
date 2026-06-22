@@ -1,0 +1,39 @@
+{
+  "best_params": {
+    "learning_rate": 0.030420521149859783,
+    "num_leaves": 29,
+    "max_depth": 4,
+    "min_child_samples": 104,
+    "feature_fraction": 0.8255079015857973,
+    "bagging_fraction": 0.500902748990575,
+    "lambda_l1": 0.1582351462247772,
+    "lambda_l2": 0.0016607125929234815
+  },
+  "best_iteration": 94,
+  "final_rounds": 103,
+  "features_used": [
+    "rolling_mean_7",
+    "lag_3",
+    "rolling_std_30",
+    "WeekOfYear",
+    "District",
+    "month_cos",
+    "price_change_7d",
+    "price_change_30d",
+    "month_sin",
+    "rolling_mean_30",
+    "Month",
+    "lag_7",
+    "lag_30",
+    "is_outlier_iqr",
+    "Year",
+    "rolling_std_7",
+    "records_aggregated",
+    "lag_21"
+  ],
+  "features_horizon_masked": [
+    "lag_1",
+    "price_change_1d"
+  ],
+  "val_rmse": 527.2438570782116
+}

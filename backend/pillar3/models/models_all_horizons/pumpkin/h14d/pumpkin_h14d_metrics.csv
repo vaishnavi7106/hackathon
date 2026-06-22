@@ -1,0 +1,2 @@
+Commodity,Horizon,Train_rows,Val_rows,Test_rows,Features_used,Features_horizon_masked,Best_HPO_iteration,Final_rounds,Val_RMSE,Val_MAE,Val_MAPE_%,Val_R2,Test_RMSE,Test_MAE,Test_MAPE_%,Test_R2
+Pumpkin,14,14432,2488,1968,13,5,31,100,236.3958,168.9107,8.9854,0.63289,260.208,180.2737,8.4681,0.582095
