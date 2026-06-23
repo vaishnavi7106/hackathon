@@ -1,0 +1,617 @@
+﻿Uzhavar AI
+உழவர் AI
+AI-Powered Agricultural Decision Support for Tamil Nadu Farmers
+4-Pillar Solution Architecture · Hackathon 2025
+
+One app. Four decisions. Every Tamil Nadu farmer, better off.
+
+Core Hypothesis
+By combining four AI models targeting the highest-value farmer decisions — disease detection, soil and irrigation optimization, price timing, and government subsidy navigation — Uzhavar AI will increase farmer income by ₹30,000–45,000 per year while being fully implementable within 10–12 weeks.
+
+Solution Overview
+Pillar
+Name
+Core Model
+Primary Output
+Build Time
+1
+Crop Sentinel
+MobileNetV2 CNN
+Disease diagnosis + treatment
+2 weeks
+2
+Soil & Water Optimizer
+XGBoost + LSTM
+Joint fertilizer + irrigation prescription
+2–3 weeks
+3
+Market Navigator
+Prophet + hold/sell engine
+Hold/sell decision with net gain
+1–2 weeks
+4
+Government Navigator
+LLM + scheme database
+Eligible schemes + deadlines
+1–2 weeks
+
+Expected Annual Impact Per Farmer
+20% reduction
+in crop loss (conservative)
+
++₹10,000–15,000
+unclaimed government subsidies
+₹4,500 savings
+fertilizer + water combined
+
+₹30,000–45,000 total gain
+annual per-farmer increase
++₹15,000–25,000
+income from better market timing
+
+8–12 weeks
+to full working prototype
+
+Recommended Build Sequence
+Build and demo pillars in this order for maximum early impact:
+Pillar 4 — Government Navigator: fastest to ship, highest emotional impact for judges and farmers alike
+Pillar 3 — Market Navigator: clean data (AGMARKNET), quick model training
+Pillar 1 — Crop Sentinel: needs training time on PlantVillage dataset, start early
+Pillar 2 — Soil & Water Optimizer: most complex joint model, build last with full runway
+
+Technology Stack
+Frontend
+React PWA — offline-first via Service Workers, Tamil / Hindi / English UI
+Backend
+FastAPI (Python) — ML inference, request routing, authentication
+ML Framework
+PyTorch (MobileNetV2), scikit-learn (XGBoost), TensorFlow (LSTM), Prophet
+Database
+PostgreSQL for persistent data, Redis for caching and fast lookups
+LLM (Pillar 4)
+Claude API or OpenAI GPT — system-prompted with government scheme database
+Offline Strategy
+Service Workers + local data sync, critical recommendations cached on device
+Languages
+Tamil, Hindi, English — multilingual from Day 1
+Deployment
+Cloud VM (AWS/GCP free tier for hackathon), Docker containers
+
+Pillar 1
+Crop Sentinel
+
+Crop diseases are the single largest controllable cause of yield loss for small Tamil Nadu farmers. By the time a farmer can see disease symptoms, 30–40% of the crop is already affected. Crop Sentinel uses computer vision to identify diseases from a smartphone photo and delivers actionable treatment guidance — including both modern and traditional indigenous remedies — within seconds.
+
+Problem Being Solved
+Late detection: farmers identify disease 2–3 weeks after optimal treatment window
+Misdiagnosis: incorrect identification leads to wrong pesticide application, wasting money
+No treatment alternatives: farmers unaware of cost-effective indigenous remedies (neem oil, compost teas)
+Estimated crop loss attributable to late/wrong disease response: 25–30% of annual yield
+
+ML Model: MobileNetV2 with Transfer Learning
+Why MobileNetV2
+Architecture
+Convolutional Neural Network — MobileNetV2 (inverted residuals + depthwise separable convolutions)
+Why this model
+Designed for mobile inference — small footprint, fast, accurate on image classification tasks
+Pre-training
+ImageNet weights (transfer learning) — fine-tuned on PlantVillage disease dataset
+Input
+RGB photo of crop leaf, 224x224 pixels (captured via PWA camera or uploaded)
+Output
+Disease class + confidence score + SHAP explanation map
+Model size
+~14 MB — small enough to run on-device for offline use
+Inference time
+< 300ms on mid-range smartphone
+
+Training Data
+Primary dataset
+PlantVillage — 54,306 images, 26 diseases across 14 crop species
+Augmentation
+Rotation, brightness shift, horizontal flip — to handle real field photo variation
+Tamil Nadu crops
+Prioritise: rice, sugarcane, banana, groundnut, cotton, tomato
+Farmer-contributed
+In-app photo submission feeds a growing Tamil Nadu-specific dataset over time
+Validation split
+80% train / 10% validation / 10% test — report accuracy on test set for judges
+
+SHAP Explainability — The Key Innovation
+Most disease detection apps return a label and a number. Farmers don't trust black boxes. SHAP (SHapley Additive exPlanations) generates a heatmap overlaid on the farmer's photo showing exactly which leaf region triggered the diagnosis. This serves two purposes: it builds farmer trust, and it flags false positives where the model is focusing on soil or background instead of the leaf.
+Library
+SHAP GradientExplainer — efficient for CNN models
+Output format
+Heatmap overlay rendered directly in the PWA on the original photo
+Tamil label
+"இந்த இலையின் மஞ்சள் பகுதி நோயை காட்டுகிறது" (This yellow area on the leaf indicates disease)
+Fallback
+If confidence < 70%, prompt farmer to submit a clearer photo rather than guess
+
+Output Specification
+Every Crop Sentinel diagnosis must return all five of the following:
+Disease name
+In Tamil + English, e.g. "நெல் பாக்டீரியல் இலை கருக்கல் / Rice Bacterial Leaf Blight"
+Confidence %
+Displayed as a visual confidence bar — high (>85%), medium (70–85%), low (<70% = re-photo prompt)
+SHAP heatmap
+Overlay on the submitted photo, shown inline in the app
+Modern treatment
+Specific chemical/biological recommendation with dosage, cost per acre, nearest supply point
+Indigenous remedy
+Tamil traditional alternative — neem oil spray, panchagavya, compost tea — with preparation method
+
+Data Sources
+PlantVillage dataset — publicly available, 54K+ labeled images, free for research
+ICAR (Indian Council of Agricultural Research) — regional disease prevalence data for Tamil Nadu
+Farmer photo submissions — in-app contribution builds Tamil Nadu-specific training data over time
+Tamil Nadu Agriculture Department disease bulletins — for indigenous remedy validation
+
+Implementation Steps
+Download and preprocess PlantVillage dataset — filter for Tamil Nadu crops
+Fine-tune MobileNetV2 on filtered dataset using PyTorch (pretrained ImageNet weights)
+Integrate SHAP GradientExplainer — generate heatmap for every inference
+Build treatment database: 26 diseases × (modern treatment + indigenous remedy)
+Expose inference endpoint via FastAPI — POST /diagnose with image payload
+Export model to TFLite for on-device offline inference
+PWA camera integration — capture, compress, send, display result within 5 seconds
+
+Pillar 1 — Success Metrics
+Metric
+Target
+Measurement Method
+Top-1 accuracy
+> 85% on test set
+Hold-out test split from PlantVillage
+Inference latency
+< 300ms
+Time from API receipt to response
+Confidence calibration
+< 70% triggers re-photo prompt
+Automated threshold in API
+Treatment coverage
+100% of diagnosed diseases
+Manual review of treatment DB
+SHAP heatmap validity
+Focus on leaf region, not background
+Manual review of 50 sample outputs
+
+Pillar 2
+Soil & Water Optimizer
+
+Over-fertilization wastes money and degrades soil. Under-irrigation stresses crops and reduces yield. These two decisions are deeply coupled — fertilizer effectiveness depends on soil moisture — yet most tools treat them separately. The Soil & Water Optimizer combines an XGBoost model for fertilizer prescription and an LSTM for irrigation scheduling into a single joint recommendation, outputting one integrated action plan per crop cycle.
+
+Problem Being Solved
+Fertilizer overuse: average Tamil Nadu farmer overapplies NPK by 20–35%, costing ₹2,000–3,000/year
+Irrigation guesswork: 40% of water waste comes from schedule-based irrigation ignoring actual soil moisture
+Decoupled advice: fertilizer and irrigation are usually advised separately — joint timing is the real optimization
+Micronutrient blindness: Zn, Fe, Cu, B deficiencies are common but missed by standard NPK tests
+
+ML Models
+XGBoost — Soil Health and Fertilizer Prescription
+Model type
+XGBoost (gradient boosted trees) — handles tabular soil data with mixed feature types
+Why XGBoost
+Outperforms linear models on small-to-medium tabular datasets; fast training; explainable with SHAP
+Input features
+Soil pH, N, P, K levels, organic matter %, crop type, district, season, previous crop
+Micronutrients
+Zn, Fe, Cu, B — included as input features when soil test provides them
+Output
+Recommended NPK quantities (kg/acre), micronutrient supplements, application timing
+Cost optimization
+Model includes local fertilizer prices — outputs cheapest combination meeting soil needs
+Training data
+ICAR soil health card database + district-level soil maps from Tamil Nadu Agriculture Dept.
+
+LSTM — Irrigation Scheduling
+Model type
+Long Short-Term Memory (LSTM) — time-series model for sequential soil moisture prediction
+Why LSTM
+Soil moisture is temporal — today's reading depends on yesterday's irrigation, rainfall, and temperature
+Input sequence
+7-day history of: rainfall (IMD), temperature, humidity, previous irrigation dates/volumes, soil type
+Crop ET
+Evapotranspiration coefficient per crop — adjusts irrigation need by crop growth stage
+Output
+Specific irrigation dates for next 14 days, duration per session (minutes), estimated water volume (litres)
+IMD integration
+Pulls 5-day IMD weather forecast — skips irrigation recommendation if rain > 5mm expected
+Water cost output
+Calculates cost per session based on pump type (diesel/electric) and electricity tariff
+
+Joint Optimization — The Key Innovation
+Running XGBoost and LSTM separately and merging outputs is not enough. The joint optimization layer coordinates fertilizer and irrigation timing together:
+Urea application is most effective when soil moisture is 60–70% field capacity — the optimizer schedules urea within 48 hours of a sufficient irrigation event
+Potash uptake is inhibited by waterlogging — the optimizer separates potash application from heavy irrigation days
+The final output is a single calendar: "Day 1: irrigate 90 min. Day 2: apply 2kg urea/acre. Day 5: irrigate 60 min."
+
+Output Specification
+Fertilizer prescription
+NPK quantities in kg/acre, brand recommendations, local price estimate, total cost per season
+Micronutrient flags
+Deficiency warnings for Zn/Fe/Cu/B with supplement type and dosage
+Irrigation calendar
+14-day schedule with dates, session durations, water volumes, expected cost
+Joint plan
+Single integrated calendar combining fertilizer application days + irrigation days
+Savings summary
+"This prescription saves ₹1,840 vs. standard practice for your crop and district"
+
+Data Sources
+ICAR Soil Health Card database — district-level NPK and micronutrient baselines
+Tamil Nadu Agriculture Department soil maps — texture, drainage class, organic matter bands
+IMD (India Meteorological Department) API — real-time and 5-day forecast rainfall, temperature, humidity
+Farmer soil test input — actual test results if available, else district baseline used
+Crop coefficient tables (FAO-56) — evapotranspiration by crop and growth stage
+Local fertilizer price data — manually curated and updated monthly per district
+
+Implementation Steps
+Pull and clean ICAR soil health card dataset — engineer features (pH, NPK, OM%, district, crop)
+Train XGBoost fertilizer model — cross-validate by district, add cost optimization layer
+Integrate IMD API — pull 5-day forecast and build 14-day weather window
+Train LSTM irrigation model — input 7-day soil/weather history, output 14-day irrigation schedule
+Build joint optimization layer — align fertilizer and irrigation dates per agronomic rules
+Expose /prescribe endpoint — POST with farmer profile + soil test + crop, return integrated plan
+
+Pillar 2 — Success Metrics
+Metric
+Target
+Measurement Method
+Fertilizer cost reduction
+> 20% vs. farmer baseline
+Field trial comparison with control group
+Irrigation schedule accuracy
+< 15% deviation from actual crop water need
+Compare vs. FAO-56 crop ET benchmarks
+Joint plan coherence
+100% of plans have no agronomic conflicts
+Manual agronomist review of 20 plans
+Weather integration
+Irrigation skipped correctly when rain > 5mm forecast
+Backtesting against historical IMD data
+Model training time
+< 4 hours on standard laptop
+Local training benchmark
+
+Pillar 3
+Market Navigator
+
+Tamil Nadu farmers typically sell their produce at harvest — the worst possible time, when supply peaks and prices are lowest — because they need immediate cash. Market Navigator gives every farmer the same market intelligence that large traders have had for decades: price forecasts, seasonal patterns, and a clear hold/sell decision that accounts for the actual cost of waiting.
+
+Problem Being Solved
+Distress selling: 60%+ of farmers sell at harvest when prices are 20–40% below seasonal peak
+No price visibility: farmers rely on middlemen (commission agents) for price information — a conflict of interest
+Storage cost blindness: even when farmers hold crop, they don't calculate net gain after storage cost
+Market fragmentation: prices vary 15–25% across mandis within 100km — farmers sell at nearest, not best
+
+ML Model: Prophet with Hold/Sell Decision Engine
+Prophet — Price Forecasting
+Model type
+Facebook Prophet — additive time-series model for price forecasting
+Why Prophet
+Handles seasonality, trend, and holiday effects out of the box; robust to missing data; interpretable
+Training data
+AGMARKNET mandi price data — 10 years, all major Tamil Nadu mandis, daily prices
+Features
+Historical price, crop type, mandi location, season, harvest calendar, rainfall index
+Forecast horizon
+90-day forward forecast with confidence intervals
+Output
+Daily price forecast for farmer's nearest 3 mandis + projected peak price date
+Retraining
+Weekly retrain on latest AGMARKNET data — Prophet is fast enough for this schedule
+
+Hold/Sell Decision Engine — The Key Innovation
+Price forecasting alone is not enough. The farmer still has to decide: is it worth waiting? The hold/sell engine makes this calculation explicit:
+Hold/Sell Calculation Logic
+Current price (today): ₹1,820/quintal
+Forecast peak price (July 10): ₹2,340/quintal (+28%)
+Storage cost for 6 weeks: ₹420/quintal (warehouse + transport)
+Net gain from waiting: ₹520 − ₹420 = ₹100/quintal
+→ Recommendation: HOLD. Estimated net gain: ₹100/quintal.
+
+Mandi Comparison Feature
+Coverage
+All e-NAM linked mandis in Tamil Nadu — price pulled daily via e-NAM API
+Distance filter
+Shows mandis within 50km of farmer's location, sorted by net price after transport cost
+Transport cost
+Estimated from farmer location to mandi — ₹X/quintal deducted from mandi price for true comparison
+Output format
+"Coimbatore mandi (₹1,820) vs. Tirupur mandi (₹1,940 − ₹80 transport = ₹1,860 net). Best: Tirupur."
+
+Output Specification
+Price forecast
+90-day chart showing forecasted price for farmer's crop at nearest 3 mandis
+Peak price date
+Specific date + predicted price, with confidence band (e.g. ₹2,200–2,480 range)
+Hold/sell decision
+HOLD or SELL with full calculation shown — not a black box
+Storage cost input
+Farmer inputs their storage facility (home/warehouse/cold storage) — cost auto-calculated
+Mandi comparison
+Side-by-side comparison of nearest 3 mandis after transport cost deduction
+Historical context
+"In the last 5 years, this crop peaked in July 3 out of 5 times." — builds pattern trust
+
+Data Sources
+AGMARKNET — 10-year daily mandi prices across all major Tamil Nadu agricultural markets
+e-NAM (National Agriculture Market) API — real-time mandi prices and auction data
+Tamil Nadu Agriculture Department — seasonal crop calendar, harvest date estimates by district
+Warehouse receipt data — storage cost benchmarks from NABARD warehouse scheme
+Google Maps Distance Matrix API — transport cost estimation between farm and mandi
+
+Implementation Steps
+Download AGMARKNET dataset — 10 years, clean, fill gaps, engineer seasonal features
+Train Prophet model per crop per mandi — cross-validate on 2023–2024 holdout data
+Build hold/sell engine — rule-based calculation on top of Prophet forecast, inputs storage cost
+Integrate e-NAM API — daily real-time price pull, store in Redis for fast lookup
+Build mandi comparison module — pull 3 nearest mandis, deduct estimated transport cost
+Expose /forecast endpoint — POST with crop + location + storage type, return full recommendation
+
+Pillar 3 — Success Metrics
+Metric
+Target
+Measurement Method
+Price forecast MAPE
+< 12% Mean Absolute Percentage Error
+Backtesting on 2023–2024 AGMARKNET holdout
+Hold/sell accuracy
+> 70% correct hold recommendations in backtest
+Backtest: did holding beat selling in X% of cases?
+Peak date accuracy
+Predicted peak within ±10 days of actual
+Backtest on historical peak dates
+API latency
+< 500ms for full forecast response
+Load test on FastAPI endpoint
+Data freshness
+e-NAM prices updated within 24 hours
+Automated monitoring alert if stale
+
+Pillar 4
+Government Navigator
+
+Tamil Nadu farmers leave an estimated ₹8,000–15,000 per year in unclaimed subsidies and government scheme benefits. The reasons are well-known: complex paperwork, language barriers, unclear eligibility, missed deadlines. Government Navigator is a conversational Tamil-language assistant that knows every relevant central and state scheme, checks eligibility against the farmer's profile, and tells them exactly what to do and by when.
+
+Problem Being Solved
+Subsidy leakage: majority of eligible small farmers don't claim PM-KISAN, crop insurance, or input subsidies
+Information asymmetry: scheme details are published in English in government portals inaccessible to most farmers
+Deadline blindness: schemes have strict application windows — a 2-week missed deadline means a 1-year wait
+Document confusion: farmers unsure which documents are needed, visit offices multiple times unnecessarily
+Middleman dependency: farmers pay informal agents ₹500–1,500 to file applications they could do themselves
+
+Technical Approach: LLM + Government Scheme Database
+Architecture
+LLM
+Claude API (claude-sonnet) or OpenAI GPT-4o — prompted with scheme database context
+Approach
+Retrieval-Augmented Generation (RAG) — farmer query + scheme database + farmer profile fed to LLM
+Database
+Structured JSON scheme database — manually curated, updated quarterly
+Language
+Primary Tamil output — LLM prompted to respond in Tamil always, English on request
+Voice support
+Web Speech API (browser-native) — farmer can speak in Tamil, response read aloud
+No ML training
+No model training required — scheme knowledge is in the database, LLM provides the interface
+
+Government Scheme Database
+The scheme database is the core asset of Pillar 4. It must be accurate, current, and complete. Every entry follows this structure:
+Field
+Description
+Example
+scheme_id
+Unique identifier
+PM_KISAN_01
+name_en
+English name
+PM Kisan Samman Nidhi
+name_ta
+Tamil name
+பிஎம் கிசான்
+level
+Central / State
+Central
+benefit_amount
+Annual value
+₹6,000 (3 installments of ₹2,000)
+eligibility
+Conditions as structured rules
+Small/marginal farmer, owns cultivable land
+documents_required
+List of documents
+Aadhaar, land record (patta), bank account
+application_deadline
+Date or rolling
+Rolling — apply anytime, credit in 4 months
+application_url
+Direct link
+pmkisan.gov.in
+state
+Tamil Nadu / All India
+All India
+last_updated
+Review date
+2025-01-15
+
+Schemes Covered — Minimum Viable Database
+The database must cover at minimum the following schemes at launch:
+Central Government Schemes
+PM-KISAN Samman Nidhi — ₹6,000/year income support for small and marginal farmers
+PM Fasal Bima Yojana (PMFBY) — crop insurance with subsidised premiums
+PM Krishi Sinchayee Yojana (PMKSY) — subsidy for drip and sprinkler irrigation systems
+Soil Health Card Scheme — free soil testing and card every 2 years
+Kisan Credit Card (KCC) — subsidised credit for farm inputs
+Tamil Nadu State Schemes
+TN Chief Minister's Comprehensive Crop Insurance — state-level insurance top-up
+TN Drip and Sprinkler Irrigation Subsidy — up to 100% subsidy for small farmers on micro-irrigation
+Free/Subsidised Seeds Scheme — foundation seed distribution at 50% subsidy via district offices
+Tamil Nadu Farmer Investment Support Scheme (TNFISS) — ₹8,000/year for paddy farmers
+e-NAM Onboarding Support — registration assistance and first-transaction bonus
+
+LLM System Prompt Design
+The LLM's behavior is controlled by a carefully engineered system prompt. The core principles:
+Always respond in Tamil unless farmer explicitly asks for English
+Never make up a scheme — only reference schemes present in the provided database context
+Always tell the farmer their eligibility verdict clearly: ELIGIBLE, NOT ELIGIBLE, or NEED MORE INFO
+Always list the exact documents needed and the exact application URL or office
+When a deadline is within 30 days, open with an urgency alert before anything else
+Keep responses under 150 words — farmers are on mobile, screen space is limited
+
+Output Specification
+Eligibility check
+"You are eligible for 3 schemes" — listed with benefit amounts
+Scheme detail
+Benefit, documents needed, deadline, how to apply — in Tamil
+Deadline alert
+Banner alert if any eligible scheme deadline is within 30 days
+Document checklist
+Downloadable/printable PDF checklist per scheme
+Application link
+Direct deep link to application page, not just the homepage
+Office locator
+Nearest Agriculture Department office for in-person applications
+
+Data Sources
+PM-KISAN portal (pmkisan.gov.in) — scheme details, eligibility rules, payment calendar
+Tamil Nadu Agriculture Department website — state scheme notifications and GOs
+e-NAM portal — market registration scheme details
+NABARD circulars — Kisan Credit Card and warehouse receipt scheme terms
+Direct government notifications (manually curated, quarterly review cycle)
+
+Implementation Steps
+Build and validate scheme database — 15+ schemes, all fields complete, Tamil translations verified
+Design and test LLM system prompt — test Tamil output quality, hallucination guardrails
+Build farmer profile intake — crop, land size in acres, district, income band, Aadhaar-linked (yes/no)
+Implement eligibility filter — pre-filter database to eligible schemes before LLM call (saves tokens)
+Integrate Web Speech API — Tamil voice input + text-to-speech output for low-literacy users
+Build deadline reminder system — push notification 30 and 7 days before scheme deadlines
+Expose /schemes endpoint — POST with farmer profile, return eligible schemes list + LLM conversation thread
+
+Pillar 4 — Success Metrics
+Metric
+Target
+Measurement Method
+Scheme coverage
+15+ schemes at launch
+Manual count of database entries
+Hallucination rate
+0% made-up scheme details
+Test: 50 queries with known-answer checking
+Tamil language quality
+Native speaker rating ≥ 4/5
+User testing with Tamil-speaking farmers
+Eligibility accuracy
+< 5% false positive rate
+Test against known-eligible/ineligible farmer profiles
+Subsidy claimed per user
+Avg. ₹10,000+ per active user (pilot)
+Track application submissions in pilot villages
+Response time
+< 3 seconds end-to-end
+Measure: farmer input to full Tamil response
+
+System Integration
+API Endpoints Summary
+Endpoint
+Method
+Pillar
+Input
+Output
+/diagnose
+POST
+1
+Image file
+Disease, confidence, SHAP map, treatment
+/prescribe
+POST
+2
+Farmer profile + soil test + crop
+Fertilizer + irrigation calendar
+/forecast
+POST
+3
+Crop + location + storage type
+Price forecast + hold/sell decision
+/schemes
+POST
+4
+Farmer profile
+Eligible schemes + LLM thread
+/health
+GET
+All
+None
+Service health check
+
+Farmer Data Model
+All four pillars share a single farmer profile — entered once, used everywhere:
+farmer_id
+UUID — unique per device/account
+name
+First name in Tamil or English
+district
+Tamil Nadu district — drives ICAR soil data, mandi selection, scheme eligibility
+village
+Village name — for hyperlocal weather and price lookup
+crops
+List of current crops with acreage — e.g. [{"crop": "rice", "acres": 2.5}]
+land_size_acres
+Total cultivable land — drives PM-KISAN and scheme eligibility
+soil_test
+Latest soil test results — pH, N, P, K, optional Zn/Fe/Cu/B
+pump_type
+Diesel / electric / none — for irrigation cost calculation in Pillar 2
+storage_facility
+Home / warehouse / cold storage — for Pillar 3 storage cost
+language
+Preferred language: ta (Tamil) / hi (Hindi) / en (English)
+aadhaar_linked
+Boolean — required for PM-KISAN and some state schemes
+
+Offline Strategy
+Tamil Nadu villages have inconsistent connectivity. The PWA must function without internet for core features:
+Service Workers cache: last 7 days of disease diagnoses, soil prescription, price forecast
+TFLite model: Crop Sentinel CNN runs on-device for photo diagnosis without internet
+Queued sync: farmer inputs captured offline, synced to backend when connection restored
+Static scheme data: Government Navigator scheme database cached locally — LLM responses need connectivity
+IMD weather: cached 5-day forecast updated whenever online — used by Pillar 2 offline
+
+Implementation Roadmap
+Phase
+Weeks
+Deliverables
+Pillar Focus
+Phase 1 — Foundation
+1–2
+Farmer profile, FastAPI skeleton, React PWA shell, PostgreSQL setup
+All (infrastructure)
+Phase 2 — Quick wins
+3–4
+Government Navigator live, Market Navigator price forecast, e-NAM integration
+4 → 3
+Phase 3 — ML core
+5–7
+Crop Sentinel trained + deployed, SHAP integration, disease treatment database
+1
+Phase 4 — Optimizer
+8–10
+Soil XGBoost trained, LSTM irrigation model, joint optimization layer
+2
+Phase 5 — Polish
+11–12
+Tamil voice UI, offline PWA, field pilot (50 farmers), impact metrics, demo video
+All
+
+Recommended Demo Narrative for Judges
+Walk judges through one farmer's morning in the app — four decisions, four pillars, five minutes total:
+Farmer Karthik opens the app and photographs a yellowing rice leaf → Crop Sentinel returns "Bacterial Leaf Blight" (91% confidence) with SHAP heatmap and neem oil treatment
+App shows this week's soil prescription: "Apply 1.8kg urea on Tuesday, irrigate 90 min on Thursday" — joint plan generated from his last soil test
+Market Navigator shows: "HOLD your paddy. Current price: ₹1,820. Forecast peak July 10: ₹2,340. Net gain after storage: ₹100/quintal."
+Government Navigator (in Tamil): "சார்ந்தவர் கார்த்திக், உங்களுக்கு 3 திட்டங்களில் தகுதி உள்ளது. PM-KISAN: ₹6,000. TN துளிபாஸன மஞ்சள்: ₹8,500. உடனடியாக விண்ணப்பிக்கவும்."
+
+Uzhavar AI — Expected Annual Impact
+₹30,000 – ₹45,000 per farmer per year
+Defensible. Field-validatable. Built in 12 weeks.

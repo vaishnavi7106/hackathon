@@ -4,34 +4,28 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Forest — primary brand (#0A5C47 from design doc)
         primary: {
-          50:  '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+          50:  '#E8F5F1',
+          100: '#C5E8DC',
+          200: '#8FD1BE',
+          300: '#59BAA0',
+          400: '#2DA383',
+          500: '#12A07A',
+          600: '#0A5C47',
+          700: '#084D3C',
+          800: '#063D30',
+          900: '#042E24',
         },
-        saffron: {
-          DEFAULT: '#f59e0b',
-          50:  '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+        // Harvest amber — warnings, pending actions
+        harvest: {
+          DEFAULT: '#F59E0B',
+          light:   '#FEF3C7',
+          dark:    '#92400E',
         },
       },
       fontFamily: {
-        sans: ['Noto Sans Tamil', 'Noto Sans', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'Noto Sans Tamil', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
+import { Camera, Image as ImageIcon } from 'lucide-react'
 import { diagnoseImage, submitRiceSymptoms, getDiagnoseHistory } from '@/api/diagnose'
 import type { DiagnoseResponse, DiagnoseHistoryItem, SymptomOption } from '@/types/diagnose'
 import { DiagnosisResult } from '@/components/pillar1/DiagnosisResult'
@@ -84,12 +85,12 @@ async function makeThumbnail(file: File): Promise<string> {
 
 // ── TN-priority crop list (6 crops, matches disease_mapping.py crop_ids) ─
 const MODEL_CROPS = [
-  { id: 'rice',      emoji: '🌾', en: 'Rice',          ta: 'நெல்'          },
-  { id: 'tomato',    emoji: '🍅', en: 'Tomato',        ta: 'தக்காளி'       },
-  { id: 'banana',    emoji: '🍌', en: 'Banana',        ta: 'வாழை'          },
-  { id: 'groundnut', emoji: '🥜', en: 'Groundnut',     ta: 'நிலக்கடலை'    },
-  { id: 'sugarcane', emoji: '🌿', en: 'Sugarcane',     ta: 'கரும்பு'       },
-  { id: 'maize',     emoji: '🌽', en: 'Corn (Maize)',  ta: 'மக்காச்சோளம்' },
+  { id: 'rice',      en: 'Rice',         ta: 'நெல்'          },
+  { id: 'tomato',    en: 'Tomato',       ta: 'தக்காளி'       },
+  { id: 'banana',    en: 'Banana',       ta: 'வாழை'          },
+  { id: 'groundnut', en: 'Groundnut',    ta: 'நிலக்கடலை'    },
+  { id: 'sugarcane', en: 'Sugarcane',    ta: 'கரும்பு'       },
+  { id: 'maize',     en: 'Corn (Maize)', ta: 'மக்காச்சோளம்' },
 ] as const
 
 type CropId = typeof MODEL_CROPS[number]['id']
@@ -136,8 +137,8 @@ const L = {
     pick_crop:          'எந்த பயிரில் பிரச்சனை?',
     selected_prefix:    'தேர்ந்தெடுக்கப்பட்டது:',
     change:             'மாற்றவும்',
-    take_photo:         '📷 புகைப்படம் எடுக்கவும்',
-    upload:             '🖼 படம் பதிவேற்றவும்',
+    take_photo:         'புகைப்படம் எடுக்கவும்',
+    upload:             'படம் பதிவேற்றவும்',
     recent:             'சமீபத்திய ஸ்கேன்கள்',
     no_scans:           'இன்னும் ஸ்கேன் இல்லை.',
     see_all:            'அனைத்தையும் காண',
@@ -161,8 +162,8 @@ const L = {
     pick_crop:          'Which crop has the problem?',
     selected_prefix:    'Selected:',
     change:             'Change',
-    take_photo:         '📷 Take Photo',
-    upload:             '🖼 Upload Image',
+    take_photo:         'Take Photo',
+    upload:             'Upload Image',
     recent:             'Recent Scans',
     no_scans:           'No scans yet. Take your first photo above.',
     see_all:            'See all history',
@@ -486,11 +487,11 @@ export default function CropSentinel() {
               <button
                 onClick={() => handleFile(phase.file)}
                 className="w-full py-3 rounded-xl text-sm font-bold text-white"
-                style={{ background: '#1B4332' }}
+                style={{ background: '#0A5C47' }}
               >
                 {t.retry}
               </button>
-              <button onClick={goHome} className="text-sm text-green-700 underline">
+              <button onClick={goHome} className="text-sm underline" style={{ color: '#0A5C47' }}>
                 {t.retake_link}
               </button>
             </div>
@@ -513,13 +514,11 @@ export default function CropSentinel() {
     return (
       <div className="flex flex-col min-h-screen bg-gray-50">
         <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-          <h1 className="font-semibold text-gray-900 text-base">{t.title} 🌿</h1>
+          <h1 className="font-semibold text-base" style={{ color: '#111827' }}>{t.title}</h1>
         </header>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-5 px-6 pb-24 text-center">
-          <span className="text-5xl">⚠️</span>
-
-          <p className="text-base font-bold text-gray-900 leading-snug">
+          <p className="text-base font-bold leading-snug" style={{ color: '#111827' }}>
             {lang === 'ta'
               ? `இந்த படத்தில் ${cropLabel} நோயை தெளிவாக கண்டறிய முடியவில்லை.`
               : `We couldn't clearly identify a ${cropLabel} disease in this photo.`}
@@ -586,7 +585,7 @@ export default function CropSentinel() {
           )}
 
           <div className="mt-5 text-center">
-            <button onClick={goHome} className="text-sm text-green-700 underline">
+            <button onClick={goHome} className="text-sm underline" style={{ color: '#0A5C47' }}>
               {t.retake_link}
             </button>
           </div>
@@ -610,9 +609,7 @@ export default function CropSentinel() {
             {lang === 'ta' ? 'நோயை கண்டறிக' : 'Identify the Disease'}
           </h1>
           {cropLabel && (
-            <p className="text-xs text-gray-500 mt-0.5">
-              {cropInfo?.emoji} {cropLabel}
-            </p>
+            <p className="text-xs mt-0.5" style={{ color: '#6B7280' }}>{cropLabel}</p>
           )}
         </header>
 
@@ -626,7 +623,7 @@ export default function CropSentinel() {
           />
 
           <div className="mt-5 text-center">
-            <button onClick={goHome} className="text-sm text-green-700 underline">
+            <button onClick={goHome} className="text-sm underline" style={{ color: '#0A5C47' }}>
               {t.retake_link}
             </button>
           </div>
@@ -669,7 +666,7 @@ export default function CropSentinel() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-        <h1 className="font-semibold text-gray-900 text-base">{t.title} 🌿</h1>
+        <h1 className="font-semibold text-base" style={{ color: '#111827' }}>{t.title}</h1>
         <p className="text-xs text-gray-500 mt-0.5">{t.subtitle}</p>
       </header>
 
@@ -691,15 +688,15 @@ export default function CropSentinel() {
                 <button
                   key={crop.id}
                   onClick={() => setSelectedCrop(crop.id)}
-                  className="rounded-2xl border-2 border-gray-200 bg-white py-5 flex flex-col items-center gap-1.5 text-center transition-all hover:border-green-400 hover:bg-green-50 active:scale-95"
+                  className="rounded-xl border bg-white py-4 px-3 flex flex-col items-start gap-0.5 text-left transition-all active:scale-95"
+                  style={{ borderColor: '#D1D5DB', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}
                 >
-                  <span className="text-4xl">{crop.emoji}</span>
-                  <span className="text-sm font-bold text-gray-800">
+                  <span className="text-sm font-semibold" style={{ color: '#111827' }}>
                     {lang === 'ta' ? crop.ta : crop.en}
                   </span>
-                  {lang !== 'ta' && (
-                    <span className="text-xs text-gray-400">{crop.ta}</span>
-                  )}
+                  <span className="text-xs" style={{ color: '#6B7280' }}>
+                    {lang === 'ta' ? crop.en : crop.ta}
+                  </span>
                 </button>
               ))}
             </div>
@@ -710,22 +707,25 @@ export default function CropSentinel() {
         {selectedCrop && activeCropInfo && (
           <div className="space-y-4">
             {/* Selected crop banner */}
-            <div className="rounded-2xl bg-green-50 border-2 border-green-700 px-4 py-3 flex items-center gap-3">
-              <span className="text-3xl shrink-0">{activeCropInfo.emoji}</span>
+            <div
+              className="rounded-xl px-4 py-3 flex items-center gap-3 border"
+              style={{ backgroundColor: '#E8F5F1', borderColor: '#0A5C47' }}
+            >
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-green-700 font-semibold uppercase tracking-wide">
+                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#0A5C47', letterSpacing: '0.05em' }}>
                   {t.selected_prefix}
                 </p>
-                <p className="text-base font-bold text-green-900">
+                <p className="text-base font-bold" style={{ color: '#0A5C47' }}>
                   {lang === 'ta' ? activeCropInfo.ta : activeCropInfo.en}
                   {lang !== 'ta' && (
-                    <span className="ml-2 text-sm font-normal text-green-700">({activeCropInfo.ta})</span>
+                    <span className="ml-2 text-sm font-normal" style={{ color: '#12A07A' }}>({activeCropInfo.ta})</span>
                   )}
                 </p>
               </div>
               <button
                 onClick={() => setSelectedCrop('')}
-                className="text-xs text-green-700 font-semibold border border-green-400 rounded-full px-3 py-1 hover:bg-green-100 shrink-0"
+                className="text-xs font-semibold border rounded-full px-3 py-1 shrink-0"
+                style={{ borderColor: '#0A5C47', color: '#0A5C47' }}
               >
                 {t.change}
               </button>
@@ -735,18 +735,20 @@ export default function CropSentinel() {
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => cameraRef.current?.click()}
-                className="rounded-2xl border-2 border-green-700 bg-white py-5 flex flex-col items-center gap-2 transition hover:bg-green-50"
+                className="rounded-xl border-2 bg-white py-5 flex flex-col items-center gap-2 transition"
+                style={{ borderColor: '#0A5C47' }}
               >
-                <span className="text-3xl">📷</span>
-                <span className="text-xs font-bold text-green-800">{t.take_photo}</span>
+                <Camera size={24} color="#0A5C47" />
+                <span className="text-xs font-semibold" style={{ color: '#0A5C47' }}>{t.take_photo}</span>
               </button>
 
               <button
                 onClick={() => galleryRef.current?.click()}
-                className="rounded-2xl border-2 border-green-700 bg-white py-5 flex flex-col items-center gap-2 transition hover:bg-green-50"
+                className="rounded-xl border-2 bg-white py-5 flex flex-col items-center gap-2 transition"
+                style={{ borderColor: '#0A5C47' }}
               >
-                <span className="text-3xl">🖼</span>
-                <span className="text-xs font-bold text-green-800">{t.upload}</span>
+                <ImageIcon size={24} color="#0A5C47" />
+                <span className="text-xs font-semibold" style={{ color: '#0A5C47' }}>{t.upload}</span>
               </button>
             </div>
           </div>
@@ -795,7 +797,7 @@ export default function CropSentinel() {
                       />
                     ) : (
                       <div className="w-11 h-11 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                        <span className="text-xl">🌿</span>
+                        <ImageIcon size={18} color="#9CA3AF" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -817,7 +819,8 @@ export default function CropSentinel() {
               {fallbackHistory.length > 5 && !showAllHistory && (
                 <button
                   onClick={() => setShowAllHistory(true)}
-                  className="w-full text-xs text-green-700 font-semibold py-2 text-center"
+                  className="w-full text-xs font-semibold py-2 text-center"
+                  style={{ color: '#0A5C47' }}
                 >
                   {t.see_all} →
                 </button>

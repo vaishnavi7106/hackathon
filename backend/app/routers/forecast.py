@@ -12,9 +12,11 @@ import pandas as pd
 from fastapi import APIRouter, HTTPException, Query, status
 
 from app.crud.forecast import (
+    calc_mandi_distance,
     calc_storage_cost,
     calc_transport_cost,
     create_price_forecast,
+    get_district_centroid,
     get_nearest_mandis,
 )
 from app.deps import CurrentFarmerDep, DbDep
@@ -154,6 +156,7 @@ async def get_price_forecast(body: ForecastRequest, farmer: CurrentFarmerDep, db
     primary_mandi = mandis[0]
 
     # Fetch live prices for all mandis
+    dist_lat, dist_lon = get_district_centroid(farmer.district)
     mandi_infos: list[MandiInfo] = []
     for mandi in mandis:
         price_data = await get_live_price(body.crop, mandi.mandi_id, db)
@@ -162,7 +165,7 @@ async def get_price_forecast(body: ForecastRequest, farmer: CurrentFarmerDep, db
         # available AGMARKNET date) when the live API and mandi_prices DB are empty.
         if today_price is None:
             today_price = _price_from_live_features(body.crop, mandi.district)
-        distance = 20.0
+        distance = calc_mandi_distance(mandi, dist_lat, dist_lon)
         transport = calc_transport_cost(distance)
         net = round((today_price or 0) - transport, 2) if today_price else None
         mandi_infos.append(

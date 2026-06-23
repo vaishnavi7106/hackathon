@@ -1,0 +1,43 @@
+{
+  "reference_date": "2026-04-01",
+  "source": "Department of Agriculture, Cooperation and Farmers Welfare, GoI — Fertilizer MRP Kharif 2025-26",
+  "source_url": "https://www.fertilizer.org/price-list",
+  "prices": [
+    {
+      "product": "Urea",
+      "product_ta": "யூரியா",
+      "nutrient_content": "46% N",
+      "bag_kg": 45,
+      "price_per_bag_inr": 266.50,
+      "price_per_kg_inr": 5.93,
+      "subsidy_note": "Government NBS subsidized MRP. Additional handling charges of ₹8–15/bag may apply at retail."
+    },
+    {
+      "product": "DAP",
+      "product_ta": "டிஏபி",
+      "nutrient_content": "18% N + 46% P2O5",
+      "bag_kg": 50,
+      "price_per_bag_inr": 1350.00,
+      "price_per_kg_inr": 27.00,
+      "subsidy_note": "Government subsidized MRP (Di-Ammonium Phosphate)."
+    },
+    {
+      "product": "MOP",
+      "product_ta": "எம்ஓபி",
+      "nutrient_content": "60% K2O",
+      "bag_kg": 50,
+      "price_per_bag_inr": 1670.00,
+      "price_per_kg_inr": 33.40,
+      "subsidy_note": "Government MRP (Muriate of Potash). Imported, price may vary by state."
+    },
+    {
+      "product": "SSP",
+      "product_ta": "எஸ்எஸ்பி",
+      "nutrient_content": "16% P2O5 + 11% S",
+      "bag_kg": 50,
+      "price_per_bag_inr": 400.00,
+      "price_per_kg_inr": 8.00,
+      "subsidy_note": "Government subsidized MRP (Single Super Phosphate). Lower cost P source."
+    }
+  ]
+}

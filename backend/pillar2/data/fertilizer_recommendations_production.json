@@ -1,0 +1,568 @@
+{
+  "version": "1.0",
+  "source": "TNAU Crop Production Guide 2020 — Fertilizer Recommendations for Major Crops of Tamil Nadu",
+  "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+  "notes": "NPK values are in kg/ha. Zone 0 entries are zone-independent and serve as fallback for any district. All values verified against TNAU CPG 2020, Chapter-wise recommendations.",
+  "recommendations": [
+    {
+      "rec_id": "REC-001",
+      "zone_id": 1,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "dry_season",
+      "n_kg_ha": 150,
+      "p_kg_ha": 50,
+      "k_kg_ha": 50,
+      "source_ref": "TNAU CPG 2020, Rice Chapter, p.12 — Cauvery Delta and Coimbatore tract irrigated Samba",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Transplanting", "stage_ta": "அடி உரம் / நடவு",     "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 21, "stage": "Active Tillering",       "stage_ta": "கள்ளத் தண்டு வளர்ச்சி","n_pct": 50, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Panicle Initiation",     "stage_ta": "கதிர் தோற்றம்",        "n_pct": 25, "p_pct": 0,   "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-002",
+      "zone_id": 2,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "dry_season",
+      "n_kg_ha": 120,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Rice Chapter, p.13 — Northern Zone irrigated rice",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Transplanting", "stage_ta": "அடி உரம் / நடவு",     "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 21, "stage": "Active Tillering",       "stage_ta": "கள்ளத் தண்டு வளர்ச்சி","n_pct": 50, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Panicle Initiation",     "stage_ta": "கதிர் தோற்றம்",        "n_pct": 25, "p_pct": 0,   "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-003",
+      "zone_id": 3,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "dry_season",
+      "n_kg_ha": 120,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Rice Chapter, p.13 — Southern Zone irrigated rice",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Transplanting", "stage_ta": "அடி உரம் / நடவு",     "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 21, "stage": "Active Tillering",       "stage_ta": "கள்ளத் தண்டு வளர்ச்சி","n_pct": 50, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Panicle Initiation",     "stage_ta": "கதிர் தோற்றம்",        "n_pct": 25, "p_pct": 0,   "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-004",
+      "zone_id": 4,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "dry_season",
+      "n_kg_ha": 100,
+      "p_kg_ha": 50,
+      "k_kg_ha": 50,
+      "source_ref": "TNAU CPG 2020, Rice Chapter — Far Southern zone",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Transplanting", "stage_ta": "அடி உரம் / நடவு",     "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 21, "stage": "Active Tillering",       "stage_ta": "கள்ளத் தண்டு வளர்ச்சி","n_pct": 50, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Panicle Initiation",     "stage_ta": "கதிர் தோற்றம்",        "n_pct": 25, "p_pct": 0,   "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-005",
+      "zone_id": 1,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "wet_season",
+      "n_kg_ha": 120,
+      "p_kg_ha": 50,
+      "k_kg_ha": 50,
+      "source_ref": "TNAU CPG 2020, Rice Chapter — Zone 1 Kuruvai/wet season",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Transplanting", "stage_ta": "அடி உரம் / நடவு",     "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 21, "stage": "Active Tillering",       "stage_ta": "கள்ளத் தண்டு வளர்ச்சி","n_pct": 50, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Panicle Initiation",     "stage_ta": "கதிர் தோற்றம்",        "n_pct": 25, "p_pct": 0,   "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-006",
+      "zone_id": 2,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "wet_season",
+      "n_kg_ha": 100,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Rice Chapter — Zone 2 wet season",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Transplanting", "stage_ta": "அடி உரம் / நடவு",     "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 21, "stage": "Active Tillering",       "stage_ta": "கள்ளத் தண்டு வளர்ச்சி","n_pct": 50, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Panicle Initiation",     "stage_ta": "கதிர் தோற்றம்",        "n_pct": 25, "p_pct": 0,   "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-007",
+      "zone_id": 0,
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 60,
+      "p_kg_ha": 30,
+      "k_kg_ha": 30,
+      "source_ref": "TNAU CPG 2020, Rice Chapter — Rainfed/dryland rice all zones",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_paddy.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing",     "stage_ta": "அடி உரம் / விதைப்பு", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Top Dressing",        "stage_ta": "மேல் உரம்",             "n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-008",
+      "zone_id": 0,
+      "crop": "groundnut",
+      "crop_ta": "நிலக்கடலை",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 10,
+      "p_kg_ha": 30,
+      "k_kg_ha": 20,
+      "source_ref": "TNAU CPG 2020, Groundnut Chapter, p.45 — Rainfed groundnut; N low as legume fixes atmospheric N",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_groundnut.html",
+      "split_schedule": [
+        {"day": 0, "stage": "Basal / Sowing", "stage_ta": "அடி உரம் / விதைப்பு", "n_pct": 100, "p_pct": 100, "k_pct": 100}
+      ]
+    },
+    {
+      "rec_id": "REC-009",
+      "zone_id": 1,
+      "crop": "cotton",
+      "crop_ta": "பருத்தி",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 80,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Cotton Chapter, p.78 — Irrigated cotton Zone 1/2",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_cotton.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",           "stage_ta": "அடி உரம்",  "n_pct": 33, "p_pct": 100, "k_pct": 50},
+        {"day": 30, "stage": "Squaring",         "stage_ta": "மொட்டு",   "n_pct": 34, "p_pct": 0,   "k_pct": 50},
+        {"day": 60, "stage": "Boll Development", "stage_ta": "காய் வளர்ச்சி","n_pct": 33, "p_pct": 0, "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-010",
+      "zone_id": 2,
+      "crop": "cotton",
+      "crop_ta": "பருத்தி",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 80,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Cotton Chapter — Zone 2 irrigated cotton",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_cotton.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",           "stage_ta": "அடி உரம்",  "n_pct": 33, "p_pct": 100, "k_pct": 50},
+        {"day": 30, "stage": "Squaring",         "stage_ta": "மொட்டு",   "n_pct": 34, "p_pct": 0,   "k_pct": 50},
+        {"day": 60, "stage": "Boll Development", "stage_ta": "காய் வளர்ச்சி","n_pct": 33, "p_pct": 0, "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-011",
+      "zone_id": 0,
+      "crop": "groundnut",
+      "crop_ta": "நிலக்கடலை",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 20,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Groundnut Chapter — Irrigated groundnut",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_groundnut.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing",      "stage_ta": "அடி உரம்", "n_pct": 50,  "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Pod Initiation",       "stage_ta": "காய் தோற்றம்","n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-012",
+      "zone_id": 0,
+      "crop": "sugarcane",
+      "crop_ta": "கரும்பு",
+      "irrigation_type": "irrigated",
+      "season_bucket": "annual",
+      "n_kg_ha": 200,
+      "p_kg_ha": 75,
+      "k_kg_ha": 100,
+      "source_ref": "TNAU CPG 2020, Sugarcane Chapter, p.95",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_sugarcane.html",
+      "split_schedule": [
+        {"day": 0,   "stage": "Basal",              "stage_ta": "அடி உரம்",          "n_pct": 25, "p_pct": 100, "k_pct": 50},
+        {"day": 45,  "stage": "Tillering",           "stage_ta": "கூட்டு வளர்ச்சி",  "n_pct": 25, "p_pct": 0,   "k_pct": 25},
+        {"day": 120, "stage": "Grand Growth",        "stage_ta": "மகா வளர்ச்சி",     "n_pct": 25, "p_pct": 0,   "k_pct": 25},
+        {"day": 210, "stage": "Maturation",          "stage_ta": "முதிர்ச்சி",        "n_pct": 25, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-013",
+      "zone_id": 0,
+      "crop": "banana",
+      "crop_ta": "வாழை",
+      "irrigation_type": "irrigated",
+      "season_bucket": "annual",
+      "n_kg_ha": 200,
+      "p_kg_ha": 75,
+      "k_kg_ha": 300,
+      "source_ref": "TNAU CPG 2020, Banana Chapter, p.120 — high K demand for fruit quality",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_banana.html",
+      "split_schedule": [
+        {"day": 0,   "stage": "Planting",         "stage_ta": "நடவு",    "n_pct": 25, "p_pct": 100, "k_pct": 25},
+        {"day": 60,  "stage": "Vegetative",       "stage_ta": "வளர்ச்சி","n_pct": 25, "p_pct": 0,   "k_pct": 25},
+        {"day": 120, "stage": "Shooting",         "stage_ta": "குடலை",  "n_pct": 25, "p_pct": 0,   "k_pct": 25},
+        {"day": 180, "stage": "Bunch Development","stage_ta": "குலை",    "n_pct": 25, "p_pct": 0,   "k_pct": 25}
+      ]
+    },
+    {
+      "rec_id": "REC-014",
+      "zone_id": 0,
+      "crop": "maize",
+      "crop_ta": "சோளம்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 150,
+      "p_kg_ha": 75,
+      "k_kg_ha": 75,
+      "source_ref": "TNAU CPG 2020, Maize Chapter, p.65",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_maize.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",          "stage_ta": "அடி உரம்", "n_pct": 33, "p_pct": 100, "k_pct": 50},
+        {"day": 25, "stage": "Knee Height",    "stage_ta": "முழங்கால் உயரம்","n_pct": 34, "p_pct": 0, "k_pct": 50},
+        {"day": 45, "stage": "Tasselling",     "stage_ta": "தாலி",      "n_pct": 33, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-015",
+      "zone_id": 0,
+      "crop": "maize",
+      "crop_ta": "சோளம்",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 80,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Maize Chapter — Rainfed/dryland maize",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_maize.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",       "stage_ta": "அடி உரம்", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Top Dressing","stage_ta": "மேல் உரம்","n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-016",
+      "zone_id": 0,
+      "crop": "onion",
+      "crop_ta": "வெங்காயம்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 100,
+      "p_kg_ha": 50,
+      "k_kg_ha": 100,
+      "source_ref": "TNAU CPG 2020, Onion Chapter, p.140",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_onion.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",         "stage_ta": "அடி உரம்",   "n_pct": 50, "p_pct": 100, "k_pct": 50},
+        {"day": 30, "stage": "Bulb Initiation","stage_ta": "குல்லா தோற்றம்","n_pct": 50, "p_pct": 0, "k_pct": 50}
+      ]
+    },
+    {
+      "rec_id": "REC-017",
+      "zone_id": 0,
+      "crop": "tomato",
+      "crop_ta": "தக்காளி",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 120,
+      "p_kg_ha": 80,
+      "k_kg_ha": 100,
+      "source_ref": "TNAU CPG 2020, Tomato Chapter, p.155",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_tomato.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",         "stage_ta": "அடி உரம்", "n_pct": 33, "p_pct": 100, "k_pct": 33},
+        {"day": 30, "stage": "Flowering",     "stage_ta": "பூக்கும் நிலை","n_pct": 34, "p_pct": 0, "k_pct": 34},
+        {"day": 60, "stage": "Fruit Setting", "stage_ta": "காய் வளர்ச்சி","n_pct": 33, "p_pct": 0, "k_pct": 33}
+      ]
+    },
+    {
+      "rec_id": "REC-018",
+      "zone_id": 0,
+      "crop": "turmeric",
+      "crop_ta": "மஞ்சள்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "annual",
+      "n_kg_ha": 60,
+      "p_kg_ha": 30,
+      "k_kg_ha": 120,
+      "source_ref": "TNAU CPG 2020, Turmeric Chapter, p.180 — high K for rhizome quality",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_turmeric.html",
+      "split_schedule": [
+        {"day": 0,   "stage": "Planting",     "stage_ta": "நடவு",    "n_pct": 33, "p_pct": 100, "k_pct": 50},
+        {"day": 60,  "stage": "Vegetative",   "stage_ta": "வளர்ச்சி","n_pct": 34, "p_pct": 0,   "k_pct": 25},
+        {"day": 120, "stage": "Rhizome Fill", "stage_ta": "கிழங்கு வளர்ச்சி","n_pct": 33, "p_pct": 0, "k_pct": 25}
+      ]
+    },
+    {
+      "rec_id": "REC-019",
+      "zone_id": 0,
+      "crop": "blackgram",
+      "crop_ta": "உளுந்து",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 12,
+      "p_kg_ha": 25,
+      "k_kg_ha": 25,
+      "source_ref": "TNAU CPG 2020, Pulses Chapter — Rainfed blackgram",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_pulses.html",
+      "split_schedule": [
+        {"day": 0, "stage": "Basal / Sowing", "stage_ta": "அடி உரம் / விதைப்பு", "n_pct": 100, "p_pct": 100, "k_pct": 100}
+      ]
+    },
+    {
+      "rec_id": "REC-020",
+      "zone_id": 0,
+      "crop": "blackgram",
+      "crop_ta": "உளுந்து",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 15,
+      "p_kg_ha": 30,
+      "k_kg_ha": 30,
+      "source_ref": "TNAU CPG 2020, Pulses Chapter — Irrigated blackgram",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_pulses.html",
+      "split_schedule": [
+        {"day": 0, "stage": "Basal / Sowing", "stage_ta": "அடி உரம் / விதைப்பு", "n_pct": 100, "p_pct": 100, "k_pct": 100}
+      ]
+    },
+    {
+      "rec_id": "REC-021",
+      "zone_id": 0,
+      "crop": "greengram",
+      "crop_ta": "பாசிப்பயறு",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 10,
+      "p_kg_ha": 20,
+      "k_kg_ha": 20,
+      "source_ref": "TNAU CPG 2020, Pulses Chapter — Rainfed greengram",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_pulses.html",
+      "split_schedule": [
+        {"day": 0, "stage": "Basal / Sowing", "stage_ta": "அடி உரம் / விதைப்பு", "n_pct": 100, "p_pct": 100, "k_pct": 100}
+      ]
+    },
+    {
+      "rec_id": "REC-022",
+      "zone_id": 0,
+      "crop": "sorghum",
+      "crop_ta": "கம்பு",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 40,
+      "p_kg_ha": 20,
+      "k_kg_ha": 20,
+      "source_ref": "TNAU CPG 2020, Sorghum Chapter — Rainfed sorghum",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_millets.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing", "stage_ta": "அடி உரம்", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Top Dressing",   "stage_ta": "மேல் உரம்","n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-023",
+      "zone_id": 0,
+      "crop": "sorghum",
+      "crop_ta": "கம்பு",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 90,
+      "p_kg_ha": 45,
+      "k_kg_ha": 45,
+      "source_ref": "TNAU CPG 2020, Sorghum Chapter — Irrigated sorghum",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_millets.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",          "stage_ta": "அடி உரம்",  "n_pct": 33, "p_pct": 100, "k_pct": 100},
+        {"day": 25, "stage": "Vegetative",     "stage_ta": "வளர்ச்சி",  "n_pct": 34, "p_pct": 0,   "k_pct": 0},
+        {"day": 45, "stage": "Boot Stage",     "stage_ta": "கதிர் முளைப்பு","n_pct": 33, "p_pct": 0, "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-024",
+      "zone_id": 0,
+      "crop": "finger_millet",
+      "crop_ta": "கேழ்வரகு",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 40,
+      "p_kg_ha": 20,
+      "k_kg_ha": 20,
+      "source_ref": "TNAU CPG 2020, Millets Chapter — Rainfed finger millet (ragi)",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_millets.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing", "stage_ta": "அடி உரம்", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 25, "stage": "Top Dressing",   "stage_ta": "மேல் உரம்","n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-025",
+      "zone_id": 0,
+      "crop": "finger_millet",
+      "crop_ta": "கேழ்வரகு",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 80,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Millets Chapter — Irrigated ragi",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_millets.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",       "stage_ta": "அடி உரம்", "n_pct": 33, "p_pct": 100, "k_pct": 100},
+        {"day": 25, "stage": "Tillering",   "stage_ta": "கள்ளத் தண்டு","n_pct": 34, "p_pct": 0, "k_pct": 0},
+        {"day": 45, "stage": "Heading",     "stage_ta": "கதிர் தோற்றம்","n_pct": 33, "p_pct": 0, "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-026",
+      "zone_id": 0,
+      "crop": "cotton",
+      "crop_ta": "பருத்தி",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 40,
+      "p_kg_ha": 20,
+      "k_kg_ha": 20,
+      "source_ref": "TNAU CPG 2020, Cotton Chapter — Rainfed dryland cotton",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_cotton.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing", "stage_ta": "அடி உரம்", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Top Dressing",   "stage_ta": "மேல் உரம்","n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-027",
+      "zone_id": 0,
+      "crop": "sunflower",
+      "crop_ta": "சூரியகாந்தி",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 90,
+      "p_kg_ha": 45,
+      "k_kg_ha": 45,
+      "source_ref": "TNAU CPG 2020, Oilseeds Chapter — Irrigated sunflower",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_oilseeds.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal",       "stage_ta": "அடி உரம்", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 35, "stage": "Bud Stage",   "stage_ta": "மொட்டு நிலை","n_pct": 50, "p_pct": 0, "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-028",
+      "zone_id": 0,
+      "crop": "sunflower",
+      "crop_ta": "சூரியகாந்தி",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 45,
+      "p_kg_ha": 22,
+      "k_kg_ha": 22,
+      "source_ref": "TNAU CPG 2020, Oilseeds Chapter — Rainfed sunflower",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_oilseeds.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing", "stage_ta": "அடி உரம்", "n_pct": 50, "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Top Dressing",   "stage_ta": "மேல் உரம்","n_pct": 50, "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-029",
+      "zone_id": 0,
+      "crop": "cassava",
+      "crop_ta": "மரவள்ளி",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 100,
+      "p_kg_ha": 50,
+      "k_kg_ha": 100,
+      "source_ref": "TNAU CPG 2020, Tapioca/Cassava Chapter",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_tapioca.html",
+      "split_schedule": [
+        {"day": 0,   "stage": "Planting",     "stage_ta": "நடவு",    "n_pct": 33, "p_pct": 100, "k_pct": 50},
+        {"day": 60,  "stage": "Vegetative",   "stage_ta": "வளர்ச்சி","n_pct": 34, "p_pct": 0,   "k_pct": 25},
+        {"day": 120, "stage": "Tuber Fill",   "stage_ta": "கிழங்கு","n_pct": 33,  "p_pct": 0,   "k_pct": 25}
+      ]
+    },
+    {
+      "rec_id": "REC-030",
+      "zone_id": 3,
+      "crop": "groundnut",
+      "crop_ta": "நிலக்கடலை",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 20,
+      "p_kg_ha": 40,
+      "k_kg_ha": 40,
+      "source_ref": "TNAU CPG 2020, Groundnut Chapter — Zone 3 irrigated groundnut",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_groundnut.html",
+      "split_schedule": [
+        {"day": 0,  "stage": "Basal / Sowing",  "stage_ta": "அடி உரம்",   "n_pct": 50,  "p_pct": 100, "k_pct": 100},
+        {"day": 30, "stage": "Pod Initiation",  "stage_ta": "காய் தோற்றம்","n_pct": 50,  "p_pct": 0,   "k_pct": 0}
+      ]
+    },
+    {
+      "rec_id": "REC-031",
+      "zone_id": 0,
+      "crop": "coconut",
+      "crop_ta": "தேங்காய்",
+      "irrigation_type": "irrigated",
+      "season_bucket": "any",
+      "n_kg_ha": 90,
+      "p_kg_ha": 56,
+      "k_kg_ha": 210,
+      "source_ref": "TNAU CPG 2020, Coconut Chapter — 500g N, 320g P₂O₅, 1200g K₂O per tree per year at 175 trees/ha",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_coconut.html",
+      "split_schedule": [
+        {"day": 0,   "stage": "Basal (Jan–Mar)",        "stage_ta": "அடி உரம் (ஜன–மார்)",     "n_pct": 33, "p_pct": 100, "k_pct": 33},
+        {"day": 120, "stage": "First Top-dress (May)",   "stage_ta": "முதல் மேல் உரம் (மே)",   "n_pct": 33, "p_pct": 0,   "k_pct": 33},
+        {"day": 240, "stage": "Second Top-dress (Sep)",  "stage_ta": "இரண்டாம் மேல் உரம் (செப்)","n_pct": 34, "p_pct": 0,   "k_pct": 34}
+      ]
+    },
+    {
+      "rec_id": "REC-032",
+      "zone_id": 0,
+      "crop": "coconut",
+      "crop_ta": "தேங்காய்",
+      "irrigation_type": "rainfed",
+      "season_bucket": "any",
+      "n_kg_ha": 65,
+      "p_kg_ha": 42,
+      "k_kg_ha": 150,
+      "source_ref": "TNAU CPG 2020, Coconut Chapter — rainfed gardens: 75% of irrigated dose",
+      "source_url": "https://www.tnau.ac.in/tech/cpg_coconut.html",
+      "split_schedule": [
+        {"day": 0,   "stage": "Basal (Jan–Mar)",        "stage_ta": "அடி உரம் (ஜன–மார்)",     "n_pct": 33, "p_pct": 100, "k_pct": 33},
+        {"day": 120, "stage": "First Top-dress (May)",   "stage_ta": "முதல் மேல் உரம் (மே)",   "n_pct": 33, "p_pct": 0,   "k_pct": 33},
+        {"day": 240, "stage": "Second Top-dress (Sep)",  "stage_ta": "இரண்டாம் மேல் உரம் (செப்)","n_pct": 34, "p_pct": 0,   "k_pct": 34}
+      ]
+    }
+  ]
+}

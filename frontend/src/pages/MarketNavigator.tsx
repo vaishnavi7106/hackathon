@@ -58,22 +58,22 @@ interface ForecastResponse {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const CROPS = [
-  { name: 'Tomato',                 tamil: 'தக்காளி',        emoji: '🍅' },
-  { name: 'Onion',                  tamil: 'வெங்காயம்',      emoji: '🧅' },
-  { name: 'Banana - Green',         tamil: 'வாழைப்பழம்',    emoji: '🍌' },
-  { name: 'Bhindi(Ladies Finger)',  tamil: 'வெண்டைக்காய்',   emoji: '🫑' },
-  { name: 'Bitter Gourd',           tamil: 'பாகற்காய்',      emoji: '🟢' },
-  { name: 'Cabbage',                tamil: 'முட்டைக்கோஸ்',  emoji: '🥬' },
-  { name: 'Coconut',                tamil: 'தேங்காய்',       emoji: '🥥' },
-  { name: 'Green Chilli',           tamil: 'பச்சை மிளகாய்', emoji: '🌶️' },
-  { name: 'Mint(Pudina)',           tamil: 'புதினா',          emoji: '🌿' },
-  { name: 'Pumpkin',                tamil: 'பூசணிக்காய்',   emoji: '🎃' },
+  { name: 'Tomato',                tamil: 'தக்காளி' },
+  { name: 'Onion',                 tamil: 'வெங்காயம்' },
+  { name: 'Banana - Green',        tamil: 'வாழைப்பழம்' },
+  { name: 'Bhindi(Ladies Finger)', tamil: 'வெண்டைக்காய்' },
+  { name: 'Bitter Gourd',          tamil: 'பாகற்காய்' },
+  { name: 'Cabbage',               tamil: 'முட்டைக்கோஸ்' },
+  { name: 'Coconut',               tamil: 'தேங்காய்' },
+  { name: 'Green Chilli',          tamil: 'பச்சை மிளகாய்' },
+  { name: 'Mint(Pudina)',          tamil: 'புதினா' },
+  { name: 'Pumpkin',               tamil: 'பூசணிக்காய்' },
 ] as const
 
 const STORAGE_OPTIONS = [
-  { value: 'home' as const,         label: 'Home',       tamil: 'வீட்டு',    emoji: '🏠', rate: '₹30/wk' },
-  { value: 'warehouse' as const,    label: 'Warehouse',  tamil: 'கிடங்கு',   emoji: '🏭', rate: '₹55/wk' },
-  { value: 'cold_storage' as const, label: 'Cold',       tamil: 'குளிர்',    emoji: '❄️', rate: '₹120/wk' },
+  { value: 'home' as const,         tamil: 'வீட்டு',  rate: '₹30/வாரம்' },
+  { value: 'warehouse' as const,    tamil: 'கிடங்கு', rate: '₹55/வாரம்' },
+  { value: 'cold_storage' as const, tamil: 'குளிர்',  rate: '₹120/வாரம்' },
 ] as const
 
 const CACHE_TTL = 12 * 60 * 60 * 1000
@@ -225,22 +225,19 @@ export default function MarketNavigator() {
                 <button
                   key={crop.name}
                   onClick={() => setSelectedCrop(crop.name)}
-                  className={cn(
-                    'card p-3 flex items-center gap-3 text-left transition-all active:scale-[0.98]',
-                    isSelected
-                      ? 'border-primary-400 bg-primary-50 ring-1 ring-primary-300'
-                      : 'hover:border-gray-200',
-                  )}
+                  className="card p-3 text-left transition-all active:scale-[0.98]"
+                  style={isSelected ? {
+                    borderColor: '#0A5C47',
+                    backgroundColor: '#E8F5F1',
+                    boxShadow: '0 0 0 1px #12A07A',
+                  } : {}}
                 >
-                  <span className="text-2xl flex-shrink-0 leading-none">{crop.emoji}</span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">
-                      {isTamil ? crop.tamil : crop.name}
-                    </p>
-                    <p className="text-[11px] text-gray-400 truncate">
-                      {isTamil ? crop.name : crop.tamil}
-                    </p>
-                  </div>
+                  <p className="text-sm font-semibold truncate" style={{ color: isSelected ? '#0A5C47' : '#111827' }}>
+                    {isTamil ? crop.tamil : crop.name}
+                  </p>
+                  <p className="text-[11px] mt-0.5 truncate" style={{ color: '#6B7280' }}>
+                    {isTamil ? crop.name : crop.tamil}
+                  </p>
                 </button>
               )
             })}
@@ -253,24 +250,30 @@ export default function MarketNavigator() {
             {t('சேமிப்பு வகை', 'Storage Type')}
           </p>
           <div className="flex gap-2">
-            {STORAGE_OPTIONS.map(opt => (
-              <button
-                key={opt.value}
-                onClick={() => setStorage(opt.value)}
-                className={cn(
-                  'flex-1 flex flex-col items-center gap-1 rounded-xl py-3 px-1 border text-center transition-all',
-                  storage === opt.value
-                    ? 'border-primary-400 bg-primary-50 text-primary-700'
-                    : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300',
-                )}
-              >
-                <span className="text-xl">{opt.emoji}</span>
-                <span className="text-[11px] font-medium leading-tight">
-                  {isTamil ? opt.tamil : opt.label}
-                </span>
-                <span className="text-[10px] text-gray-400">{opt.rate}</span>
-              </button>
-            ))}
+            {STORAGE_OPTIONS.map(opt => {
+              const isActive = storage === opt.value
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setStorage(opt.value)}
+                  className="flex-1 flex flex-col items-center gap-1 rounded-xl py-3 px-2 border text-center transition-all"
+                  style={isActive ? {
+                    borderColor: '#0A5C47',
+                    backgroundColor: '#E8F5F1',
+                    color: '#0A5C47',
+                  } : {
+                    borderColor: '#D1D5DB',
+                    backgroundColor: 'white',
+                    color: '#6B7280',
+                  }}
+                >
+                  <span className="text-[12px] font-semibold leading-tight">
+                    {opt.tamil}
+                  </span>
+                  <span className="text-[10px]" style={{ color: '#9CA3AF' }}>{opt.rate}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -361,8 +364,8 @@ function ResultScreen({
           </svg>
         </button>
         <div>
-          <h1 className="font-semibold text-gray-900 text-base">
-            {cropInfo?.emoji} {isTamil ? cropInfo?.tamil : result.crop}
+          <h1 className="font-semibold text-base" style={{ color: '#111827' }}>
+            {isTamil ? cropInfo?.tamil ?? result.crop : result.crop}
           </h1>
           <p className="text-xs text-gray-400">
             {t('14 நாள் முன்னறிவிப்பு', '14-day forecast')}
@@ -452,7 +455,7 @@ function ResultScreen({
             <p className="text-xs font-semibold text-gray-600 mb-3">
               {t('14 நாள் விலை முன்னறிவிப்பு', '14-Day Price Forecast')}
             </p>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={140}>
               <LineChart data={chartData} margin={{ top: 18, right: 16, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                 <XAxis
@@ -473,16 +476,16 @@ function ResultScreen({
                 <Tooltip content={<ChartTooltip />} />
 
                 {/* Confidence bands */}
-                <Line dataKey="yhat_upper" stroke="#99f6e4" strokeDasharray="4 3" strokeWidth={1} dot={false} legendType="none" />
-                <Line dataKey="yhat_lower" stroke="#99f6e4" strokeDasharray="4 3" strokeWidth={1} dot={false} legendType="none" />
+                <Line dataKey="yhat_upper" stroke="#8FD1BE" strokeDasharray="4 3" strokeWidth={1} dot={false} legendType="none" />
+                <Line dataKey="yhat_lower" stroke="#8FD1BE" strokeDasharray="4 3" strokeWidth={1} dot={false} legendType="none" />
 
                 {/* Main forecast */}
                 <Line
                   dataKey="yhat"
-                  stroke="#0d9488"
+                  stroke="#0A5C47"
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 4, fill: '#0d9488', strokeWidth: 0 }}
+                  activeDot={{ r: 4, fill: '#0A5C47', strokeWidth: 0 }}
                 />
 
                 {/* Today marker */}
@@ -494,14 +497,14 @@ function ResultScreen({
                     x={pf.peak_date}
                     y={pf.peak_price}
                     r={5}
-                    fill="#0d9488"
+                    fill="#0A5C47"
                     stroke="white"
                     strokeWidth={2}
                     label={{
                       value: `₹${pf.peak_price.toFixed(0)}`,
                       position: 'top',
                       fontSize: 10,
-                      fill: '#0d9488',
+                      fill: '#0A5C47',
                       fontWeight: 600,
                     }}
                   />
@@ -510,8 +513,8 @@ function ResultScreen({
             </ResponsiveContainer>
 
             <div className="flex items-center justify-center gap-5 mt-2">
-              <LegendItem color="#0d9488" label={t('முன்னறிவிப்பு', 'Forecast')} />
-              <LegendItem color="#99f6e4" label={t('வரம்பு', 'Range')} dashed />
+              <LegendItem color="#0A5C47" label={t('முன்னறிவிப்பு', 'Forecast')} />
+              <LegendItem color="#8FD1BE" label={t('வரம்பு', 'Range')} dashed />
             </div>
           </div>
         )}

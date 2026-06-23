@@ -9,29 +9,15 @@ export default defineConfig({
   resolve: {
     alias: [{ find: '@', replacement: srcDir }],
   },
-  optimizeDeps: {
-    esbuildOptions: {
-      plugins: [
-        {
-          name: 'local-alias',
-          setup(build) {
-            build.onResolve({ filter: /^@\// }, (args) => ({
-              path: args.path.replace('@/', srcDir + '/'),
-            }))
-          },
-        },
-      ],
-    },
-  },
   server: {
     port: 5180,
     proxy: {
       '/v1': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:8001',
         changeOrigin: true,
       },
       '/v2': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:8001',
         changeOrigin: true,
       },
     },

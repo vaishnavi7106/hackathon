@@ -35,13 +35,13 @@ export default function SoilOptimizer() {
   const noCrops = profile.crops.length === 0
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: '#F8F4ED' }}>
+    <div className="min-h-screen pb-24" style={{ backgroundColor: '#F9FAFB', maxWidth: 480, margin: '0 auto', width: '100%' }}>
       {/* Header */}
-      <div className="px-4 pt-10 pb-0" style={{ background: '#1B4332' }}>
-        <p className="text-white text-lg font-bold">
+      <div className="px-4 pt-4 pb-0 sticky top-0 z-30" style={{ background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)' }}>
+        <p className="text-white font-semibold text-base">
           {t('மண் & நீர் மேலாளர்', 'Soil & Water Optimizer')}
         </p>
-        <p className="text-green-300 text-xs mt-0.5 mb-3">
+        <p className="text-xs mt-0.5 mb-3" style={{ color: 'rgba(255,255,255,0.7)' }}>
           {t('TNAU CPG 2020 • FAO-56 அடிப்படையில்', 'Based on TNAU CPG 2020 & FAO-56')}
         </p>
 
@@ -52,12 +52,10 @@ export default function SoilOptimizer() {
               <button
                 key={crop.id}
                 onClick={() => setActiveCropId(crop.id)}
-                className={cn(
-                  'shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border',
-                  activeCropId === crop.id
-                    ? 'bg-white text-green-900 border-white'
-                    : 'bg-transparent text-green-300 border-green-600 hover:border-green-300',
-                )}
+                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border"
+                style={activeCropId === crop.id
+                  ? { backgroundColor: 'white', color: '#0A5C47', borderColor: 'white' }
+                  : { backgroundColor: 'transparent', color: 'rgba(255,255,255,0.7)', borderColor: 'rgba(255,255,255,0.35)' }}
               >
                 {cropLabel(crop.name)}
                 {crop.acres > 0 && (
@@ -69,7 +67,7 @@ export default function SoilOptimizer() {
         )}
 
         {/* Section tab bar */}
-        <div className="flex border-b border-green-700">
+        <div className="flex" style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
           {[
             { key: 'plan', ta: 'இன்றைய பணி', en: "Today's Task" },
             { key: 'diary', ta: 'பண்ணை நாட்குறிப்பு', en: 'Farm Diary' },
@@ -77,12 +75,10 @@ export default function SoilOptimizer() {
             <button
               key={key}
               onClick={() => setActiveSection(key as 'plan' | 'diary')}
-              className={cn(
-                'flex-1 text-xs font-semibold py-2.5 border-b-2 transition-colors',
-                activeSection === key
-                  ? 'border-white text-white'
-                  : 'border-transparent text-green-400 hover:text-green-200',
-              )}
+              className="flex-1 text-xs font-semibold py-2.5 border-b-2 transition-colors"
+              style={activeSection === key
+                ? { borderColor: 'white', color: 'white' }
+                : { borderColor: 'transparent', color: 'rgba(255,255,255,0.55)' }}
             >
               {t(ta, en)}
             </button>

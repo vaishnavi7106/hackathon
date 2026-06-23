@@ -56,20 +56,20 @@ export default function ProfileOnboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F9FAFB', maxWidth: 480, margin: '0 auto', width: '100%' }}>
       {/* Header */}
-      <div className="bg-primary-900 text-white px-4 pt-5 pb-4">
+      <div className="px-4 pt-4 pb-4" style={{ background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)' }}>
         <div className="flex items-center gap-3 mb-3">
           {step > 0 ? (
-            <button onClick={back} className="text-primary-300 text-xl">←</button>
+            <button onClick={back} className="text-white/70 text-xl leading-none">←</button>
           ) : (
             <div className="w-6" />
           )}
-          <h1 className="flex-1 font-bold text-base">
+          <h1 className="flex-1 font-semibold text-base text-white">
             {t('சுயவிவர அமைப்பு', 'Profile Setup')}
           </h1>
           {step < TOTAL_STEPS - 1 && (
-            <button onClick={finish} className="text-primary-300 text-xs">
+            <button onClick={finish} className="text-white/60 text-xs">
               {t('தவிர்', 'Skip')}
             </button>
           )}
@@ -79,14 +79,12 @@ export default function ProfileOnboarding() {
           {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
             <div
               key={i}
-              className={cn(
-                'flex-1 h-1 rounded-full transition-all duration-300',
-                i <= step ? 'bg-white' : 'bg-primary-700',
-              )}
+              className="flex-1 h-1 rounded-full transition-all duration-300"
+              style={{ backgroundColor: i <= step ? 'white' : 'rgba(255,255,255,0.3)' }}
             />
           ))}
         </div>
-        <p className="text-primary-300 text-xs">
+        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.7)' }}>
           {t(`படி ${step + 1} / ${TOTAL_STEPS}`, `Step ${step + 1} of ${TOTAL_STEPS}`)} — {STEP_TITLES[lang][step]}
         </p>
       </div>
@@ -204,12 +202,10 @@ function YesNoToggle({ value, onChange, yesLabel, noLabel }: {
         <button
           key={String(v)}
           onClick={() => onChange(v)}
-          className={cn(
-            'flex-1 py-2.5 rounded-xl border text-sm font-medium transition-colors',
-            value === v
-              ? 'bg-primary-700 text-white border-primary-700'
-              : 'bg-white text-gray-700 border-gray-300',
-          )}
+          className="flex-1 py-2.5 rounded-xl border text-sm font-medium transition-colors"
+          style={value === v
+            ? { backgroundColor: '#0A5C47', color: 'white', borderColor: '#0A5C47' }
+            : { backgroundColor: 'white', color: '#374151', borderColor: '#D1D5DB' }}
         >
           {v ? yesLabel : noLabel}
         </button>
@@ -230,12 +226,10 @@ function OptionGroup<T extends string>({ value, onChange, options, cols = 2 }: {
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
-          className={cn(
-            'py-2.5 rounded-xl border text-sm font-medium text-center transition-colors',
-            value === o.value
-              ? 'bg-primary-700 text-white border-primary-700'
-              : 'bg-white text-gray-700 border-gray-300 hover:border-primary-300',
-          )}
+          className="py-2.5 rounded-xl border text-sm font-medium text-center transition-colors"
+          style={value === o.value
+            ? { backgroundColor: '#0A5C47', color: 'white', borderColor: '#0A5C47' }
+            : { backgroundColor: 'white', color: '#374151', borderColor: '#D1D5DB' }}
         >
           {o.ta}
           <span className="block text-xs opacity-70 mt-0.5">{o.en}</span>
@@ -250,7 +244,6 @@ function StepPersonal({ lang, profile, setField }: StepProps) {
   const t = (ta: string, en: string) => lang === 'ta' ? ta : en
   return (
     <div className="space-y-4">
-      <div className="text-4xl text-center mb-2">👤</div>
       <Field label={t('முழு பெயர்', 'Full Name')}>
         <Input value={profile.name} onChange={(v) => setField('name', v)} placeholder={t('உங்கள் பெயர் உள்ளிடுக', 'Enter your full name')} />
       </Field>
@@ -300,7 +293,6 @@ function StepLocation({ lang, profile, setField }: StepProps) {
   const t = (ta: string, en: string) => lang === 'ta' ? ta : en
   return (
     <div className="space-y-4">
-      <div className="text-4xl text-center mb-2">📍</div>
       <Field label={t('மாவட்டம்', 'District')}>
         <Select
           value={profile.district}
@@ -412,7 +404,6 @@ function StepFarm({ lang, profile, setField }: StepProps) {
 
   return (
     <div className="space-y-4">
-      <div className="text-4xl text-center mb-2">🌾</div>
 
       {/* Crop cards */}
       {crops.length > 0 && (
@@ -441,7 +432,8 @@ function StepFarm({ lang, profile, setField }: StepProps) {
                 <div className="flex gap-2 shrink-0">
                   <button
                     onClick={() => openEdit(crop)}
-                    className="text-xs text-primary-600 font-semibold px-2 py-1 rounded-lg hover:bg-primary-50"
+                    className="text-xs font-semibold px-2 py-1 rounded-lg"
+                    style={{ color: '#0A5C47' }}
                   >
                     {t('திருத்து', 'Edit')}
                   </button>
@@ -471,7 +463,8 @@ function StepFarm({ lang, profile, setField }: StepProps) {
       {crops.length < 5 && !showForm && (
         <button
           onClick={openAdd}
-          className="w-full rounded-xl border-2 border-dashed border-primary-300 py-3 text-sm font-semibold text-primary-600 hover:bg-primary-50 transition-colors"
+          className="w-full rounded-xl border-2 border-dashed py-3 text-sm font-semibold transition-colors"
+          style={{ borderColor: '#12A07A', color: '#0A5C47' }}
         >
           + {t('பயிர் சேர்க்கவும்', 'Add crop')}
         </button>
@@ -479,8 +472,8 @@ function StepFarm({ lang, profile, setField }: StepProps) {
 
       {/* Inline add/edit form */}
       {showForm && (
-        <div className="rounded-xl border border-primary-200 bg-primary-50 p-4 space-y-3">
-          <p className="text-xs font-bold text-primary-800 uppercase tracking-wide">
+        <div className="rounded-xl border p-4 space-y-3" style={{ borderColor: '#C5E8DC', backgroundColor: '#E8F5F1' }}>
+          <p className="text-xs font-bold uppercase tracking-wide" style={{ color: '#0A5C47' }}>
             {editingId ? t('பயிர் திருத்து', 'Edit Crop') : t('புதிய பயிர்', 'New Crop')}
           </p>
 
@@ -537,7 +530,8 @@ function StepFarm({ lang, profile, setField }: StepProps) {
           <div className="flex gap-2">
             <button
               onClick={saveCrop}
-              className="flex-1 py-2.5 rounded-xl bg-primary-700 text-white text-sm font-semibold"
+              className="flex-1 py-2.5 rounded-xl text-white text-sm font-semibold"
+              style={{ backgroundColor: '#0A5C47' }}
             >
               {t('சேமி', 'Save')}
             </button>
@@ -609,8 +603,7 @@ function StepEligibility({ lang, profile, setField }: StepProps) {
   const t = (ta: string, en: string) => lang === 'ta' ? ta : en
   return (
     <div className="space-y-4">
-      <div className="text-4xl text-center mb-2">🪪</div>
-      <div className="card p-3 bg-primary-50 border-primary-100 text-xs text-primary-800">
+      <div className="rounded-xl p-3 text-xs" style={{ backgroundColor: '#E8F5F1', border: '1px solid #C5E8DC', color: '#0A5C47' }}>
         {t(
           'இந்த தகவல்கள் PM-KISAN, KCC போன்ற திட்டங்களில் தகுதி சரிபார்க்க பயன்படுகின்றன.',
           'This information is used to check eligibility for schemes like PM-KISAN, KCC etc.',
@@ -676,7 +669,6 @@ function StepSoilDocs({ lang, profile, setField }: StepProps) {
 
   return (
     <div className="space-y-4">
-      <div className="text-4xl text-center mb-2">🧪</div>
       <p className="text-center text-xs text-gray-500">
         {t('இந்த விவரங்கள் மண் & நீர் மேலாளர் (Pillar 2) க்கு தானாக பயன்படும்.', 'These details are used automatically by the Soil Optimizer.')}
       </p>

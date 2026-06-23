@@ -1,0 +1,669 @@
+{
+  "_meta": { "version": "1.0", "source": "TNAU CPG 2020 / ICAR", "classes": 43 },
+
+  "Apple___Apple_scab": {
+    "disease_id": "apple_scab",
+    "healthy": false,
+    "symptoms_en": "Olive-brown velvety spots on leaves and fruit; premature leaf drop; scabby fruit surface.",
+    "symptoms_ta": "இலைகள் மற்றும் பழங்களில் ஆலிவ்-பழுப்பு நிற வெல்வெட் புள்ளிகள்; இலை உதிர்வு; பழத்தில் கரடுமுரடான தோல்.",
+    "modern": {
+      "chemical": "Mancozeb 75% WP or Captan 50% WP",
+      "dosage": "2g per litre water; spray every 10–14 days from bud break",
+      "cost_per_acre": 200,
+      "supply_note": "Available at district agri input shops. Begin spray at green tip stage."
+    },
+    "indigenous": {
+      "name": "Baking soda spray",
+      "method": "Mix 5g baking soda + 5ml liquid soap in 1L water. Spray on leaves weekly. Best as preventive.",
+      "preparation_ta": "5கி சோடா + 5மிலி சோப்பு 1 லிட்டர் நீரில் கலந்து வாரம் ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Apple___Black_rot": {
+    "disease_id": "apple_black_rot",
+    "healthy": false,
+    "symptoms_en": "Purple-bordered brown leaf spots; rotting fruit with black concentric rings; cankers on bark.",
+    "symptoms_ta": "இலைகளில் ஊதா விளிம்புடன் பழுப்பு புள்ளிகள்; கருப்பு வட்டங்களுடன் அழுகும் பழங்கள்; பட்டையில் புண்கள்.",
+    "modern": {
+      "chemical": "Captan 50% WP or Copper oxychloride 50% WP",
+      "dosage": "3g per litre water; spray at 10-day intervals from petal fall",
+      "cost_per_acre": 220,
+      "supply_note": "Remove and destroy infected mummified fruits before spraying."
+    },
+    "indigenous": {
+      "name": "Bordeaux mixture",
+      "method": "Prepare 1% Bordeaux mixture (10g copper sulphate + 10g lime per litre). Spray on leaves and branches monthly.",
+      "preparation_ta": "10கி காப்பர் சல்பேட் + 10கி சுண்ணாம்பு 1 லிட்டர் நீரில் கலந்து மாதம் ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Apple___Cedar_apple_rust": {
+    "disease_id": "apple_cedar_rust",
+    "healthy": false,
+    "symptoms_en": "Bright orange-yellow spots on upper leaf surface; tube-like structures on leaf underside; reduced fruit set.",
+    "symptoms_ta": "இலை மேற்பரப்பில் பிரகாசமான ஆரஞ்சு-மஞ்சள் புள்ளிகள்; இலை அடிப்பரப்பில் குழாய் போன்ற அமைப்பு; பழ உருவாக்கம் குறைதல்.",
+    "modern": {
+      "chemical": "Myclobutanil 9.3% EW or Triforine",
+      "dosage": "1ml per litre water; spray from pink bud to petal fall stage",
+      "cost_per_acre": 260,
+      "supply_note": "Remove nearby juniper/cedar trees where possible. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Neem oil spray",
+      "method": "Mix 5ml neem oil + 2ml soap in 1L water. Spray weekly on leaf surfaces as a preventive.",
+      "preparation_ta": "வேப்பெண்ணெய் 5மிலி + சோப்பு 2மிலி 1 லிட்டர் நீரில் கலந்து வாரம் தெளிக்கவும்."
+    }
+  },
+
+  "Apple___healthy": {
+    "disease_id": "apple_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Banana___Sigatoka": {
+    "disease_id": "banana_sigatoka",
+    "healthy": false,
+    "symptoms_en": "Yellow streaks on young leaves widening into brown oval spots with grey centre; premature leaf death reduces yield.",
+    "symptoms_ta": "இளம் இலைகளில் மஞ்சள் கோடுகள் பரந்து சாம்பல் நடுவுடன் பழுப்பு நீள்வட்ட புள்ளிகளாகும்; இலை இறப்பு மகசூலை குறைக்கும்.",
+    "modern": {
+      "chemical": "Propiconazole 25% EC or Mancozeb 75% WP",
+      "dosage": "Propiconazole 1ml/L or Mancozeb 2g/L; spray at 3-week intervals",
+      "cost_per_acre": 180,
+      "supply_note": "Remove severely affected leaves before spraying. Available at district agri shops."
+    },
+    "indigenous": {
+      "name": "Pseudomonas fluorescens spray",
+      "method": "Mix 5g Pseudomonas fluorescens in 1L water. Spray on leaves every 15 days. Also apply as soil drench.",
+      "preparation_ta": "சூடோமோனாஸ் ஃப்ளோரெசன்ஸ் 5கி/லிட்டர் கரைத்து 15 நாட்கள் இடைவெளியில் இலைகளில் தெளிக்கவும்."
+    }
+  },
+
+  "Blueberry___healthy": {
+    "disease_id": "blueberry_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Cherry_(including_sour)___Powdery_mildew": {
+    "disease_id": "cherry_powdery_mildew",
+    "healthy": false,
+    "symptoms_en": "White powdery coating on young leaves and shoots; leaf curl and distortion; reduced fruit size.",
+    "symptoms_ta": "இளம் இலைகள் மற்றும் தண்டுகளில் வெள்ளை பொடி போன்ற பூஞ்சண மூடிகை; இலை சுருட்டு; பழம் சிறுத்தல்.",
+    "modern": {
+      "chemical": "Sulfur 80% WG or Hexaconazole 5% EC",
+      "dosage": "Sulfur 3g/L or Hexaconazole 2ml/L; spray every 10–14 days",
+      "cost_per_acre": 170,
+      "supply_note": "Do not spray sulfur when temperature exceeds 35°C. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Milk spray",
+      "method": "Mix 1 part milk with 9 parts water. Spray weekly on affected leaves. Reduces mildew spread.",
+      "preparation_ta": "பால் 1 பங்கு + தண்ணீர் 9 பங்கு கலந்து வாரம் ஒருமுறை இலைகளில் தெளிக்கவும்."
+    }
+  },
+
+  "Cherry_(including_sour)___healthy": {
+    "disease_id": "cherry_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+    "disease_id": "maize_gray_leaf_spot",
+    "healthy": false,
+    "symptoms_en": "Long rectangular grey-tan lesions running parallel to leaf veins; lesions merge causing large blighted areas.",
+    "symptoms_ta": "இலை நரம்புகளுக்கு இணையாக நீண்ட சதுர சாம்பல்-பழுப்பு புண்கள்; புண்கள் இணைந்து பெரிய கருகல் பகுதியாகும்.",
+    "modern": {
+      "chemical": "Propiconazole 25% EC or Azoxystrobin 23% SC",
+      "dosage": "Propiconazole 1ml/L or Azoxystrobin 1ml/L; spray at VT to R1 stage",
+      "cost_per_acre": 250,
+      "supply_note": "Plant resistant hybrids. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Neem leaf extract spray",
+      "method": "Boil 500g neem leaves in 5L water for 30 min. Cool, filter, dilute 1:3. Spray on leaves weekly.",
+      "preparation_ta": "500கி வேப்பிலை 5 லிட்டர் நீரில் 30 நிமிடம் கொதிக்க வைத்து வடிகட்டி 1:3 நீர்த்து தெளிக்கவும்."
+    }
+  },
+
+  "Corn_(maize)___Common_rust_": {
+    "disease_id": "maize_common_rust",
+    "healthy": false,
+    "symptoms_en": "Circular to elongated brick-red pustules on both leaf surfaces; severe infection causes leaf yellowing and drying.",
+    "symptoms_ta": "இலையின் இருபுறமும் வட்ட/நீண்ட செங்கல்-சிவப்பு கொப்புளங்கள்; தீவிர தொற்றில் இலை மஞ்சளாகி உலர்தல்.",
+    "modern": {
+      "chemical": "Mancozeb 75% WP or Propiconazole 25% EC",
+      "dosage": "Mancozeb 2g/L or Propiconazole 1ml/L; spray at first pustule appearance",
+      "cost_per_acre": 190,
+      "supply_note": "Use rust-resistant hybrids. Available at district agri input shops."
+    },
+    "indigenous": {
+      "name": "Wood ash spray",
+      "method": "Mix 200g wood ash in 1L water. Filter and spray on leaves. Repeat every 5 days during outbreak.",
+      "preparation_ta": "200கி மரக்கரி சாம்பல் 1 லிட்டர் நீரில் கலந்து வடிகட்டி இலைகளில் தெளிக்கவும். 5 நாட்களுக்கு ஒருமுறை."
+    }
+  },
+
+  "Corn_(maize)___Northern_Leaf_Blight": {
+    "disease_id": "maize_northern_leaf_blight",
+    "healthy": false,
+    "symptoms_en": "Long (5–15cm) grey-green to tan cigar-shaped lesions on leaves; severe infection kills entire leaves.",
+    "symptoms_ta": "இலைகளில் நீண்ட (5–15செமி) சாம்பல்-பச்சை முதல் பழுப்பு நிற சுருட்டு வடிவ புண்கள்; தீவிர தாக்குதலில் முழு இலை இறப்பு.",
+    "modern": {
+      "chemical": "Mancozeb 75% WP or Tebuconazole 25.9% EC",
+      "dosage": "Mancozeb 2g/L or Tebuconazole 1ml/L; spray at tasseling stage",
+      "cost_per_acre": 210,
+      "supply_note": "Plant resistant hybrid varieties. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Trichoderma viride seed treatment",
+      "method": "Treat seeds with Trichoderma viride 4g/kg before sowing to boost plant immunity.",
+      "preparation_ta": "விதை நடுவதற்கு முன் 4கி/கிலோ டிரைக்கோடர்மா விரிடேயுடன் விதை நேர்த்தி செய்யவும்."
+    }
+  },
+
+  "Corn_(maize)___healthy": {
+    "disease_id": "maize_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Grape___Black_rot": {
+    "disease_id": "grape_black_rot",
+    "healthy": false,
+    "symptoms_en": "Tan spots with dark border on leaves; small brown spots enlarge and blacken on berries; shrivelled mummified fruit.",
+    "symptoms_ta": "இலைகளில் கருப்பு விளிம்புடன் பழுப்பு புள்ளிகள்; பழங்களில் சிறு புள்ளிகள் கருத்து சுருங்குதல்.",
+    "modern": {
+      "chemical": "Mancozeb 75% WP or Captan 50% WP",
+      "dosage": "2g per litre; spray every 10–14 days from bud break through fruit set",
+      "cost_per_acre": 200,
+      "supply_note": "Remove mummified berries and infected leaves. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Bordeaux mixture",
+      "method": "1% Bordeaux mixture (10g copper sulphate + 10g lime per litre). Spray every 2 weeks from budbreak.",
+      "preparation_ta": "10கி காப்பர் சல்பேட் + 10கி சுண்ணாம்பு 1 லிட்டர் நீரில் கலந்து 2 வாரத்திற்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Grape___Esca_(Black_Measles)": {
+    "disease_id": "grape_esca",
+    "healthy": false,
+    "symptoms_en": "Tiger-stripe pattern on leaves; dark brown wood streaking inside trunk; sudden vine collapse (apoplexy).",
+    "symptoms_ta": "இலைகளில் புலி கோடு வடிவம்; தண்டுக்குள் கருப்பு-பழுப்பு கோடுகள்; திடீர் கொடி சாய்வு.",
+    "modern": {
+      "chemical": "No chemical cure. Prune infected wood; treat wounds with copper paste or pruning sealant",
+      "dosage": "Prune 20cm below visible discolouration; seal cut surfaces with Bordeaux paste immediately",
+      "cost_per_acre": 150,
+      "supply_note": "No curative chemical available. Prevention through sanitary pruning is key."
+    },
+    "indigenous": {
+      "name": "Copper paste wound sealant",
+      "method": "Mix copper sulphate 50g + lime 50g into a thick paste. Apply to all pruning wounds immediately after cutting.",
+      "preparation_ta": "காப்பர் சல்பேட் 50கி + சுண்ணாம்பு 50கி கலைத்து வெட்டிய இடங்களில் உடனே தடவுங்கள்."
+    }
+  },
+
+  "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {
+    "disease_id": "grape_leaf_blight",
+    "healthy": false,
+    "symptoms_en": "Brown necrotic spots on upper leaf surface; dark brown to black sporulation on lower surface; severe defoliation.",
+    "symptoms_ta": "இலையின் மேற்பரப்பில் பழுப்பு இறந்த திசு புள்ளிகள்; அடிப்பரப்பில் கருப்பு வித்தகம்; கடும் இலை உதிர்வு.",
+    "modern": {
+      "chemical": "Copper oxychloride 50% WP or Mancozeb 75% WP",
+      "dosage": "3g copper oxychloride or 2g Mancozeb per litre; spray every 10 days",
+      "cost_per_acre": 190,
+      "supply_note": "Available at district agri input shops. Spray before monsoon onset."
+    },
+    "indigenous": {
+      "name": "Neem oil + soap spray",
+      "method": "Mix 5ml neem oil + 2ml liquid soap in 1L water. Spray both leaf surfaces weekly.",
+      "preparation_ta": "வேப்பெண்ணெய் 5மிலி + சோப்பு 2மிலி 1 லிட்டர் நீரில் கலந்து வாரம் இலையின் இருபுறமும் தெளிக்கவும்."
+    }
+  },
+
+  "Grape___healthy": {
+    "disease_id": "grape_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Groundnut___Early_leaf_spot": {
+    "disease_id": "groundnut_early_leaf_spot",
+    "healthy": false,
+    "symptoms_en": "Circular brown spots with yellow halo on upper leaf surface; dark brown spore rings on lower surface from 25–30 DAP.",
+    "symptoms_ta": "நிலக்கடலை இலையின் மேல்பரப்பில் மஞ்சள் வட்டத்துடன் வட்ட பழுப்பு புள்ளிகள்; நடவுக்கு 25–30 நாள் பிறகு தோன்றும்.",
+    "modern": {
+      "chemical": "Chlorothalonil 75% WP or Mancozeb 75% WP",
+      "dosage": "2g per litre; first spray at 25 DAP, repeat every 10–15 days",
+      "cost_per_acre": 160,
+      "supply_note": "TNAU recommends 3 sprays: 25, 40, 55 DAP. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Neem seed kernel extract (NSKE)",
+      "method": "Soak 500g neem seed kernel powder in 10L water overnight. Filter and spray at 1:10 dilution at 10-day intervals.",
+      "preparation_ta": "வேப்பம் விதை பருப்பு 500கி 10 லிட்டர் நீரில் ஒரு இரவு ஊற வைத்து வடிகட்டி 1:10 நீர்த்து தெளிக்கவும்."
+    }
+  },
+
+  "Groundnut___Late_leaf_spot": {
+    "disease_id": "groundnut_late_leaf_spot",
+    "healthy": false,
+    "symptoms_en": "Dark brown to black circular spots on upper leaf surface; prominent dark spore rings on lower surface from 40–45 DAP.",
+    "symptoms_ta": "நிலக்கடலை இலை மேற்பரப்பில் கருப்பு-பழுப்பு வட்டுப் புள்ளிகள்; 40–45 நாட்களுக்கு பிறகு தோன்றும்.",
+    "modern": {
+      "chemical": "Tebuconazole 25.9% EC or Propiconazole 25% EC",
+      "dosage": "1ml per litre; spray at 40, 55, 70 DAP",
+      "cost_per_acre": 200,
+      "supply_note": "Do not skip 55 DAP spray — critical pod-fill stage. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Trichoderma viride seed treatment",
+      "method": "Treat seeds with Trichoderma viride 4g/kg seed before sowing. Suppresses soil-borne and foliar pathogens.",
+      "preparation_ta": "டிரைக்கோடர்மா விரிடே 4கி/கிலோ விதையுடன் நேர்த்தி செய்து விதைக்கவும்."
+    }
+  },
+
+  "Orange___Haunglongbing_(Citrus_greening)": {
+    "disease_id": "orange_citrus_greening",
+    "healthy": false,
+    "symptoms_en": "Asymmetric yellowing (blotchy mottle) of leaves; small lopsided bitter fruit; twig dieback; no chemical cure.",
+    "symptoms_ta": "இலைகளில் ஒரு பக்கமாக மஞ்சளடித்தல்; சிறிய கசப்பான வளையற்ற பழங்கள்; கிளை இறப்பு; குணப்படுத்த முடியாத நோய்.",
+    "modern": {
+      "chemical": "No curative treatment. Control psyllid vector with Imidacloprid 17.8% SL",
+      "dosage": "Imidacloprid 0.3ml/L; spray to control Asian citrus psyllid. Remove and destroy infected trees.",
+      "cost_per_acre": 300,
+      "supply_note": "Mandatory removal of infected trees. Plant certified disease-free nursery stock only."
+    },
+    "indigenous": {
+      "name": "Sticky yellow traps + neem spray",
+      "method": "Place yellow sticky traps 1 per tree. Spray neem oil 5ml/L to repel psyllid vectors. No cure possible.",
+      "preparation_ta": "மஞ்சள் ஒட்டும் பொறிகள் வைக்கவும். வேப்பெண்ணெய் 5மிலி/லிட்டர் தெளித்து வெள்ளை ஈ கட்டுப்படுத்தவும்."
+    }
+  },
+
+  "Peach___Bacterial_spot": {
+    "disease_id": "peach_bacterial_spot",
+    "healthy": false,
+    "symptoms_en": "Small water-soaked spots on leaves becoming brown with purple halo; cracking and deformity of fruit surface.",
+    "symptoms_ta": "இலைகளில் சிறிய நீர் ஊறிய புள்ளிகள் பின் ஊதா வட்டத்துடன் பழுப்பாகும்; பழ மேற்பரப்பு வெடித்து சிதைவு.",
+    "modern": {
+      "chemical": "Copper hydroxide 77% WG or Oxytetracycline",
+      "dosage": "Copper hydroxide 3g/L; spray at petal fall and repeat every 10 days",
+      "cost_per_acre": 220,
+      "supply_note": "Avoid overhead irrigation. Use resistant varieties. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Copper sulphate spray",
+      "method": "Dissolve 5g copper sulphate in 5L water. Spray on leaves monthly during growing season as preventive.",
+      "preparation_ta": "காப்பர் சல்பேட் 5கி 5 லிட்டர் நீரில் கரைத்து மாதம் ஒருமுறை தடுப்பு நடவடிக்கையாக தெளிக்கவும்."
+    }
+  },
+
+  "Peach___healthy": {
+    "disease_id": "peach_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Pepper,_bell___Bacterial_spot": {
+    "disease_id": "pepper_bacterial_spot",
+    "healthy": false,
+    "symptoms_en": "Small water-soaked spots on leaves turning brown with yellow margin; spot-like lesions on fruit surface.",
+    "symptoms_ta": "இலைகளில் நீர் ஊறிய புள்ளிகள் மஞ்சள் விளிம்புடன் பழுப்பாகும்; பழத்தில் புண்கள்.",
+    "modern": {
+      "chemical": "Copper hydroxide 77% WG or Copper oxychloride 50% WP",
+      "dosage": "3g per litre water; spray every 7–10 days. Avoid applying in hot afternoon.",
+      "cost_per_acre": 180,
+      "supply_note": "Avoid leaf wetness. Do not use overhead sprinklers. Available at district agri shops."
+    },
+    "indigenous": {
+      "name": "Garlic extract spray",
+      "method": "Blend 50g garlic in 500ml water. Filter and dilute to 5L. Spray weekly on foliage for antibacterial effect.",
+      "preparation_ta": "50கி பூண்டு 500மிலி நீரில் அரைத்து வடிகட்டி 5 லிட்டராக நீர்த்து வாரம் தெளிக்கவும்."
+    }
+  },
+
+  "Pepper,_bell___healthy": {
+    "disease_id": "pepper_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Potato___Early_blight": {
+    "disease_id": "potato_early_blight",
+    "healthy": false,
+    "symptoms_en": "Brown concentric ring spots (target-board pattern) on older lower leaves; premature defoliation; small tubers.",
+    "symptoms_ta": "பழைய கீழ் இலைகளில் பழுப்பு வட்ட வரிகளுடன் (இலக்கு பலகை வடிவம்) புள்ளிகள்; அகால இலை உதிர்வு; கிழங்கு சிறுத்தல்.",
+    "modern": {
+      "chemical": "Mancozeb 75% WP or Chlorothalonil 75% WP",
+      "dosage": "2g per litre; spray every 7–10 days from early vegetative stage",
+      "cost_per_acre": 150,
+      "supply_note": "Available at agri input shops. Begin spray before symptoms appear in humid weather."
+    },
+    "indigenous": {
+      "name": "Neem seed kernel extract (NSKE)",
+      "method": "Filter 500g NSKE soaked in 10L water. Dilute 1:10 and spray weekly on leaves.",
+      "preparation_ta": "வேப்பம் விதை பருப்பு 500கி 10 லிட்டரில் ஊற வைத்து வடிகட்டி 1:10 நீர்த்து வாரம் தெளிக்கவும்."
+    }
+  },
+
+  "Potato___Late_blight": {
+    "disease_id": "potato_late_blight",
+    "healthy": false,
+    "symptoms_en": "Large water-soaked dark green to brown spots on leaves; white fluffy mycelium on underside in humid conditions; tuber rot.",
+    "symptoms_ta": "இலைகளில் பெரிய நீர் ஊறிய கருப்பு-பழுப்பு புள்ளிகள்; ஈரப்பதத்தில் கீழ்ப்பரப்பில் வெள்ளை பூஞ்சாண மூடிகை; கிழங்கு அழுகல்.",
+    "modern": {
+      "chemical": "Metalaxyl 8% + Mancozeb 64% WP (Ridomil Gold) or Cymoxanil 8% + Mancozeb 64% WP",
+      "dosage": "2.5g per litre; spray every 7 days especially during cool humid weather",
+      "cost_per_acre": 280,
+      "supply_note": "Act fast — late blight spreads rapidly. Available at district agri input shops."
+    },
+    "indigenous": {
+      "name": "Bordeaux mixture",
+      "method": "Prepare 1% Bordeaux mixture. Spray every 7 days as preventive measure especially in rainy season.",
+      "preparation_ta": "1% போர்டோ கலவை (10கி காப்பர் சல்பேட் + 10கி சுண்ணாம்பு/லிட்டர்) 7 நாளுக்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Potato___healthy": {
+    "disease_id": "potato_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Raspberry___healthy": {
+    "disease_id": "raspberry_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Rice___Leaf_scald": {
+    "disease_id": "rice_leaf_scald",
+    "healthy": false,
+    "symptoms_en": "Light brown to grey water-soaked lesions on leaf tips that dry out; chevron or herringbone banding on leaf blade.",
+    "symptoms_ta": "இலை நுனியில் வெளிர் பழுப்பு-சாம்பல் நீர் ஊறிய புண்கள் உலரும்; இலை மேற்பரப்பில் V-வடிவ கோடுகள்.",
+    "modern": {
+      "chemical": "Propiconazole 25% EC or Hexaconazole 5% EC",
+      "dosage": "Propiconazole 1ml/L or Hexaconazole 2ml/L; spray at first symptom appearance",
+      "cost_per_acre": 190,
+      "supply_note": "Available at district agri input shops. TNAU recommends balanced potassium nutrition to reduce severity."
+    },
+    "indigenous": {
+      "name": "Pseudomonas fluorescens + potash spray",
+      "method": "Spray Pseudomonas fluorescens 5g/L at 30 days after transplanting. Apply potassium chloride 10g/L as foliar.",
+      "preparation_ta": "சூடோமோனாஸ் 5கி/லிட்டர் நடவுக்கு 30 நாள் பிறகு தெளிக்கவும். பொட்டாசியம் குளோரைடு 10கி/லிட்டர் இலை தெளிப்பாக இடவும்."
+    }
+  },
+
+  "Soybean___healthy": {
+    "disease_id": "soybean_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Squash___Powdery_mildew": {
+    "disease_id": "squash_powdery_mildew",
+    "healthy": false,
+    "symptoms_en": "White powdery patches on upper leaf surface; leaves yellow and wither; powdery growth on stems and petioles.",
+    "symptoms_ta": "இலை மேற்பரப்பில் வெள்ளை பொடி திட்டுகள்; இலைகள் மஞ்சளாகி வாடுதல்; தண்டுகளிலும் பொடி வளர்ச்சி.",
+    "modern": {
+      "chemical": "Sulfur 80% WG or Hexaconazole 5% EC",
+      "dosage": "Sulfur 2.5g/L or Hexaconazole 1ml/L; spray every 10–14 days",
+      "cost_per_acre": 140,
+      "supply_note": "Do not apply sulfur above 35°C. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Baking soda + neem oil spray",
+      "method": "Mix 5g baking soda + 5ml neem oil + 2ml soap in 1L water. Spray weekly on leaf surfaces.",
+      "preparation_ta": "5கி சோடா + 5மிலி வேப்பெண்ணெய் + 2மிலி சோப்பு 1 லிட்டர் நீரில் கலந்து வாரம் தெளிக்கவும்."
+    }
+  },
+
+  "Strawberry___Leaf_scorch": {
+    "disease_id": "strawberry_leaf_scorch",
+    "healthy": false,
+    "symptoms_en": "Irregular purple to reddish-brown spots on leaf surface; spots enlarge; leaf edge scorches and dries; reduced yield.",
+    "symptoms_ta": "இலை மேற்பரப்பில் ஒழுங்கற்ற ஊதா-பழுப்பு புள்ளிகள்; புள்ளிகள் வளர்ந்து இலை விளிம்பு கருகுதல்; மகசூல் குறைவு.",
+    "modern": {
+      "chemical": "Captan 50% WP or Myclobutanil 9.3% EW",
+      "dosage": "2g Captan or 1ml Myclobutanil per litre; spray every 10–14 days during growing season",
+      "cost_per_acre": 170,
+      "supply_note": "Remove old infected leaves. Avoid overhead irrigation. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Neem oil spray",
+      "method": "Mix 5ml neem oil + 2ml soap in 1L water. Spray weekly on both leaf surfaces as preventive measure.",
+      "preparation_ta": "வேப்பெண்ணெய் 5மிலி + சோப்பு 2மிலி 1 லிட்டர் நீரில் கலந்து வாரம் இலை இருபுறமும் தெளிக்கவும்."
+    }
+  },
+
+  "Strawberry___healthy": {
+    "disease_id": "strawberry_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  },
+
+  "Sugarcane___Mosaic": {
+    "disease_id": "sugarcane_mosaic",
+    "healthy": false,
+    "symptoms_en": "Mosaic pattern of green and yellow stripes on young leaves; stunted growth; no chemical cure — remove and destroy infected plants.",
+    "symptoms_ta": "இளம் இலைகளில் பச்சை மற்றும் மஞ்சள் கோடுகளால் மொசைக் வடிவம்; வளர்ச்சி தடை; நோயுற்ற தாவரங்களை நீக்கி அழிக்கவும்.",
+    "modern": {
+      "chemical": "No chemical cure. Spray Imidacloprid 17.8% SL to control aphid vector",
+      "dosage": "Imidacloprid 0.3ml/L; spray to control aphid and leafhopper vectors spreading the virus",
+      "cost_per_acre": 200,
+      "supply_note": "Use virus-free certified seed setts. Remove infected ratoons immediately."
+    },
+    "indigenous": {
+      "name": "Yellow sticky traps + neem spray",
+      "method": "Place yellow sticky traps 1 per 10m to capture aphids. Spray neem oil 5ml/L weekly to repel vectors.",
+      "preparation_ta": "மஞ்சள் ஒட்டும் பொறிகள் 10மீ-க்கு 1 வைக்கவும். வேப்பெண்ணெய் 5மிலி/லிட்டர் தெளித்து பூச்சிகளை விரட்டவும்."
+    }
+  },
+
+  "Tomato___Bacterial_spot": {
+    "disease_id": "tomato_bacterial_spot",
+    "healthy": false,
+    "symptoms_en": "Small water-soaked spots on leaves turning brown with yellow halo; raised scab-like spots on fruit; defoliation.",
+    "symptoms_ta": "இலைகளில் நீர் ஊறிய சிறு புள்ளிகள் மஞ்சள் வட்டத்துடன் பழுப்பாகும்; பழத்தில் கரடுமுரடான புண்கள்; இலை உதிர்வு.",
+    "modern": {
+      "chemical": "Copper oxychloride 50% WP or Copper hydroxide 77% WG",
+      "dosage": "3g copper oxychloride or 2g copper hydroxide per litre; spray every 7–10 days",
+      "cost_per_acre": 180,
+      "supply_note": "Avoid overhead irrigation. Use drip if possible. Available at district agri input shops."
+    },
+    "indigenous": {
+      "name": "Garlic extract spray",
+      "method": "Blend 100g garlic in 1L water. Filter and dilute to 10L. Spray every 5 days on foliage.",
+      "preparation_ta": "100கி பூண்டு 1 லிட்டர் நீரில் அரைத்து வடிகட்டி 10 லிட்டராக நீர்த்து 5 நாட்களுக்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Early_blight": {
+    "disease_id": "tomato_early_blight",
+    "healthy": false,
+    "symptoms_en": "Brown spots with concentric rings (target pattern) on lower older leaves; yellow halo around spots; fruit stem rot.",
+    "symptoms_ta": "கீழ் பழைய இலைகளில் வட்ட வரிகளுடன் (இலக்கு வடிவம்) பழுப்பு புள்ளிகள்; புள்ளி சுற்றி மஞ்சள் வட்டம்; பழ காம்பு அழுகல்.",
+    "modern": {
+      "chemical": "Mancozeb 75% WP or Chlorothalonil 75% WP",
+      "dosage": "2g per litre; spray every 7–10 days from early vegetative stage",
+      "cost_per_acre": 160,
+      "supply_note": "TNAU recommends removing lower infected leaves. Available at district agri shops."
+    },
+    "indigenous": {
+      "name": "Neem oil spray",
+      "method": "Mix 5ml neem oil + 2ml liquid soap in 1L water. Spray on affected leaves every 7 days.",
+      "preparation_ta": "வேப்பெண்ணெய் 5மிலி + சோப்பு 2மிலி 1 லிட்டர் நீரில் கலந்து 7 நாட்களுக்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Late_blight": {
+    "disease_id": "tomato_late_blight",
+    "healthy": false,
+    "symptoms_en": "Large dark brown water-soaked patches on leaves; white mould on lower leaf surface in humid conditions; firm brown fruit rot.",
+    "symptoms_ta": "இலைகளில் பெரிய கருப்பு-பழுப்பு நீர் ஊறிய திட்டுகள்; ஈரப்பதத்தில் கீழ்ப்பரப்பில் வெள்ளை பூஞ்சை; பழத்தில் திட்டமான பழுப்பு அழுகல்.",
+    "modern": {
+      "chemical": "Metalaxyl 8% + Mancozeb 64% WP (Ridomil Gold) or Cymoxanil 8% + Mancozeb 64% WP",
+      "dosage": "2.5g per litre; spray every 7 days in humid/rainy weather",
+      "cost_per_acre": 270,
+      "supply_note": "Act immediately on first symptom — spreads very fast. Available at district agri shops."
+    },
+    "indigenous": {
+      "name": "Bordeaux mixture",
+      "method": "1% Bordeaux mixture (10g copper sulphate + 10g lime per litre water). Spray every 7 days preventively.",
+      "preparation_ta": "1% போர்டோ கலவை (10கி காப்பர் சல்பேட் + 10கி சுண்ணாம்பு/லிட்டர்) 7 நாளுக்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Leaf_Mold": {
+    "disease_id": "tomato_leaf_mold",
+    "healthy": false,
+    "symptoms_en": "Yellow spots on upper leaf surface; olive-green to brown velvety mould on lower surface; leaves curl upward and wither.",
+    "symptoms_ta": "இலை மேற்பரப்பில் மஞ்சள் புள்ளிகள்; கீழ்ப்பரப்பில் ஆலிவ்-பழுப்பு நிற வெல்வெட் பூஞ்சை; இலைகள் சுருட்டு மற்றும் வாட்டம்.",
+    "modern": {
+      "chemical": "Chlorothalonil 75% WP or Copper oxychloride 50% WP",
+      "dosage": "2g Chlorothalonil or 3g Copper oxychloride per litre; spray every 10 days",
+      "cost_per_acre": 170,
+      "supply_note": "Reduce greenhouse humidity. Increase ventilation. Available at agri input shops."
+    },
+    "indigenous": {
+      "name": "Baking soda spray",
+      "method": "Dissolve 5g baking soda + 2ml soap in 1L water. Spray on leaf undersides weekly.",
+      "preparation_ta": "5கி சோடா + 2மிலி சோப்பு 1 லிட்டர் நீரில் கரைத்து இலை அடிப்பரப்பில் வாரம் தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Septoria_leaf_spot": {
+    "disease_id": "tomato_septoria_leaf_spot",
+    "healthy": false,
+    "symptoms_en": "Circular spots with white/grey centre and dark border on lower older leaves; tiny black dots in centre; severe defoliation.",
+    "symptoms_ta": "கீழ் பழைய இலைகளில் வெள்ளை/சாம்பல் நடுவும் கருப்பு விளிம்பும் உடைய வட்டுப் புள்ளிகள்; கடும் இலை உதிர்வு.",
+    "modern": {
+      "chemical": "Chlorothalonil 75% WP or Mancozeb 75% WP",
+      "dosage": "2g per litre; first spray at transplanting, repeat every 10–14 days",
+      "cost_per_acre": 160,
+      "supply_note": "Remove lower infected leaves. Mulch soil to prevent spore splash. Available at agri shops."
+    },
+    "indigenous": {
+      "name": "Neem seed kernel extract (NSKE)",
+      "method": "Soak 500g NSKE in 10L water overnight. Filter and spray at 1:10 dilution every 10 days.",
+      "preparation_ta": "வேப்பம் விதை பருப்பு 500கி 10 லிட்டரில் ஊற வைத்து வடிகட்டி 1:10 நீர்த்து 10 நாட்களுக்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Spider_mites Two-spotted_spider_mite": {
+    "disease_id": "tomato_spider_mites",
+    "healthy": false,
+    "symptoms_en": "Tiny yellow stippling on upper leaf surface; fine webbing on underside; bronze/silvery sheen; leaf drop in severe infestation.",
+    "symptoms_ta": "இலை மேற்பரப்பில் சிறிய மஞ்சள் புள்ளிகள்; கீழ்ப்பரப்பில் மெல்லிய வலை; வெண்கல/வெள்ளி நிறம்; கடும் தாக்குதலில் இலை உதிர்வு.",
+    "modern": {
+      "chemical": "Abamectin 1.9% EC or Spiromesifen 22.9% SC (miticide)",
+      "dosage": "Abamectin 0.5ml/L or Spiromesifen 1ml/L; spray under leaf surface. Rotate chemicals.",
+      "cost_per_acre": 250,
+      "supply_note": "Spray undersides of leaves — mites live there. Available at district agri input shops."
+    },
+    "indigenous": {
+      "name": "Neem oil + soap spray (mite repellent)",
+      "method": "Mix 10ml neem oil + 3ml soap in 1L water. Spray undersides of leaves every 5 days. Suffocates mites.",
+      "preparation_ta": "வேப்பெண்ணெய் 10மிலி + சோப்பு 3மிலி 1 லிட்டர் நீரில் கலந்து இலை கீழ்ப்பரப்பில் 5 நாட்களுக்கு ஒருமுறை தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Target_Spot": {
+    "disease_id": "tomato_target_spot",
+    "healthy": false,
+    "symptoms_en": "Brown spots with concentric rings and yellow halo on leaves and stems; sunken brown lesions on fruit surface.",
+    "symptoms_ta": "இலைகள் மற்றும் தண்டுகளில் மஞ்சள் வட்டத்துடன் பழுப்பு வட்ட வரி புள்ளிகள்; பழத்தில் சன்ன பழுப்பு புண்கள்.",
+    "modern": {
+      "chemical": "Azoxystrobin 23% SC or Chlorothalonil 75% WP",
+      "dosage": "Azoxystrobin 1ml/L or Chlorothalonil 2g/L; spray every 10 days",
+      "cost_per_acre": 210,
+      "supply_note": "Ensure good canopy aeration. Available at district agri input shops."
+    },
+    "indigenous": {
+      "name": "Trichoderma viride spray",
+      "method": "Mix Trichoderma viride 5g per litre water. Spray on foliage every 15 days as biocontrol measure.",
+      "preparation_ta": "டிரைக்கோடர்மா விரிடே 5கி/லிட்டர் நீரில் கலந்து 15 நாட்களுக்கு ஒருமுறை இலைகளில் தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+    "disease_id": "tomato_yellow_leaf_curl_virus",
+    "healthy": false,
+    "symptoms_en": "Leaves curl upward with yellow margins; severely stunted plant; flowers drop; no chemical cure — control whitefly vector.",
+    "symptoms_ta": "இலைகள் மேல்நோக்கி சுருண்டு மஞ்சள் விளிம்பு; செடி வளர்ச்சி தடை; பூ உதிர்வு; குணப்படுத்த முடியாது — வெள்ளை ஈ கட்டுப்படுத்தவும்.",
+    "modern": {
+      "chemical": "No viral cure. Control whitefly with Imidacloprid 17.8% SL or Thiamethoxam 25% WG",
+      "dosage": "Imidacloprid 0.3ml/L or Thiamethoxam 0.3g/L; spray at 10-day intervals from transplanting",
+      "cost_per_acre": 220,
+      "supply_note": "Use yellow sticky traps. Plant virus-resistant varieties. Remove infected plants."
+    },
+    "indigenous": {
+      "name": "Yellow sticky traps + neem spray",
+      "method": "Place 10 yellow sticky traps per acre. Spray neem oil 5ml/L weekly to repel whitefly. Remove infected plants.",
+      "preparation_ta": "ஏக்கருக்கு 10 மஞ்சள் ஒட்டும் பொறிகள் வைக்கவும். வேப்பெண்ணெய் 5மிலி/லிட்டர் வாரம் தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___Tomato_mosaic_virus": {
+    "disease_id": "tomato_mosaic_virus",
+    "healthy": false,
+    "symptoms_en": "Mosaic pattern of light and dark green on leaves; leaf distortion; stunted growth; no chemical cure — sanitation critical.",
+    "symptoms_ta": "இலைகளில் வெளிர் மற்றும் கருமை பச்சை மொசைக் வடிவம்; இலை சிதைவு; வளர்ச்சி தடை; குணப்படுத்த முடியாது.",
+    "modern": {
+      "chemical": "No chemical cure. Control aphid/thrips vector with Imidacloprid 17.8% SL",
+      "dosage": "Imidacloprid 0.3ml/L; spray to control aphid vectors. Use resistant varieties.",
+      "cost_per_acre": 200,
+      "supply_note": "Wash hands and tools with soap before handling plants. Remove infected plants immediately."
+    },
+    "indigenous": {
+      "name": "Milk + soap tool disinfection + neem spray",
+      "method": "Dip tools in 1:9 milk-water solution to inactivate virus. Spray neem oil 5ml/L to repel aphid vectors.",
+      "preparation_ta": "கருவிகளை 1:9 பால்-நீர் கரைசலில் முக்கி கிருமி நீக்கவும். வேப்பெண்ணெய் 5மிலி/லிட்டர் பூச்சி விரட்ட தெளிக்கவும்."
+    }
+  },
+
+  "Tomato___healthy": {
+    "disease_id": "tomato_healthy",
+    "healthy": true,
+    "symptoms_en": "No disease detected. Crop appears healthy.",
+    "symptoms_ta": "நோய் எதுவும் இல்லை. பயிர் ஆரோக்கியமாக உள்ளது.",
+    "modern": null,
+    "indigenous": null
+  }
+}

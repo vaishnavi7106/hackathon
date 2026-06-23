@@ -1,0 +1,161 @@
+﻿Pillar 5
+Real-Time Pest & Disease Outbreak Alert
+Individual farmers can only see disease on their own land. By the time a visible outbreak spreads across a district, the window for preventive action has closed. Pillar 5 turns every Crop Sentinel diagnosis into a collective early-warning signal — detecting disease clusters across farms in real time, alerting farmers before symptoms appear on their land, and escalating critical outbreaks directly to the Tamil Nadu Agriculture Department.
+Problem Being Solved
+No early warning system: disease outbreaks spread farm to farm with no coordinated alert — farmers learn from neighbours days or weeks after the optimal treatment window
+Individual blind spot: a single farmer's diagnosis is just data; 10 diagnoses within 10 km in 7 days is an outbreak — but no existing tool connects these dots
+Government detection lag: TN Agriculture Department identifies district-level outbreaks 3–4 weeks after onset through manual field surveys — far too slow for intervention
+Preventive treatment is 5x cheaper than curative: a farmer who sprays neem oil 5 days before symptoms appear saves 80% of the crop loss vs. one who waits to see visible damage
+Estimated avoidable crop loss from late outbreak response: 10–15% of annual yield for affected crops
+System Architecture
+Pillar 5 is built entirely on top of existing Pillar 1 infrastructure — no new data collection, no new ML model. Every Crop Sentinel diagnosis already runs; Pillar 5 geo-tags those results and adds a detection layer on top.
+Farmer photo diagnosis (Pillar 1 Crop Sentinel)
+↓
+PostGIS geo-tagged disease log (disease_reports table)
+↓
+Outbreak Detection Engine — runs every 6 hours via APScheduler
+↓
+FCM Push Notifications to farmers within 10 km radius
+↓
+Live Outbreak Map (Leaflet.js) + TN Agri Dept Webhook (HIGH/CRITICAL only)
+Database Schema
+Two new tables extend the existing PostgreSQL database. One change to the /diagnose endpoint — insert a geo-tagged row after every inference — is the only modification to existing Pillars.
+Table
+Key Fields
+Purpose
+disease_reports
+farmer_id, disease_class, confidence, location (PostGIS POINT), reported_at, crop_type, is_confirmed
+Stores every Crop Sentinel result with GPS coordinates. Confidence threshold >70% required for outbreak eligibility. is_confirmed flag lets TN Agri Dept validate or reject reports.
+outbreak_alerts
+disease_class, center_location, radius_km, report_count, severity, detected_at, alert_sent, affected_reports[]
+One row per detected outbreak cluster. severity computed from report_count (LOW: 3+, MEDIUM: 6+, HIGH: 10+, CRITICAL: 20+). affected_reports stores UUID array of contributing disease_report IDs.
+A PostGIS spatial index on disease_reports.location enables sub-10ms radius queries even at 100,000+ rows — critical for the detection engine to run quickly across all active disease types simultaneously.
+Outbreak Detection Engine — The Key Innovation
+The detection engine runs as a background cron job every 6 hours via APScheduler, embedded in the existing FastAPI application — no separate service required. For each disease type reported in the last 7 days, it uses PostGIS ST_DWithin to count how many reports of the same disease fall within 10 km of each anchor point. When 3 or more reports cluster within that radius and time window, an outbreak is declared.
+Parameter
+Value & Rationale
+Cluster threshold
+3 reports minimum — below this, coincidence is more likely than an outbreak. Adjustable per disease type in config.
+Radius
+10 km — matches typical spore dispersal range for fungal diseases and insect pest flight range for most Tamil Nadu crops.
+Lookback window
+7 days — captures fast-moving outbreaks while filtering old resolved infections from triggering false re-alerts.
+Confidence filter
+Only reports with >70% model confidence enter the clustering algorithm. Low-confidence diagnoses are stored but excluded from outbreak detection.
+Deduplication
+Before creating a new outbreak, the engine checks if an alert for the same disease already exists within 10 km in the last 24 hours — prevents duplicate notifications for the same event.
+Run frequency
+Every 6 hours — balances detection speed against database query load. Can be reduced to 1 hour with Redis caching layer.
+Severity Classification
+Severity
+Report Count Threshold
+Response Triggered
+LOW
+3 – 5 reports
+In-app banner alert to farmers within 10 km radius
+MEDIUM
+6 – 9 reports
+Push notification + in-app banner to all farmers within radius
+HIGH
+10 – 19 reports
+Push notification + banner + webhook to TN Agriculture Department district office
+CRITICAL
+20+ reports
+All above + SMS alert via Twilio to district Agricultural Officer + escalation to state HQ
+Push Notification System
+Firebase Cloud Messaging (FCM) is used for push delivery — free tier is sufficient for hackathon scale, works natively with React PWA via Service Workers, and supports Android, iOS, and desktop browsers with a single integration. FCM tokens are collected once during farmer onboarding and stored in the farmers table.
+Farmers receive alerts only if both conditions are true: (1) they are within 10 km of the outbreak centroid, AND (2) they grow the affected crop type. A rice disease outbreak does not alert sugarcane farmers in the same area — this precision prevents alert fatigue.
+Notification Content — Tamil First
+Field
+Content
+Title
+🚨 நோய் எச்சரிக்கை — நெல் பாக்டீரியல் இலை கருக்கல் (Disease name in Tamil, severity icon)
+Body
+"உங்கள் பகுதியில் 7 விவசாயிகள் இதே நோயை நெல்-ல் கண்டறிந்துள்ளனர். உடனடியாக உங்கள் பயிரை சரிபார்க்கவும்." (X farmers in your area have detected this disease in [crop]. Check your crop immediately.)
+Deep link
+Tap opens directly to Crop Sentinel camera — one tap from alert to diagnosis
+Data payload
+outbreak_id, disease_class, severity — used by PWA to display in-app banner with full details even if notification is tapped while app is open
+Live Outbreak Map — The Visual Centrepiece
+The Outbreak Map is the single most compelling demo element for judges. Built with Leaflet.js in the React PWA, it shows Tamil Nadu with colour-coded circles representing active outbreak clusters — updated every 5 minutes from the /api/outbreaks/active endpoint.
+Visual Element
+What It Shows
+Judge Impact
+Colour-coded circles
+Yellow / Orange / Red / Dark Red circles per severity, 10 km radius, on OSM map tiles
+Immediately communicates scale and urgency without any explanation needed
+Live dot appears on new diagnosis
+Within seconds of a farmer submitting a photo, a new marker appears on the map
+Real-time demo moment — most memorable part of the presentation
+Popup on click
+Disease name in Tamil + English, report count, severity, date first detected
+Shows depth — this is real structured data, not a mock graphic
+TN Agri Dept badge
+"Reported to Agriculture Department ✅" badge on HIGH/CRITICAL outbreaks
+Demonstrates government integration and systemic impact beyond individual farmers
+Tamil Nadu Agriculture Department Integration
+For HIGH and CRITICAL outbreaks only, Uzhavar AI fires a webhook to the TN Agriculture Department's reporting system. The payload includes disease type, GPS centroid, affected district, farmer count, severity, and a direct link to the Uzhavar AI outbreak dashboard for that event. Non-blocking implementation — if the government API is unavailable, the failure is logged silently without affecting the farmer-facing alert flow.
+For the hackathon demo: if the live TN Agri API endpoint is unavailable, a mock webhook log in the admin dashboard shows a real-time scrolling feed — "✅ Outbreak report dispatched to TN Agriculture Department, Thanjavur District — July 10, 2025, 06:00 AM" — which communicates the integration story clearly to judges without requiring a live government API connection.
+In-App Alert Banner
+When a farmer opens Uzhavar AI and an active outbreak exists within 10 km of their registered location, a full-width alert banner appears at the top of the home screen before any other content. The banner is colour-coded by severity, shows the disease name in Tamil, the number of affected farmers, and contains a single call-to-action button that opens the Crop Sentinel camera directly. Farmers who dismiss the banner can retrieve it from a Notifications tab.
+Output Specification
+Every outbreak event generates the following outputs across channels:
+Output
+Description
+FCM push notification
+Tamil-language push to all farmers within 10 km who grow the affected crop. Severity icon in title. Deep link to Crop Sentinel camera.
+In-app alert banner
+Colour-coded (LOW = yellow, MEDIUM = orange, HIGH = red, CRITICAL = dark red). Shown on home screen open. Dismissible.
+Outbreak Map update
+New circle rendered within 5 minutes on the live map. Popup shows disease, count, severity, and first-detected date.
+TN Agri Dept webhook
+Structured JSON payload with disease, GPS, district, farmer count, severity, and dashboard link. HIGH and CRITICAL outbreaks only.
+SMS escalation (CRITICAL only)
+Twilio SMS to district Agricultural Officer mobile number. Tamil message with disease name, village cluster, and farmer count.
+Data Sources
+Crop Sentinel diagnoses (Pillar 1) — primary data source; every diagnosis from every farmer feeds this system automatically with zero additional farmer effort
+Farmer GPS location — collected once at onboarding (district + village); refined with device GPS on each app open for accurate radius matching
+PostGIS / PostgreSQL — spatial clustering engine; ST_DWithin enables radius queries in milliseconds at scale
+Firebase Cloud Messaging (FCM) — push notification delivery; free tier supports up to 1 million messages/month
+IMD weather data (Pillar 2) — cross-referenced to flag whether outbreak conditions correlate with recent rainfall or humidity spikes, adding agronomic context to alerts
+Tamil Nadu Agriculture Department disease calendars — used to set seasonal sensitivity thresholds (lower cluster threshold during peak disease seasons)
+Implementation Steps
+Add PostGIS extension to existing PostgreSQL instance — single SQL command; no infrastructure change required
+Create disease_reports and outbreak_alerts tables with spatial indexes — schema append, does not modify existing tables
+Add geo-tag insert to /diagnose endpoint — one additional database write after existing ML inference; adds <5ms latency
+Build outbreak_engine.py — APScheduler cron, ST_DWithin clustering logic, severity computation, deduplication check
+Register FCM in Firebase Console — generate VAPID key; add Service Worker registration to React PWA (one-time setup, ~2 hours)
+Build send_outbreak_alerts() function — FCM MulticastMessage, crop-type filter, Tamil notification text, mark alert_sent in DB
+Build /api/outbreaks/active GET endpoint — returns active outbreak records with lat/lng for map rendering
+Integrate Leaflet.js map in React PWA — OutbreakMap component, Circle layers, colour-coded by severity, 5-minute polling
+Build OutbreakBanner component — home screen alert, severity colour, Tamil text, deep link to Crop Sentinel camera
+Implement TN Agri Dept webhook — httpx POST, non-blocking, HIGH/CRITICAL filter, mock log for demo fallback
+Add Twilio SMS for CRITICAL severity — single API call, district Agricultural Officer phone number from config
+Pillar 5 — Success Metrics
+Metric
+Target
+Measurement Method
+Outbreak detection latency
+< 6 hours from 3rd report
+Timestamp diff: 3rd report → outbreak_alerts row created
+False positive rate
+< 10% of alerts
+Agronomist review of 20 triggered alerts in pilot; mark incorrect ones
+Push notification delivery rate
+> 90% of targeted farmers
+FCM delivery receipts vs. farmer count in radius
+Alert-to-diagnosis conversion
+> 40% of alerted farmers open Crop Sentinel within 24 hours
+Event tracking: notification tap → /diagnose API call
+Map render latency
+< 500ms for full Tamil Nadu map load
+Browser DevTools Network panel — time to interactive
+TN Agri Dept webhook success rate
+> 95% delivery on HIGH/CRITICAL outbreaks
+Webhook response log; retry queue for failures
+Preventive treatment adoption
+> 30% of alerted farmers apply preventive treatment (pilot)
+Farmer self-report via in-app follow-up survey 48 hours after alert
+Pillar 5 — Estimated Additional Impact: ₹3,000 – ₹8,000 per farmer per year
+Preventing one outbreak-level infection event through early warning adds directly to the ₹30,000–45,000 total gain.
+Zero marginal data collection cost — every benefit comes from Pillar 1 data already being collected.

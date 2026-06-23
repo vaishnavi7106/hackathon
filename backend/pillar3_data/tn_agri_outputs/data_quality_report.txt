@@ -1,0 +1,131 @@
+﻿=================================================================
+TAMIL NADU AGRICULTURAL MARKET DATA — QUALITY REPORT
+Generated : 2026-06-22 11:26:29
+=================================================================
+
+─── ROW COUNTS ───
+  Original rows              :  4,500,048
+  Dropped (missing keys)     :          0
+  Dropped (price issues)     :        414
+  Dropped (exact duplicates) :        376
+  Key duplicates (KEPT)      :      2,336  ← see potential_key_duplicates.csv
+  FINAL cleaned rows         :  4,499,258
+  Retention rate             : 99.98%
+
+─── COVERAGE ───
+  Districts                  : 36
+  Markets                    : 719
+  Commodities                : 141
+  Varieties                  : 211
+  Date range                 : 2022-01-01 → 2026-06-15
+
+─── KEY DUPLICATE ANALYSIS ───
+  Key duplicate groups       : 1,167
+  Key duplicate rows         : 2,336
+  (Key = Arrival_Date + District + Market + Commodity + Variety)
+  These are KEPT — may be multi-grade, multi-lot, or multi-auction.
+  Review potential_key_duplicates.csv to decide per-group.
+
+  Top 10 districts with most key duplicates:
+    Dharmapuri                  :    198 rows
+    Villupuram                  :    164 rows
+    Cuddalore                   :    164 rows
+    Thiruvarur                  :    162 rows
+    Perambalur                  :    130 rows
+    Krishnagiri                 :    126 rows
+    Pudukkottai                 :    124 rows
+    Theni                       :    106 rows
+    Thiruchirappalli            :    102 rows
+    Ariyalur                    :    100 rows
+
+  Top 10 commodities with most key duplicates:
+    Tomato                      :    106 rows
+    Beans                       :     91 rows
+    Bhindi(Ladies Finger)       :     86 rows
+    Onion                       :     78 rows
+    Green Avare (W)             :     77 rows
+    Brinjal                     :     76 rows
+    Green Chilli                :     74 rows
+    Onion Green                 :     74 rows
+    Raddish                     :     72 rows
+    Drumstick                   :     70 rows
+
+─── PRICE FLAGS ───
+  Rows with Min_Price = 0    :      4,048  (kept, flagged)
+  IQR outliers in export     :     13,420
+  is_outlier_iqr == True     :     13,420
+  Counts match               : YES ✓
+
+─── MISSING VALUES IN CLEANED DATA ───
+  All columns: 0 missing
+
+─── DISTRICT COVERAGE (by record count) ───
+  Salem                       :  399,014 rows  2022-01-03 → 2026-06-15  (109 commodities)
+  Thiruvannamalai             :  251,512 rows  2022-01-03 → 2026-06-15  (109 commodities)
+  Madurai                     :  234,329 rows  2022-01-01 → 2026-06-15  (95 commodities)
+  Vellore                     :  220,022 rows  2022-01-03 → 2026-06-15  (114 commodities)
+  Theni                       :  209,274 rows  2022-01-03 → 2026-06-15  (85 commodities)
+  Virudhunagar                :  193,800 rows  2023-06-01 → 2026-06-15  (86 commodities)
+  Namakkal                    :  192,212 rows  2022-01-03 → 2026-06-15  (109 commodities)
+  Thiruchirappalli            :  172,759 rows  2024-06-06 → 2026-06-15  (90 commodities)
+  Erode                       :  169,947 rows  2022-06-01 → 2026-06-15  (113 commodities)
+  Dharmapuri                  :  165,081 rows  2023-05-03 → 2026-06-15  (84 commodities)
+  Krishnagiri                 :  162,775 rows  2024-06-18 → 2026-06-15  (90 commodities)
+  Thiruvarur                  :  144,272 rows  2022-01-03 → 2026-06-15  (67 commodities)
+  Sivaganga                   :  135,344 rows  2024-06-18 → 2026-06-15  (64 commodities)
+  Pudukkottai                 :  128,807 rows  2023-10-31 → 2026-06-15  (78 commodities)
+  Thanjavur                   :  126,324 rows  2022-01-03 → 2026-06-15  (81 commodities)
+  Villupuram                  :  124,595 rows  2022-01-03 → 2026-06-15  (110 commodities)
+  Thirupur                    :  124,213 rows  2024-07-16 → 2026-06-15  (72 commodities)
+  Dindigul                    :  113,804 rows  2022-06-01 → 2026-06-15  (85 commodities)
+  Karur                       :  112,484 rows  2024-06-18 → 2026-06-15  (75 commodities)
+  Thirunelveli                :  112,384 rows  2024-06-18 → 2026-06-15  (77 commodities)
+  Cuddalore                   :  100,961 rows  2022-01-03 → 2026-06-15  (93 commodities)
+  Nagapattinam                :   93,820 rows  2022-01-03 → 2026-06-15  (71 commodities)
+  Nilgiris                    :   92,596 rows  2024-07-16 → 2026-06-15  (64 commodities)
+  Kancheepuram                :   82,914 rows  2022-01-03 → 2026-06-15  (83 commodities)
+  Ranipet                     :   71,829 rows  2024-07-16 → 2026-06-15  (86 commodities)
+  Tuticorin                   :   66,045 rows  2024-06-18 → 2026-06-15  (77 commodities)
+  Thiruvellore                :   65,193 rows  2022-09-23 → 2026-06-15  (67 commodities)
+  Kallakuruchi                :   64,423 rows  2024-07-16 → 2026-06-15  (82 commodities)
+  Thirupathur                 :   57,516 rows  2024-07-16 → 2026-06-15  (74 commodities)
+  Ramanathapuram              :   57,359 rows  2022-04-05 → 2026-06-15  (65 commodities)
+  Tenkasi                     :   52,677 rows  2024-07-16 → 2026-06-15  (68 commodities)
+  Coimbatore                  :   49,998 rows  2022-01-01 → 2026-06-15  (87 commodities)
+  Kanyakumari                 :   45,618 rows  2022-01-04 → 2026-06-15  (68 commodities)
+  Ariyalur                    :   38,606 rows  2022-01-01 → 2026-06-15  (68 commodities)
+  Perambalur                  :   36,753 rows  2024-07-16 → 2026-06-15  (74 commodities)
+  Chengalpattu                :   29,998 rows  2024-07-16 → 2026-06-15  (76 commodities)
+
+─── TEXT STANDARDISATION NOTES ───
+  District, State     : str.title() — purely natural-language names
+  Commodity, Variety,
+  Grade, Market       : smart_title() — preserves all-caps codes
+    Preserved: ADT 37, RCH-2, MCU-7, HMT, LRA, TKM 9, NO 1, ...
+    Capitalised: green chilli→Green Chilli, api→Api, other→Other
+    Left alone: Green Chilli, Banana - Green (already correct)
+
+─── NOTES FOR FORECASTING ───
+  1. Data is NOT continuous — expect gaps per district/commodity.
+  2. 15 districts only have data from mid-2024 onwards.
+     Models on those districts need shorter lookback windows.
+  3. Flowers (Jasmine, Kakada, Tube Flower): legitimately ₹1L–₹8L/qtl.
+     Do NOT treat as errors. IQR is computed per-commodity.
+  4. is_outlier_iqr=True rows are KEPT in main dataset.
+     Review suspicious_outliers.csv before model training.
+  5. min_price_zero_flag=True: use Modal_Price only for those rows.
+  6. Price_Spread/_Pct are volatility proxies for model features.
+  7. Calendar columns encode Tamil Nadu's Kharif (Jun–Nov) and
+     Rabi (Dec–Mar) harvest seasonality.
+
+─── RECOMMENDED FORECASTING APPROACH ───
+  Query interface: (district, commodity, date_range)
+  Group by       : District + Commodity + Variety
+  Target variable: Modal_Price
+  Minimum rows   : ~30 per group before fitting any model
+  Suggested models:
+    • Prophet    — handles gaps + multi-seasonality natively
+    • LightGBM   — lag features, fast, handles tabular patterns
+    • SARIMA     — for commodities with clear seasonal cycles
+  For districts with <2 years data: prefer LightGBM over SARIMA.
+=================================================================
