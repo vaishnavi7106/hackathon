@@ -220,6 +220,29 @@ async def diagnose_crop(
                 ),
             )
 
+        if not g_is_healthy and not g_low_conf:
+            try:
+                from app.crud.notification import create_notification
+                _CROP_TA: dict[str, str] = {
+                    "rice": "நெல்", "tomato": "தக்காளி", "banana": "வாழை",
+                    "groundnut": "நிலக்கடலை", "sugarcane": "கரும்பு",
+                    "maize": "மக்காச்சோளம்", "onion": "வெங்காயம்",
+                    "potato": "உருளைக்கிழங்கு",
+                }
+                crop_label_en = crop or g_name_en
+                crop_label_ta = _CROP_TA.get((crop or "").lower(), crop_label_en)
+                await create_notification(
+                    db=db, farmer_id=farmer_id, type="disease",
+                    title_en=f"Disease detected on {crop_label_en}",
+                    title_ta=f"{crop_label_ta} இல் நோய் கண்டறியப்பட்டது",
+                    body_en=f"{g_name_en} detected. Tap to see treatment.",
+                    body_ta=f"{g_name_ta} கண்டறியப்பட்டது. சிகிச்சை பார்க்கவும்.",
+                    action_route="/crop-sentinel",
+                    action_params={"diagnosis_id": str(diag.diagnosis_id)},
+                )
+            except Exception:
+                pass
+
         return DiagnoseResponse(
             diagnosis_id=diag.diagnosis_id,
             disease=None if g_is_healthy else DiseaseOut(
@@ -383,6 +406,22 @@ async def diagnose_crop(
     treatment = _treatment_from_disease(disease) if disease else None
     confidence_level = "high" if confidence >= 0.85 else "medium"
     heatmap_url = f"/media/{diag.heatmap_key}" if diag.heatmap_key else None
+
+    try:
+        from app.crud.notification import create_notification
+        crop_label = crop or inference_result.get("name_en", "crop")
+        name_ta = inference_result.get("name_ta") or inference_result.get("name_en", "நோய்")
+        await create_notification(
+            db=db, farmer_id=farmer_id, type="disease",
+            title_en=f"Disease detected on {crop_label}",
+            title_ta=f"{crop_label} இல் நோய் கண்டறியப்பட்டது",
+            body_en=f"{inference_result.get('name_en', 'Disease')} detected. Tap to see treatment.",
+            body_ta=f"{name_ta} கண்டறியப்பட்டது. சிகிச்சை பார்க்கவும்.",
+            action_route="/crop-sentinel",
+            action_params={"diagnosis_id": str(diag.diagnosis_id)},
+        )
+    except Exception:
+        pass
 
     return DiagnoseResponse(
         diagnosis_id=diag.diagnosis_id,

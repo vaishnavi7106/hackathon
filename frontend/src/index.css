@@ -6,6 +6,7 @@
   html {
     font-family: 'Inter', 'Noto Sans Tamil', system-ui, sans-serif;
     -webkit-tap-highlight-color: transparent;
+    font-size: 112%;
   }
 
   body {
@@ -98,6 +99,11 @@
   .page-header {
     @apply sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-4 py-3;
   }
+}
+
+/* Global zoom — scales inline px values and all text */
+#root {
+  zoom: 1.12;
 }
 
 /* Tamil text line-height */

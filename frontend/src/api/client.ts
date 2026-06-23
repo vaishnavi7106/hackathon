@@ -53,6 +53,35 @@ async function request<T>(
   return res.json() as Promise<T>
 }
 
+async function requestWithToken<T>(
+  method: string,
+  path: string,
+  body: unknown,
+  overrideToken: string,
+): Promise<T> {
+  const headers: Record<string, string> = {
+    'Authorization': `Bearer ${overrideToken}`,
+    'Content-Type': 'application/json',
+  }
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers,
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    let errMsg = `HTTP ${res.status}`
+    let errTa: string | undefined
+    try {
+      const errBody: ApiErrorResponse = await res.json()
+      const detail = errBody.detail ?? errBody.error
+      if (typeof detail === 'string') errMsg = detail
+      else if (detail) { errMsg = detail.message ?? errMsg; errTa = detail.message_ta }
+    } catch { /* ignore */ }
+    throw new ApiError(res.status, errMsg, errTa)
+  }
+  return res.json() as Promise<T>
+}
+
 export const api = {
   get: <T>(path: string) => request<T>('GET', path),
   post: <T>(path: string, body?: unknown) => request<T>('POST', path, body),
@@ -60,4 +89,6 @@ export const api = {
   patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body),
   delete: <T>(path: string) => request<T>('DELETE', path),
   postForm: <T>(path: string, form: FormData) => request<T>('POST', path, form, true),
+  postWithToken: <T>(path: string, body: unknown, token: string) =>
+    requestWithToken<T>('POST', path, body, token),
 }

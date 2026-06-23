@@ -1,9 +1,25 @@
 import { api } from './client'
-import type { LoginRequest, RegisterRequest, TokenResponse } from '@/types/api'
+import type {
+  LoginRequest,
+  RegisterRequest,
+  SendOtpRequest,
+  SendOtpResponse,
+  TokenResponse,
+  VerifyOtpRequest,
+  VerifyOtpResponse,
+} from '@/types/api'
 
 export const authApi = {
-  register: (body: RegisterRequest) =>
-    api.post<TokenResponse>('/auth/register', body),
+  sendOtp: (body: SendOtpRequest) =>
+    api.post<SendOtpResponse>('/auth/send-otp', body),
+
+  verifyOtp: (body: VerifyOtpRequest) =>
+    api.post<VerifyOtpResponse>('/auth/verify-otp', body),
+
+  register: (body: RegisterRequest, registrationToken?: string) =>
+    registrationToken
+      ? api.postWithToken<TokenResponse>('/auth/register', body, registrationToken)
+      : api.post<TokenResponse>('/auth/register', body),
 
   login: (body: LoginRequest) =>
     api.post<TokenResponse>('/auth/login', body),

@@ -71,9 +71,12 @@ class Settings(BaseSettings):
     fcm_server_key: str = ""
     # TN Agriculture Dept webhook — set to real URL to enable
     tn_agri_webhook_url: str = ""
-    # Twilio (CRITICAL severity SMS) — set all three to enable
+    # Twilio — account credentials
     twilio_account_sid: str = ""
     twilio_auth_token: str = ""
+    # Twilio Verify service SID (VA...) — no "from" number needed
+    twilio_verify_service_sid: str = ""
+    # Legacy from-number (unused when Verify is configured)
     twilio_from_number: str = ""
     tn_agri_officer_phone: str = ""
 

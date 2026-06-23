@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { BottomNav } from './BottomNav'
+import { GlobalAssistant } from '@/components/GlobalAssistant'
 
 interface LayoutProps {
   title?: string
@@ -30,6 +31,7 @@ export function Layout({ title, showBack, rightAction }: LayoutProps) {
           <Outlet />
         </main>
         <BottomNav />
+        <GlobalAssistant />
       </div>
     </div>
   )

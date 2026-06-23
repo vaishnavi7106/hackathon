@@ -1,491 +1,136 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  Sun, Cloud, CloudRain, Droplets, Thermometer,
+  Sprout, FlaskConical, CheckCircle2, AlertCircle,
+  ChevronDown, ChevronUp, Info, Waves, Calendar,
+} from 'lucide-react'
 import { useProfileStore } from '@/store/profileStore'
 import { useDailyRecordStore } from '@/store/dailyRecordStore'
 import { useSoilStore } from '@/store/soilStore'
-import type { DailyRecord, FertilizerApplication } from '@/types/dailyRecord'
-
-// ---------------------------------------------------------------------------
-// i18n labels
-// ---------------------------------------------------------------------------
-
-const L = {
-  ta: {
-    title: 'இன்றைய வேலை',
-    soil_title: 'மண் பணி',
-    water_title: 'நீர் பணி',
-    loading: 'இன்றைய தரவு கணக்கிடுகிறது…',
-    retry: 'மீண்டும் முயற்சி',
-    no_profile: 'சுயவிவரம் அமைக்கவும்',
-    soil_none: 'இன்று உரம் தேவையில்லை',
-    soil_due: 'இன்று உரம் இட வேண்டும்!',
-    next: 'அடுத்தது:',
-    days_away: 'நாட்களில்',
-    why: 'ஏன் இன்று? ▼',
-    hide: 'மறை ▲',
-    tnau_split: 'TNAU CPG 2020 பிரித்து இடுவதன் அட்டவணை — நடவு / துரவு / கதிர் தோற்றம் நிலைகளில்',
-    bags: 'பை',
-    total: 'மொத்தம்',
-    confirm_fert: 'உரம் இட்டேன் ✓',
-    confirmed_fert: '✅ உரம் இட்டது உறுதி',
-    irrigate_heading: 'இந்த மாலை நீர் பாய்ச்சவும்',
-    skip_rain: 'மழை — நீர்பாசனம் தேவையில்லை',
-    skip_ok: 'ஈரம் போதுமானது — இன்று தேவையில்லை',
-    min: 'நிமிடம்',
-    crop_needs: 'பயிருக்கு தேவை',
-    rain: 'மழை',
-    est_cost: 'மதிப்பிட்ட செலவு ₹',
-    how_calc: 'கணக்கீடு எப்படி? ▼',
-    see_7day: '7 நாள் திட்டம் ▼',
-    soil_tab_link: 'மண் தாவலில் 7 நாள் திட்டம் காண →',
-    updated: 'புதுப்பிக்கப்பட்டது',
-    confirm_irr: 'நீர் பாய்ச்சினேன் ✓',
-    confirmed_irr: '✅ நீர்பாசனம் உறுதி',
-    et0: 'ET₀',
-    kc: 'Kc',
-    deficit: 'குறைபாடு',
-    stage: 'வளர்ச்சி நிலை',
-    threshold: 'குறைபாடு 2mm-ஐ தாண்டும்போது நீர்பாசனம்',
-    source: 'Hargreaves-Samani + OpenWeatherMap',
-    tap_expand: 'விரிவாக காண ▼',
-    tap_collapse: 'மூடு ▲',
-    rainfed_skip: 'மழை நீர் பாசனம் — நீர்பாசனம் தேவையில்லை',
-  },
-  en: {
-    title: "Today's Tasks",
-    soil_title: 'Soil Task',
-    water_title: 'Water Task',
-    loading: "Calculating today's data…",
-    retry: 'Retry',
-    no_profile: 'Complete your profile first',
-    soil_none: 'No fertilizer today',
-    soil_due: 'Apply fertilizer today!',
-    next: 'Next:',
-    days_away: 'days away',
-    why: 'Why today? ▼',
-    hide: 'Hide ▲',
-    tnau_split: 'Based on TNAU CPG 2020 split-application schedule — Transplanting / Tillering / Panicle Initiation stages',
-    bags: 'bags',
-    total: 'Total',
-    confirm_fert: 'Done — Applied ✓',
-    confirmed_fert: '✅ Application confirmed',
-    irrigate_heading: 'Irrigate this evening',
-    skip_rain: 'Rain received — skip irrigation',
-    skip_ok: 'Moisture sufficient — skip today',
-    min: 'min',
-    crop_needs: 'Crop needs',
-    rain: 'Rain',
-    est_cost: 'Est. cost ₹',
-    how_calc: 'How was this calculated? ▼',
-    see_7day: '7-day plan ▼',
-    soil_tab_link: 'View 7-day plan in Soil tab →',
-    updated: 'Updated',
-    confirm_irr: 'Done — Irrigated ✓',
-    confirmed_irr: '✅ Irrigation confirmed',
-    et0: 'ET₀',
-    kc: 'Kc',
-    deficit: 'Deficit',
-    stage: 'Stage',
-    threshold: 'Irrigate when deficit exceeds 2mm',
-    source: 'Hargreaves-Samani + OpenWeatherMap',
-    tap_expand: 'Expand ▼',
-    tap_collapse: 'Collapse ▲',
-    rainfed_skip: 'Rain-fed — no irrigation needed',
-  },
-} as const
+import { TN_CROPS } from '@/data/tn-options'
+import type { DailyRecord } from '@/types/dailyRecord'
 
 type Lang = 'ta' | 'en'
 
-// ---------------------------------------------------------------------------
-// Soil Task Sub-card
-// ---------------------------------------------------------------------------
+const L = {
+  ta: {
+    loading: 'இன்றைய தரவு கணக்கிடுகிறது…',
+    retry: 'மீண்டும் முயற்சி',
+    no_profile: 'சுயவிவரம் அமைக்கவும்',
+    humidity: 'ஈரப்பதம்',
+    rainfall: 'மழை',
+    no_irrigation: 'நீர்பாசனம் தேவையில்லை',
+    irrigate_today: 'இன்று மாலை நீர் பாய்ச்சவும்',
+    rain_skip: 'மழை — நீர்பாசனம் வேண்டாம்',
+    no_fertilizer: 'இன்று உரம் தேவையில்லை',
+    fertilizer_today: 'இன்று உரம் இட வேண்டும்',
+    next_fert_prefix: 'அடுத்து:',
+    days_away: 'நாட்களில்',
+    min: 'நிமிடம்',
+    est_cost: 'மதிப்பிட்ட செலவு ₹',
+    confirm_irr: 'நீர் பாய்ச்சினேன் ✓',
+    confirmed_irr: 'நீர்பாசனம் உறுதி',
+    bags: 'பை',
+    total: 'மொத்தம்',
+    confirm_fert: 'உரம் இட்டேன் ✓',
+    confirmed_fert: 'உரம் இட்டது உறுதி',
+    irrigation_plan: '5 நாள் நீர்பாசன திட்டம்',
+    today_label: 'இன்று',
+    tomorrow_label: 'நாளை',
+    fertilizer_plan: 'உர அட்டவணை',
+    done_label: 'முடிந்தது',
+    upcoming_label: 'வரும்',
+    today_task: 'இன்று',
+    details: 'தொழில்நுட்ப விவரங்கள்',
+    et0: 'ET₀',
+    kc: 'Kc',
+    deficit: 'குறைபாடு',
+    threshold: 'குறைபாடு 2mm-ஐ தாண்டும்போது நீர்பாசனம்',
+    source: 'Hargreaves-Samani + OpenWeatherMap',
+    updated: 'புதுப்பிக்கப்பட்டது',
+    tnau_note: 'TNAU CPG 2020 பிரித்து இடுவதன் அட்டவணை',
+    crop_status: 'பயிர் நிலை',
+    day_label: 'நாள்',
+    acres: 'ஏக்கர்',
+    tasks_today: 'இன்றைய வேலை',
+    weather_today: 'இன்றைய வானிலை',
+    growth: 'வளர்ச்சி',
+  },
+  en: {
+    loading: "Calculating today's data…",
+    retry: 'Retry',
+    no_profile: 'Complete your profile first',
+    humidity: 'Humidity',
+    rainfall: 'Rain',
+    no_irrigation: 'No irrigation today',
+    irrigate_today: 'Irrigate this evening',
+    rain_skip: 'Rain received — skip irrigation',
+    no_fertilizer: 'No fertilizer today',
+    fertilizer_today: 'Apply fertilizer today',
+    next_fert_prefix: 'Next:',
+    days_away: 'days away',
+    min: 'min',
+    est_cost: 'Est. cost ₹',
+    confirm_irr: 'Done — Irrigated ✓',
+    confirmed_irr: 'Irrigation confirmed',
+    bags: 'bags',
+    total: 'Total',
+    confirm_fert: 'Done — Applied ✓',
+    confirmed_fert: 'Application confirmed',
+    irrigation_plan: '5-Day Irrigation Plan',
+    today_label: 'Today',
+    tomorrow_label: 'Tomorrow',
+    fertilizer_plan: 'Fertilizer Schedule',
+    done_label: 'Done',
+    upcoming_label: 'Upcoming',
+    today_task: 'Today',
+    details: 'Scientific Details',
+    et0: 'ET₀',
+    kc: 'Kc',
+    deficit: 'Deficit',
+    threshold: 'Irrigate when deficit exceeds 2mm',
+    source: 'Hargreaves-Samani + OpenWeatherMap',
+    updated: 'Updated',
+    tnau_note: 'TNAU CPG 2020 split-application schedule',
+    crop_status: 'Crop Status',
+    day_label: 'Day',
+    acres: 'ac',
+    tasks_today: "Today's Tasks",
+    weather_today: "Today's Weather",
+    growth: 'Growth',
+  },
+} as const
 
-function SoilSubCard({
-  record,
-  lang,
-  onConfirm,
-}: {
-  record: DailyRecord
-  lang: Lang
-  onConfirm: () => void
-}) {
-  const t = L[lang]
-  const [open, setOpen] = useState(false)
-  const [showWhy, setShowWhy] = useState(false)
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-  const due = record.fertilizer_due
-  const app: FertilizerApplication | null = record.fertilizer_application ?? null
-  const confirmed = record.fertilizer_confirmed === true
+function WeatherIcon({ rain, humidity, size = 28 }: { rain: number; humidity: number; size?: number }) {
+  if (rain > 2) return <CloudRain size={size} color="#2563EB" />
+  if (rain > 0) return <CloudRain size={size} color="#60A5FA" />
+  if (humidity > 78) return <Cloud size={size} color="#64748B" />
+  return <Sun size={size} color="#F59E0B" />
+}
 
-  // Next fertilizer info
-  const nf = record.next_fertilizer
-  const daysUntilNext = nf ? nf.day - record.stage_days : null
-  const stageName = lang === 'ta' ? record.display_stage_ta : record.display_stage
+function weatherBg(rain: number, humidity: number) {
+  if (rain > 2) return { bg: '#EFF6FF', border: '#BFDBFE', accent: '#2563EB' }
+  if (rain > 0) return { bg: '#EFF6FF', border: '#BFDBFE', accent: '#60A5FA' }
+  if (humidity > 78) return { bg: '#F8FAFC', border: '#E2E8F0', accent: '#64748B' }
+  return { bg: '#FFFBEB', border: '#FDE68A', accent: '#F59E0B' }
+}
 
-  // Items to display (filter zero-bag items)
-  const items = (app?.items ?? []).filter((it) => it.bags > 0)
-
+// ─── Section label ─────────────────────────────────────────────────────────────
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-xl overflow-hidden border border-amber-100">
-      {/* ── Collapsed header (always visible) ── */}
-      <button
-        className="w-full flex items-center justify-between px-4 py-3 text-left"
-        style={{ background: '#FFF8F0' }}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-lg shrink-0">{due ? '🟡' : '✅'}</span>
-          <div className="min-w-0">
-            <p className="text-xs font-bold text-amber-900 uppercase tracking-wide">{t.soil_title}</p>
-            <p className="text-sm font-semibold text-gray-800 truncate">
-              {due ? t.soil_due : t.soil_none}
-            </p>
-          </div>
-        </div>
-        <span className="text-xs text-gray-400 shrink-0 ml-2">{open ? t.tap_collapse : t.tap_expand}</span>
-      </button>
-
-      {/* ── Expanded body ── */}
-      {open && (
-        <div className="bg-white border-t border-amber-100 p-4 space-y-3">
-
-          {/* Stage name chip */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-semibold">
-              {stageName}
-            </span>
-            <span className="text-xs text-gray-500">
-              {lang === 'ta' ? `நாள் ${record.stage_days}` : `Day ${record.stage_days}`}
-            </span>
-          </div>
-
-          {/* Fertilizer due — what to apply */}
-          {due && app && items.length > 0 && (
-            <div className="rounded-xl p-3 space-y-2" style={{ background: '#FFF8F0' }}>
-              {items.map((it) => (
-                <div key={it.name} className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">{it.name}</span>
-                  <span className="text-sm text-amber-700 font-bold">
-                    {it.bags} {t.bags} · ₹{it.total}
-                  </span>
-                </div>
-              ))}
-              <div className="border-t border-amber-100 pt-2 flex justify-between text-xs font-bold text-gray-700">
-                <span>{t.total}</span>
-                <span>₹{app.total_cost}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Not due — next fertilizer */}
-          {!due && nf && daysUntilNext !== null && daysUntilNext > 0 && (
-            <p className="text-sm text-gray-600">
-              {t.next}{' '}
-              <span className="font-semibold text-amber-700">
-                {lang === 'ta' ? nf.stage_ta : nf.stage}
-              </span>{' '}
-              — {daysUntilNext} {t.days_away}
-            </p>
-          )}
-
-          {/* Why today toggle */}
-          {due && (
-            <>
-              <button
-                className="text-xs text-gray-400 flex items-center gap-1"
-                onClick={() => setShowWhy((v) => !v)}
-              >
-                {showWhy ? t.hide : t.why}
-              </button>
-              {showWhy && (
-                <div className="rounded-xl px-3 py-2.5 text-xs text-amber-800 space-y-1.5" style={{ background: '#FFFBEB' }}>
-                  <p className="font-semibold text-amber-900">
-                    {lang === 'ta'
-                      ? `${stageName} நிலையில் (நாள் ${record.stage_days}) இட வேண்டும்`
-                      : `Apply at ${stageName} stage (Day ${record.stage_days})`}
-                  </p>
-                  <p className="text-amber-700 leading-relaxed">{t.tnau_split}</p>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Confirm button */}
-          {due && (
-            <button
-              onClick={onConfirm}
-              disabled={confirmed}
-              className="w-full py-2.5 rounded-xl text-sm font-bold transition-all"
-              style={{
-                background: confirmed ? '#D1FAE5' : '#D97706',
-                color: confirmed ? '#065F46' : '#fff',
-              }}
-            >
-              {confirmed ? t.confirmed_fert : t.confirm_fert}
-            </button>
-          )}
-        </div>
-      )}
-    </div>
+    <p style={{ margin: '0 0 8px', fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      {children}
+    </p>
   )
 }
 
-// ---------------------------------------------------------------------------
-// Water Task Sub-card
-// ---------------------------------------------------------------------------
-
-function WaterSubCard({
-  record,
-  lang,
-  weeklySchedule,
-  onConfirm,
-}: {
-  record: DailyRecord
-  lang: Lang
-  weeklySchedule: Array<{
-    day_of_week: string
-    action: string
-    duration_min: number | null
-    et0_mm: number
-    rainfall_mm: number
-    net_deficit_mm: number
-    note?: string
-  }> | null
-  onConfirm: () => void
-}) {
-  const t = L[lang]
-  const [open, setOpen] = useState(false)
-  const [showCalc, setShowCalc] = useState(false)
-  const [show7Day, setShow7Day] = useState(false)
-
-  const action = record.irrigation_recommended
-  const minutes = record.irrigation_minutes
-  const confirmed = record.irrigation_confirmed === true
-  const et0 = record.et0_mm ?? 0
-  const kc = record.kc_used ?? 0
-  const etc = record.crop_water_need_mm ?? 0
-  const rain = record.weather?.rain_mm ?? 0
-  const stage = lang === 'ta' ? record.display_stage_ta : record.display_stage
-
-  const isIrrigate = action === 'irrigate'
-  const isSkipRain = action === 'skip_rain'
-  const isRainfed = action === 'skip' && record.irrigation_recommended === 'skip'
-
-  // Rough electricity cost: ₹8/hr for TN pumps
-  const estCost = minutes ? Math.round((minutes / 60) * 8) : null
-
-  // Summary line for collapsed header
-  let summaryText = t.skip_ok
-  if (isIrrigate) summaryText = `${t.irrigate_heading} — ${minutes} ${t.min}`
-  else if (isSkipRain) summaryText = t.skip_rain
-
-  // Weather timestamp
-  const pulledAt = record.weather?.pulled_at
-  const timeStr = pulledAt
-    ? new Date(pulledAt).toLocaleTimeString(lang === 'ta' ? 'ta-IN' : 'en-IN', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : null
-
-  return (
-    <div className="rounded-xl overflow-hidden border border-blue-100">
-      {/* ── Collapsed header ── */}
-      <button
-        className="w-full flex items-center justify-between px-4 py-3 text-left"
-        style={{ background: '#F0F9FF' }}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-lg shrink-0">{isIrrigate ? '💧' : '✅'}</span>
-          <div className="min-w-0">
-            <p className="text-xs font-bold text-blue-900 uppercase tracking-wide">{t.water_title}</p>
-            <p className="text-sm font-semibold text-gray-800 truncate">{summaryText}</p>
-          </div>
-        </div>
-        <span className="text-xs text-gray-400 shrink-0 ml-2">{open ? t.tap_collapse : t.tap_expand}</span>
-      </button>
-
-      {/* ── Always-visible weather timestamp ── */}
-      {timeStr && (
-        <div className="px-4 py-1.5 border-t border-blue-50 flex items-center gap-1.5" style={{ background: '#F0F9FF' }}>
-          <span className="text-xs text-blue-400">🛰</span>
-          <span className="text-xs text-blue-500">
-            {t.updated}: {timeStr} · OpenWeatherMap
-          </span>
-        </div>
-      )}
-
-      {/* ── Expanded body ── */}
-      {open && (
-        <div className="bg-white border-t border-blue-100 p-4 space-y-3">
-
-          {/* Stage chip — Kc moved to expandable "How calculated?" section only */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-semibold">
-              {stage}
-            </span>
-          </div>
-
-          {/* Main action card */}
-          <div
-            className="rounded-xl p-4 border-2"
-            style={
-              isIrrigate
-                ? { background: '#EFF6FF', borderColor: '#BFDBFE' }
-                : { background: '#F0FDF4', borderColor: '#BBF7D0' }
-            }
-          >
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">{isIrrigate ? '💧' : '✅'}</span>
-              <div className="flex-1">
-                <p className="font-bold text-base" style={{ color: isIrrigate ? '#1D4ED8' : '#15803D' }}>
-                  {isIrrigate
-                    ? `${t.irrigate_heading} — ${minutes} ${t.min}`
-                    : isSkipRain
-                    ? t.skip_rain
-                    : t.skip_ok}
-                </p>
-
-                {/* Plain-language sentence — no label:value pairs, no ET₀/Kc */}
-                <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-                  {isIrrigate && rain > 0
-                    ? lang === 'ta'
-                      ? `${rain.toFixed(1)}mm மழை பெய்தது. பயிருக்கு சுமார் ${etc.toFixed(1)}mm தேவை. இன்று மாலை ${minutes} நிமிடம் நீர் பாய்ச்சவும்.`
-                      : `It rained ${rain.toFixed(1)}mm. Your crop needs about ${etc.toFixed(1)}mm. Irrigate for ${minutes} minutes this evening.`
-                    : isIrrigate
-                    ? lang === 'ta'
-                      ? `பயிருக்கு சுமார் ${etc.toFixed(1)}mm தேவை. இன்று மாலை ${minutes} நிமிடம் நீர் பாய்ச்சவும்.`
-                      : `Your crop needs about ${etc.toFixed(1)}mm. Irrigate for ${minutes} minutes this evening.`
-                    : isSkipRain
-                    ? lang === 'ta'
-                      ? `${rain.toFixed(1)}mm மழை பெய்தது — இன்று பயிருக்கு போதுமானது.`
-                      : `It rained ${rain.toFixed(1)}mm — enough for your crop today.`
-                    : lang === 'ta'
-                    ? 'இன்று மண்ணில் ஈரம் போதுமானது.'
-                    : 'Soil moisture is sufficient today.'}
-                </p>
-
-                {/* Est cost for irrigate */}
-                {isIrrigate && estCost !== null && estCost > 0 && (
-                  <p className="text-xs text-blue-600 mt-1.5 font-medium">
-                    {t.est_cost}{estCost}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* How calculated — expandable (ET₀, Kc, deficit ONLY here) */}
-          <button
-            className="text-xs text-gray-400 flex items-center gap-1"
-            onClick={() => setShowCalc((v) => !v)}
-          >
-            {showCalc ? t.hide : t.how_calc}
-          </button>
-          {showCalc && (
-            <div className="rounded-xl p-3 space-y-2 text-xs" style={{ background: '#F8F9FA' }}>
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="rounded-lg py-2" style={{ background: '#EFF6FF' }}>
-                  <p className="text-gray-500">{t.et0}</p>
-                  <p className="font-bold text-blue-700">{et0.toFixed(2)} mm</p>
-                </div>
-                <div className="rounded-lg py-2" style={{ background: '#EFF6FF' }}>
-                  <p className="text-gray-500">{t.kc} ({stage})</p>
-                  <p className="font-bold text-blue-700">{kc.toFixed(2)}</p>
-                </div>
-                <div className="rounded-lg py-2" style={{ background: isIrrigate ? '#FEF2F2' : '#F0FDF4' }}>
-                  <p className="text-gray-500">{t.deficit}</p>
-                  <p className={`font-bold ${isIrrigate ? 'text-red-600' : 'text-green-600'}`}>
-                    {Math.max(0, etc - rain).toFixed(2)} mm
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-500 text-center">{t.threshold}</p>
-              <p className="text-gray-400 text-center">{t.source}</p>
-            </div>
-          )}
-
-          {/* 7-day plan — expandable */}
-          <button
-            className="text-xs text-gray-400 flex items-center gap-1"
-            onClick={() => setShow7Day((v) => !v)}
-          >
-            {show7Day ? t.hide : t.see_7day}
-          </button>
-          {show7Day && (
-            <div className="space-y-1.5">
-              {weeklySchedule && weeklySchedule.length > 0 ? (
-                weeklySchedule.map((day, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between rounded-xl px-3 py-2 text-xs border"
-                    style={
-                      day.action === 'irrigate'
-                        ? { background: '#EFF6FF', borderColor: '#BFDBFE' }
-                        : { background: '#F0FDF4', borderColor: '#BBF7D0' }
-                    }
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-500 w-8 shrink-0">
-                        {day.day_of_week.slice(0, 3)}
-                      </span>
-                      <span
-                        className="font-semibold"
-                        style={{ color: day.action === 'irrigate' ? '#1D4ED8' : '#15803D' }}
-                      >
-                        {day.action === 'irrigate'
-                          ? `💧 ${day.duration_min} ${t.min}`
-                          : '✅ Skip'}
-                      </span>
-                    </div>
-                    <div className="text-gray-400 text-right">
-                      ET₀: {day.et0_mm.toFixed(1)}
-                      {day.rainfall_mm > 0 && ` · 🌧 ${day.rainfall_mm.toFixed(1)}`}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <Link
-                  to="/soil-optimizer"
-                  className="block text-center text-xs text-blue-600 font-semibold py-2 rounded-xl border border-blue-200 bg-blue-50"
-                >
-                  {t.soil_tab_link}
-                </Link>
-              )}
-            </div>
-          )}
-
-          {/* Confirm button */}
-          {isIrrigate && (
-            <button
-              onClick={onConfirm}
-              disabled={confirmed}
-              className="w-full py-2.5 rounded-xl text-sm font-bold transition-all"
-              style={{
-                background: confirmed ? '#D1FAE5' : '#1D4ED8',
-                color: confirmed ? '#065F46' : '#fff',
-              }}
-            >
-              {confirmed ? t.confirmed_irr : t.confirm_irr}
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Main DailyHomeCard
-// ---------------------------------------------------------------------------
+// ─── Main export ──────────────────────────────────────────────────────────────
 
 export function DailyHomeCard({
-  lang,
-  cropId,
-  isCalculating,
-  error,
-  onRetry,
+  lang, cropId, isCalculating, error, onRetry,
 }: {
   lang: Lang
   cropId: string
@@ -497,60 +142,50 @@ export function DailyHomeCard({
   const { profile } = useProfileStore()
   const { todayByCrop, confirmFertilizerForCrop, confirmIrrigationForCrop } = useDailyRecordStore()
   const soilResult = useSoilStore((s) => s.result)
-
   const weeklySchedule = soilResult?.irrigation?.weekly_schedule ?? null
+
   const todayStr = new Date().toISOString().slice(0, 10)
   const today = todayByCrop[cropId] ?? null
   const todayIsStale = today?.date !== todayStr
 
+  const [showDetails, setShowDetails] = useState(false)
+  const [showFertDetails, setShowFertDetails] = useState(false)
+  const [showIrrDetails, setShowIrrDetails] = useState(false)
+
+  // ── Loading ──
   if (isCalculating || (todayIsStale && !today)) {
     return (
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-        <div className="px-4 py-3" style={{ background: '#1B4332' }}>
-          <p className="text-xs font-bold tracking-wide text-green-300 uppercase">{t.title}</p>
-        </div>
-        <div className="bg-white p-4 space-y-3 animate-pulse">
-          <div className="h-14 rounded-xl bg-amber-50" />
-          <div className="h-14 rounded-xl bg-blue-50" />
-          <p className="text-xs text-center text-gray-400">{t.loading}</p>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {[1, 2, 3].map((i) => (
+          <div key={i} style={{ height: 80, background: 'white', borderRadius: 14, opacity: 0.5, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }} />
+        ))}
+        <p style={{ textAlign: 'center', fontSize: 12, color: '#94A3B8' }}>{t.loading}</p>
       </div>
     )
   }
 
+  // ── No profile ──
   if (!profile.district || profile.crops.length === 0) {
     return (
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-        <div className="px-4 py-3" style={{ background: '#1B4332' }}>
-          <p className="text-xs font-bold tracking-wide text-green-300 uppercase">{t.title}</p>
-        </div>
-        <div className="bg-white p-4 text-center">
-          <p className="text-sm text-gray-500">{t.no_profile}</p>
-          <Link to="/profile/onboarding" className="text-xs text-primary-600 font-semibold mt-1 inline-block underline">
-            {lang === 'ta' ? 'சுயவிவரம் அமை →' : 'Set up profile →'}
-          </Link>
-        </div>
+      <div style={{ background: 'white', borderRadius: 14, padding: 20, textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+        <p style={{ margin: '0 0 8px', fontSize: 13, color: '#64748B' }}>{t.no_profile}</p>
+        <Link to="/profile/onboarding" style={{ fontSize: 12, color: '#0A5C47', fontWeight: 700 }}>
+          {lang === 'ta' ? 'சுயவிவரம் அமை →' : 'Set up profile →'}
+        </Link>
       </div>
     )
   }
 
+  // ── Error ──
   if (error && !today) {
     return (
-      <div className="rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-        <div className="px-4 py-3" style={{ background: '#1B4332' }}>
-          <p className="text-xs font-bold tracking-wide text-green-300 uppercase">{t.title}</p>
-        </div>
-        <div className="bg-white p-4 text-center">
-          <p className="text-xs text-red-500 mb-2">{error}</p>
-          {onRetry && (
-            <button
-              className="text-xs px-3 py-1.5 rounded-full bg-green-700 text-white font-semibold"
-              onClick={onRetry}
-            >
-              {t.retry}
-            </button>
-          )}
-        </div>
+      <div style={{ background: '#FEF2F2', borderRadius: 14, padding: '16px', textAlign: 'center', border: '1px solid #FECACA' }}>
+        <p style={{ margin: '0 0 10px', fontSize: 12, color: '#DC2626' }}>{error}</p>
+        {onRetry && (
+          <button onClick={onRetry} style={{ fontSize: 12, padding: '6px 16px', borderRadius: 20, background: '#0A5C47', color: 'white', border: 'none', cursor: 'pointer', fontWeight: 700 }}>
+            {t.retry}
+          </button>
+        )}
       </div>
     )
   }
@@ -559,30 +194,364 @@ export function DailyHomeCard({
 
   const record: DailyRecord = today
 
+  // ── Data shortcuts ──
+  const weather = record.weather
+  const rain = weather?.rain_mm ?? 0
+  const humidity = weather?.humidity_pct ?? 0
+  const temp = weather?.temp_c ?? null
+
+  const action = record.irrigation_recommended
+  const minutes = record.irrigation_minutes ?? 0
+  const irrConfirmed = record.irrigation_confirmed === true
+  const fertConfirmed = record.fertilizer_confirmed === true
+  const fertDue = record.fertilizer_due
+  const app = record.fertilizer_application
+  const fertItems = (app?.items ?? []).filter((it) => it.bags > 0)
+  const nf = record.next_fertilizer
+  const daysUntilNext = nf ? nf.day - record.stage_days : null
+
+  const isIrrigate = action === 'irrigate'
+  const isSkipRain = action === 'skip_rain'
+  const estCost = minutes ? Math.round((minutes / 60) * 8) : null
+
+  const stageName = lang === 'ta' ? record.display_stage_ta : record.display_stage
+
+  // Crop info from profile
+  const cropObj = profile.crops.find((c) => c.id === cropId) ?? profile.crops[0]
+  const cropEntry = TN_CROPS.find((c) => c.value === cropObj?.name)
+  const cropLabel = cropEntry ? (lang === 'ta' ? cropEntry.ta : cropEntry.en) : (cropObj?.name ?? '')
+  const cropAcres = cropObj?.acres ?? 0
+
+  // Growth progress (cap at 100%)
+  const TOTAL_DAYS = 120
+  const progressPct = Math.min(100, Math.round((record.stage_days / TOTAL_DAYS) * 100))
+
+  const wc = weatherBg(rain, humidity)
+
+  const pulledAt = weather?.pulled_at
+  const timeStr = pulledAt
+    ? new Date(pulledAt).toLocaleTimeString(lang === 'ta' ? 'ta-IN' : 'en-IN', { hour: '2-digit', minute: '2-digit' })
+    : null
+
   return (
-    <div className="rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-      <div className="px-4 py-3" style={{ background: '#1B4332' }}>
-        <p className="text-xs font-bold tracking-wide text-green-300 uppercase">{t.title}</p>
-        <p className="text-xs text-green-400 mt-0.5">
-          {lang === 'ta'
-            ? `${record.display_stage_ta} · நாள் ${record.stage_days}`
-            : `${record.display_stage} · Day ${record.stage_days}`}
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+      {/* ── 1. WEATHER CARD ──────────────────────────────────────────────── */}
+      {weather && (
+        <div style={{ background: wc.bg, borderRadius: 16, padding: '14px 16px', border: `1px solid ${wc.border}`, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <WeatherIcon rain={rain} humidity={humidity} size={36} />
+              <div>
+                {temp !== null && (
+                  <p style={{ margin: 0, fontSize: 26, fontWeight: 800, color: '#1E293B', lineHeight: 1 }}>{temp.toFixed(0)}°C</p>
+                )}
+                <p style={{ margin: '2px 0 0', fontSize: 12, color: '#64748B' }}>
+                  {rain > 0
+                    ? `${rain.toFixed(1)}mm ${lang === 'ta' ? 'மழை' : 'rain'}`
+                    : lang === 'ta' ? 'மழை இல்லை' : 'No rain'}
+                </p>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Droplets size={13} color="#60A5FA" />
+                <span style={{ fontSize: 12, color: '#374151', fontWeight: 600 }}>{humidity}%</span>
+                <span style={{ fontSize: 11, color: '#94A3B8' }}>{t.humidity}</span>
+              </div>
+              {temp !== null && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Thermometer size={13} color={wc.accent} />
+                  <span style={{ fontSize: 11, color: '#94A3B8' }}>{profile.district}</span>
+                </div>
+              )}
+              {timeStr && (
+                <span style={{ fontSize: 10, color: '#CBD5E1' }}>{t.updated}: {timeStr}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 2. CROP STATUS CARD ──────────────────────────────────────────── */}
+      <div style={{ background: 'white', borderRadius: 16, padding: '14px 16px', boxShadow: '0 1px 4px rgba(0,0,0,0.05)', borderLeft: '3px solid #0A5C47' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 20, background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Sprout size={20} color="#0A5C47" />
+            </div>
+            <div>
+              <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: '#1E293B' }}>{cropLabel}</p>
+              <p style={{ margin: '2px 0 0', fontSize: 11, color: '#64748B' }}>
+                {cropAcres > 0 ? `${cropAcres} ${t.acres}` : ''}
+                {cropAcres > 0 && stageName ? ' · ' : ''}
+                {stageName}
+              </p>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#0A5C47', lineHeight: 1 }}>{record.stage_days}</p>
+            <p style={{ margin: '1px 0 0', fontSize: 11, color: '#94A3B8' }}>{t.day_label}</p>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t.growth}</span>
+            <span style={{ fontSize: 10, fontWeight: 700, color: '#0A5C47' }}>{progressPct}%</span>
+          </div>
+          <div style={{ height: 7, background: '#E2E8F0', borderRadius: 4, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${progressPct}%`, background: 'linear-gradient(90deg, #0A5C47, #12A07A)', borderRadius: 4, transition: 'width 0.5s ease' }} />
+          </div>
+        </div>
       </div>
 
-      <div className="bg-gray-50 p-3 space-y-2">
-        <SoilSubCard
-          record={record}
-          lang={lang}
-          onConfirm={() => confirmFertilizerForCrop(cropId, record.date, true)}
-        />
-        <WaterSubCard
-          record={record}
-          lang={lang}
-          weeklySchedule={weeklySchedule}
-          onConfirm={() => confirmIrrigationForCrop(cropId, record.date, true)}
-        />
+      {/* ── 3. TODAY'S TASKS CARD ────────────────────────────────────────── */}
+      <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+        <div style={{ padding: '12px 16px', background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)' }}>
+          <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.tasks_today}</p>
+        </div>
+
+        <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+
+          {/* Irrigation task row */}
+          <button
+            onClick={() => setShowIrrDetails((v) => !v)}
+            style={{
+              width: '100%', textAlign: 'left', border: `1px solid ${isIrrigate ? '#BFDBFE' : '#D1FAE5'}`, cursor: 'pointer', padding: '12px 14px',
+              borderRadius: 12, display: 'flex', alignItems: 'center', gap: 12,
+              background: isIrrigate ? '#F0F7FF' : '#F6FEF9',
+            }}>
+            <div style={{ width: 38, height: 38, borderRadius: 19, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isIrrigate ? '#DBEAFE' : '#D1FAE5' }}>
+              {isIrrigate ? <Waves size={18} color="#1D4ED8" /> : <CheckCircle2 size={18} color="#0A5C47" />}
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: isIrrigate ? '#1D4ED8' : '#0A5C47' }}>
+                {isIrrigate ? `${t.irrigate_today} — ${minutes} ${t.min}` : isSkipRain ? t.rain_skip : t.no_irrigation}
+              </p>
+              {isIrrigate && estCost !== null && (
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#6B7280' }}>{t.est_cost}{estCost}</p>
+              )}
+            </div>
+            {isIrrigate && (
+              <div style={{ color: '#94A3B8', flexShrink: 0 }}>
+                {showIrrDetails ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </div>
+            )}
+          </button>
+
+          {/* Irrigation confirm + details */}
+          {isIrrigate && showIrrDetails && (
+            <div style={{ padding: '10px 14px', background: '#F8FAFF', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ flex: 1, background: '#EFF6FF', borderRadius: 8, padding: '8px 10px', textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{lang === 'ta' ? 'தேவை' : 'Need'}</p>
+                  <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 800, color: '#1D4ED8' }}>{record.crop_water_need_mm.toFixed(1)}mm</p>
+                </div>
+                {rain > 0 && (
+                  <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 8, padding: '8px 10px', textAlign: 'center' }}>
+                    <p style={{ margin: 0, fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{t.rainfall}</p>
+                    <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 800, color: '#0A5C47' }}>{rain.toFixed(1)}mm</p>
+                  </div>
+                )}
+                <div style={{ flex: 1, background: '#EFF6FF', borderRadius: 8, padding: '8px 10px', textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{t.min}</p>
+                  <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 800, color: '#1D4ED8' }}>{minutes}</p>
+                </div>
+              </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); confirmIrrigationForCrop(cropId, record.date, true) }}
+                disabled={irrConfirmed}
+                style={{ width: '100%', padding: '11px', borderRadius: 10, border: 'none', cursor: irrConfirmed ? 'default' : 'pointer', fontSize: 13, fontWeight: 700, background: irrConfirmed ? '#DCFCE7' : '#1D4ED8', color: irrConfirmed ? '#166534' : 'white' }}>
+                {irrConfirmed ? t.confirmed_irr : t.confirm_irr}
+              </button>
+            </div>
+          )}
+
+          {/* Fertilizer task row */}
+          <button
+            onClick={() => fertDue && setShowFertDetails((v) => !v)}
+            style={{
+              width: '100%', textAlign: 'left', cursor: fertDue ? 'pointer' : 'default', padding: '12px 14px',
+              borderRadius: 12, display: 'flex', alignItems: 'center', gap: 12,
+              background: fertDue ? '#FFFBEB' : '#FFFAF5',
+              border: `1px solid ${fertDue ? '#FDE68A' : '#FEE9D1'}`,
+            }}>
+            <div style={{ width: 38, height: 38, borderRadius: 19, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: fertDue ? '#FEF3C7' : '#FFEDD5' }}>
+              {fertDue ? <AlertCircle size={18} color="#D97706" /> : <CheckCircle2 size={18} color="#EA580C" />}
+            </div>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: fertDue ? '#D97706' : '#C2410C' }}>
+                {fertDue ? t.fertilizer_today : t.no_fertilizer}
+              </p>
+              {!fertDue && nf && daysUntilNext !== null && daysUntilNext > 0 && (
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#9A3412' }}>
+                  {t.next_fert_prefix} {lang === 'ta' ? nf.stage_ta : nf.stage} — {daysUntilNext} {t.days_away}
+                </p>
+              )}
+              {fertDue && app && (
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#92400E' }}>
+                  {lang === 'ta' ? app.stage_ta : app.stage} · ₹{app.total_cost}
+                </p>
+              )}
+            </div>
+            {fertDue && (
+              <div style={{ color: '#94A3B8', flexShrink: 0 }}>
+                {showFertDetails ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </div>
+            )}
+          </button>
+
+          {/* Fertilizer items + confirm */}
+          {fertDue && showFertDetails && app && (
+            <div style={{ padding: '10px 14px', background: '#FFFBF0', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {fertItems.map((it) => (
+                <div key={it.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', background: 'white', borderRadius: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <FlaskConical size={14} color="#D97706" />
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#1E293B' }}>{it.name}</span>
+                  </div>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#D97706' }}>{it.bags} {t.bags} · ₹{it.total}</span>
+                </div>
+              ))}
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', borderTop: '1px solid #FEF3C7' }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#64748B' }}>{t.total}</span>
+                <span style={{ fontSize: 13, fontWeight: 800, color: '#D97706' }}>₹{app.total_cost}</span>
+              </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); confirmFertilizerForCrop(cropId, record.date, true) }}
+                disabled={fertConfirmed}
+                style={{ width: '100%', padding: '11px', borderRadius: 10, border: 'none', cursor: fertConfirmed ? 'default' : 'pointer', fontSize: 13, fontWeight: 700, background: fertConfirmed ? '#DCFCE7' : '#D97706', color: fertConfirmed ? '#166534' : 'white' }}>
+                {fertConfirmed ? t.confirmed_fert : t.confirm_fert}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* ── 4. 5-DAY IRRIGATION TIMELINE ─────────────────────────────────── */}
+      {weeklySchedule && weeklySchedule.length > 0 && (
+        <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding: '10px 16px', background: '#EFF6FF', borderBottom: '1px solid #BFDBFE', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Waves size={14} color="#2563EB" />
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.irrigation_plan}</span>
+          </div>
+          <div style={{ padding: '14px 16px', display: 'flex', gap: 6 }}>
+            {weeklySchedule.slice(0, 5).map((day, i) => {
+              const irrigate = day.action === 'irrigate'
+              const dayLabel = i === 0 ? t.today_label : i === 1 ? t.tomorrow_label : day.day_of_week.slice(0, 3)
+              return (
+                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+                  <div style={{ width: '100%', paddingTop: 8, paddingBottom: 8, borderRadius: 10, background: irrigate ? '#DBEAFE' : '#DCFCE7', border: `1.5px solid ${irrigate ? '#93C5FD' : '#86EFAC'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {irrigate
+                      ? <Waves size={17} color="#1D4ED8" />
+                      : <CheckCircle2 size={17} color="#0A5C47" />}
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: i === 0 ? 800 : 600, color: i === 0 ? '#1E293B' : '#64748B', textAlign: 'center' }}>{dayLabel}</span>
+                  {irrigate && day.duration_min && (
+                    <span style={{ fontSize: 10, color: '#1D4ED8', fontWeight: 800 }}>{day.duration_min}m</span>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── 5. FERTILIZER SCHEDULE ─────────────────────────────────────────── */}
+      <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+        <div style={{ padding: '10px 16px', background: '#FFF7ED', borderBottom: '1px solid #FED7AA', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <FlaskConical size={14} color="#EA580C" />
+          <span style={{ fontSize: 11, fontWeight: 700, color: '#C2410C', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.fertilizer_plan}</span>
+        </div>
+        <div style={{ padding: '14px 16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+
+          {/* Today's dose if due */}
+          {fertDue && app && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#FFFBEB', borderRadius: 10, border: '1px solid #FDE68A' }}>
+              <div style={{ width: 28, height: 28, borderRadius: 14, background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <AlertCircle size={14} color="#D97706" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: '#D97706' }}>{t.today_task}</p>
+                <p style={{ margin: '1px 0 0', fontSize: 11, color: '#92400E' }}>{lang === 'ta' ? app.stage_ta : app.stage}</p>
+              </div>
+              {fertConfirmed && (
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#0A5C47', background: '#DCFCE7', padding: '2px 8px', borderRadius: 6 }}>
+                  {t.done_label}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Next upcoming */}
+          {nf && daysUntilNext !== null && daysUntilNext > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: '#FFF7ED', borderRadius: 12, border: '1px solid #FED7AA' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 18, background: '#FFEDD5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Calendar size={16} color="#EA580C" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: '#C2410C' }}>{t.upcoming_label}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: '#9A3412' }}>
+                  {lang === 'ta' ? nf.stage_ta : nf.stage} — {daysUntilNext} {t.days_away}
+                  {nf.date_estimate ? ` (${nf.date_estimate})` : ''}
+                </p>
+              </div>
+              <span style={{ fontSize: 13, fontWeight: 800, color: 'white', background: '#EA580C', padding: '3px 10px', borderRadius: 8, flexShrink: 0 }}>+{daysUntilNext}d</span>
+            </div>
+          )}
+
+          {/* All done state */}
+          {!fertDue && (!nf || (daysUntilNext !== null && daysUntilNext <= 0)) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#F0FDF4', borderRadius: 10, border: '1px solid #A7F3D0' }}>
+              <CheckCircle2 size={16} color="#0A5C47" />
+              <p style={{ margin: 0, fontSize: 12, color: '#166534', fontWeight: 700 }}>{lang === 'ta' ? 'அனைத்து உரங்களும் முடிந்தன' : 'All fertilizer applications complete'}</p>
+            </div>
+          )}
+        </div>
+        </div>
+      </div>
+
+      {/* ── 6. SCIENTIFIC DETAILS (collapsed by default) ─────────────────── */}
+      <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+        <button onClick={() => setShowDetails((v) => !v)}
+          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Info size={14} color="#94A3B8" />
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8' }}>{t.details}</span>
+          </div>
+          {showDetails ? <ChevronUp size={15} color="#CBD5E1" /> : <ChevronDown size={15} color="#CBD5E1" />}
+        </button>
+
+        {showDetails && (
+          <div style={{ padding: '4px 16px 14px', borderTop: '1px solid #F1F5F9' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+              <div style={{ background: '#EFF6FF', borderRadius: 8, padding: '8px', textAlign: 'center' }}>
+                <p style={{ margin: 0, fontSize: 10, color: '#94A3B8' }}>{t.et0}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 800, color: '#2563EB' }}>{(record.et0_mm ?? 0).toFixed(2)}</p>
+                <p style={{ margin: 0, fontSize: 9, color: '#94A3B8' }}>mm</p>
+              </div>
+              <div style={{ background: '#EFF6FF', borderRadius: 8, padding: '8px', textAlign: 'center' }}>
+                <p style={{ margin: 0, fontSize: 10, color: '#94A3B8' }}>{t.kc}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 800, color: '#2563EB' }}>{(record.kc_used ?? 0).toFixed(2)}</p>
+                <p style={{ margin: 0, fontSize: 9, color: '#94A3B8' }}>{stageName}</p>
+              </div>
+              <div style={{ background: isIrrigate ? '#FEF2F2' : '#F0FDF4', borderRadius: 8, padding: '8px', textAlign: 'center' }}>
+                <p style={{ margin: 0, fontSize: 10, color: '#94A3B8' }}>{t.deficit}</p>
+                <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 800, color: isIrrigate ? '#DC2626' : '#16A34A' }}>
+                  {Math.max(0, record.crop_water_need_mm - rain).toFixed(2)}
+                </p>
+                <p style={{ margin: 0, fontSize: 9, color: '#94A3B8' }}>mm</p>
+              </div>
+            </div>
+            <p style={{ margin: '8px 0 0', fontSize: 10, color: '#CBD5E1', textAlign: 'center' }}>{t.threshold}</p>
+            <p style={{ margin: '2px 0 0', fontSize: 10, color: '#CBD5E1', textAlign: 'center' }}>{t.source}</p>
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }

@@ -10,6 +10,7 @@ export default defineConfig({
     alias: [{ find: '@', replacement: srcDir }],
   },
   server: {
+    host: true,
     port: 5180,
     proxy: {
       '/v1': {

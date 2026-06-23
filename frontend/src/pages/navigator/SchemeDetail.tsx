@@ -1,43 +1,26 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { ArrowLeft, CheckCircle2, FileText, Globe, Building2, Calendar } from 'lucide-react'
 import { schemesApi } from '@/api/schemes'
 import { useFarmerStore } from '@/store/farmerStore'
 import { useSchemeStore } from '@/store/schemeStore'
-import { SchemeDetailSkeleton } from '@/components/ui/Skeleton'
-import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { ChatFAB } from '@/components/chat/ChatFAB'
 import { BottomNav } from '@/components/layout/BottomNav'
 import type { GovernmentSchemeOut, EligibilityResultOut } from '@/types/api'
-import { cn } from '@/lib/utils'
 
 export default function SchemeDetail() {
   const { schemeId } = useParams<{ schemeId: string }>()
-  const navigate = useNavigate()
-  const isLoggedIn = useFarmerStore((s) => s.isLoggedIn)
-  const { lang, toggleLang, isSaved, saveScheme, unsaveScheme, isApplied, markApplied, toggleDoc, isDocChecked, getCheckedDocs } = useSchemeStore()
+  const navigate     = useNavigate()
+  const isLoggedIn   = useFarmerStore((s) => s.isLoggedIn)
+  const { lang, toggleLang, isApplied, markApplied, toggleDoc, isDocChecked, getCheckedDocs } = useSchemeStore()
 
-  const [detail, setDetail] = useState<GovernmentSchemeOut | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [detail, setDetail]           = useState<GovernmentSchemeOut | null>(null)
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState<string | null>(null)
   const [checkResult, setCheckResult] = useState<EligibilityResultOut | null>(null)
   const [checkLoading, setCheckLoading] = useState(false)
-  const [toast, setToast] = useState<string | null>(null)
 
-  function showToast(msg: string) {
-    setToast(msg)
-    setTimeout(() => setToast(null), 2000)
-  }
-
-  function handleSave() {
-    if (!schemeId) return
-    if (isSaved(schemeId)) {
-      unsaveScheme(schemeId)
-      showToast(lang === 'ta' ? 'நீக்கப்பட்டது' : 'Removed')
-    } else {
-      saveScheme(schemeId)
-      showToast(lang === 'ta' ? 'சேமிக்கப்பட்டது ✓' : 'Saved ✓')
-    }
-  }
+  const t = (ta: string, en: string) => lang === 'ta' ? ta : en
 
   useEffect(() => {
     if (!isLoggedIn()) { navigate('/login', { replace: true }); return }
@@ -46,327 +29,330 @@ export default function SchemeDetail() {
   }, [schemeId])
 
   async function load() {
-    setLoading(true)
-    setError(null)
-    try {
-      const d = await schemesApi.getById(schemeId!)
-      setDetail(d)
-    } catch {
-      setError('திட்ட விவரங்கள் ஏற்றுவதில் பிழை.')
-    } finally {
-      setLoading(false)
-    }
+    setLoading(true); setError(null)
+    try { setDetail(await schemesApi.getById(schemeId!)) }
+    catch { setError(t('திட்ட விவரங்கள் ஏற்றுவதில் பிழை.', 'Failed to load scheme details.')) }
+    finally { setLoading(false) }
   }
 
   async function runCheck() {
     if (!schemeId) return
     setCheckLoading(true)
-    try {
-      const r = await schemesApi.check(schemeId, lang)
-      setCheckResult(r)
-    } catch {
-      setCheckResult(null)
-    } finally {
-      setCheckLoading(false)
-    }
+    try { setCheckResult(await schemesApi.check(schemeId, lang)) }
+    catch { setCheckResult(null) }
+    finally { setCheckLoading(false) }
   }
 
-  const t = (ta: string, en: string) => lang === 'ta' ? ta : en
-
-  const docs = detail
+  const applied     = schemeId ? isApplied(schemeId) : false
+  const docs        = detail
     ? (lang === 'ta' ? detail.documents_ta || detail.documents_required : detail.documents_required) || []
     : []
   const checkedDocs = schemeId ? getCheckedDocs(schemeId) : []
   const docsChecked = docs.filter((d) => checkedDocs.includes(d)).length
-  const saved = schemeId ? isSaved(schemeId) : false
-  const applied = schemeId ? isApplied(schemeId) : false
+
+  const name    = detail ? (lang === 'ta' ? detail.name_ta : (detail.name_en || detail.name_ta)) : ''
+  const benefit = detail
+    ? (lang === 'ta' ? (detail.benefit_amount_ta ?? detail.benefit_amount) : detail.benefit_amount)
+    : ''
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
-    <div className="w-full max-w-[480px] flex flex-col min-h-screen">
-      {/* Toast */}
-      {toast && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full shadow-lg">
-          {toast}
+    <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto', paddingBottom: 110 }}>
+
+      {/* ── HEADER ─────────────────────────────────────────────────────────── */}
+      <header style={{ background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)', padding: '14px 16px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+          <button
+            onClick={() => navigate(-1)}
+            style={{ width: 34, height: 34, borderRadius: 17, background: 'rgba(255,255,255,0.15)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+          >
+            <ArrowLeft size={18} color="white" />
+          </button>
+          <p style={{ margin: 0, flex: 1, fontSize: 15, fontWeight: 700, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {name || t('திட்ட விவரங்கள்', 'Scheme Details')}
+          </p>
+          <button
+            onClick={toggleLang}
+            style={{ fontSize: 11, border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(255,255,255,0.9)', background: 'rgba(0,0,0,0.15)', borderRadius: 20, padding: '4px 10px', cursor: 'pointer', flexShrink: 0 }}
+          >
+            {lang === 'ta' ? 'En' : 'த'}
+          </button>
+        </div>
+
+        {/* Level chip + Applied banner inside header */}
+        {detail && (
+          <div style={{ paddingBottom: 16 }}>
+            <span style={{
+              display: 'inline-block', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 6,
+              background: detail.level === 'central' ? 'rgba(199,210,254,0.3)' : 'rgba(167,243,208,0.3)',
+              color: detail.level === 'central' ? '#C7D2FE' : '#A7F3D0',
+              border: `1px solid ${detail.level === 'central' ? 'rgba(199,210,254,0.4)' : 'rgba(167,243,208,0.4)'}`,
+            }}>
+              {detail.level === 'central' ? t('மத்திய திட்டம்', 'Central Scheme') : t('மாநில திட்டம்', 'State Scheme')}
+            </span>
+            {applied && (
+              <div style={{ marginTop: 10, background: 'rgba(255,255,255,0.12)', borderRadius: 10, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CheckCircle2 size={14} color="#A7F3D0" />
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#A7F3D0' }}>
+                  {t('நீங்கள் விண்ணப்பித்துள்ளீர்கள்', 'You have applied')}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </header>
+
+      {/* ── LOADING / ERROR ─────────────────────────────────────────────────── */}
+      {loading && (
+        <div style={{ padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {[80, 120, 100, 90].map((h, i) => (
+            <div key={i} style={{ height: h, background: 'white', borderRadius: 14, boxShadow: '0 1px 4px rgba(0,0,0,0.05)', opacity: 0.6 }} />
+          ))}
         </div>
       )}
 
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-2">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-gray-600 p-1 -ml-1 text-lg"
-          aria-label="Back"
-        >
-          ←
-        </button>
-        <h1 className="flex-1 font-semibold text-gray-900 text-sm truncate min-w-0">
-          {detail ? (lang === 'ta' ? detail.name_ta : detail.name_en) : t('திட்ட விவரங்கள்', 'Scheme Details')}
-        </h1>
-        {/* Save button in TopBar */}
-        <button
-          onClick={handleSave}
-          className={cn(
-            'w-9 h-9 rounded-full flex items-center justify-center border text-base transition-colors shrink-0',
-            saved
-              ? 'bg-saffron-100 border-saffron-400 text-saffron-600'
-              : 'bg-gray-50 border-gray-200 text-gray-400 hover:border-saffron-300 hover:text-saffron-500',
-          )}
-          aria-label={saved ? t('சேமிப்பிலிருந்து நீக்கு', 'Remove') : t('சேமி', 'Save')}
-        >
-          🔖
-        </button>
-        <button
-          onClick={toggleLang}
-          className="text-xs border border-primary-400 text-primary-700 rounded-full px-3 py-1 bg-primary-50 shrink-0"
-        >
-          {lang === 'ta' ? 'En' : 'த'}
-        </button>
-      </header>
-
-      {loading && <SchemeDetailSkeleton />}
-
       {!loading && error && (
-        <div className="flex-1 flex items-center justify-center">
-          <ErrorMessage messageTa={error} onRetry={load} />
+        <div style={{ padding: '24px 16px' }}>
+          <div style={{ background: '#FEF2F2', borderRadius: 14, padding: '16px', border: '1px solid #FECACA', textAlign: 'center' }}>
+            <p style={{ margin: 0, fontSize: 13, color: '#B91C1C' }}>{error}</p>
+            <button onClick={load} style={{ marginTop: 10, fontSize: 12, fontWeight: 700, color: '#0A5C47', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+              {t('மீண்டும் முயற்சி', 'Try again')}
+            </button>
+          </div>
         </div>
       )}
 
       {!loading && !error && detail && (
-        <>
-          {/* Hero strip */}
-          <div className="bg-primary-900 text-white px-4 pt-5 pb-6">
-            <span className={cn(
-              'inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-2',
-              detail.level === 'central'
-                ? 'bg-indigo-200 text-indigo-900'
-                : 'bg-emerald-200 text-emerald-900',
-            )}>
-              {detail.level === 'central' ? t('மத்திய திட்டம்', 'Central Scheme') : t('மாநில திட்டம்', 'State Scheme')}
-            </span>
-            <h2 className="font-bold text-xl leading-snug">
-              {lang === 'ta' ? detail.name_ta : (detail.name_en || detail.name_ta)}
-            </h2>
-            {(detail.department_ta || detail.department_en) && (
-              <p className="text-primary-300 text-xs mt-1">
-                {lang === 'ta' ? detail.department_ta : (detail.department_en || detail.department_ta)}
+        <div style={{ padding: '16px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+          {/* ── What this gives you ──────────────────────────────────────────── */}
+          {benefit && (
+            <div style={{ background: '#FFFBF0', borderRadius: 16, padding: '16px', border: '1px solid #FDE68A' }}>
+              <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 700, color: '#B45309', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {t('இந்த திட்டம் தரும் நலன்', 'What this scheme gives you')}
               </p>
-            )}
-            {applied && (
-              <div className="mt-3 bg-primary-700 rounded-xl px-3 py-2 flex items-center gap-2">
-                <span className="text-primary-300 text-sm">✓</span>
-                <span className="text-primary-100 text-xs font-semibold">{t('விண்ணப்பித்தது', 'You have applied')}</span>
+              <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: '#78350F', lineHeight: 1.35 }}>{benefit}</p>
+            </div>
+          )}
+
+          {/* ── Why you qualify ──────────────────────────────────────────────── */}
+          {(detail.eligibility_ta || detail.eligibility_en) && (
+            <InfoCard
+              title={t('நீங்கள் ஏன் தகுதியுடையவர்', 'Why you qualify')}
+              body={lang === 'ta' ? detail.eligibility_ta ?? '' : (detail.eligibility_en || detail.eligibility_ta) ?? ''}
+              bg="#F0FDF4" labelColor="#0A5C47" bodyColor="#14532D"
+              borderColor="#A7F3D0"
+            />
+          )}
+
+          {/* ── Description ───────────────────────────────────────────────────── */}
+          {(detail.description_ta || detail.description_en) && (
+            <InfoCard
+              title={t('விளக்கம்', 'About this scheme')}
+              body={lang === 'ta' ? detail.description_ta ?? '' : (detail.description_en || detail.description_ta) ?? ''}
+              bg="#EFF8FF" labelColor="#1D4ED8" bodyColor="#1E3A5F"
+              borderColor="#BFDBFE"
+            />
+          )}
+
+          {/* ── Eligibility check ─────────────────────────────────────────────── */}
+          <div style={{ background: '#F5F3FF', borderRadius: 16, padding: '16px', border: '1px solid #DDD6FE' }}>
+            <p style={{ margin: '0 0 10px', fontSize: 11, fontWeight: 700, color: '#6D28D9', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              {t('தகுதி சரிபார்ப்பு', 'Eligibility Check')}
+            </p>
+            {!checkResult ? (
+              <button
+                onClick={runCheck}
+                disabled={checkLoading}
+                style={{ width: '100%', background: '#0A5C47', color: 'white', border: 'none', borderRadius: 12, padding: '12px', fontSize: 14, fontWeight: 700, cursor: checkLoading ? 'not-allowed' : 'pointer', opacity: checkLoading ? 0.7 : 1 }}
+              >
+                {checkLoading ? t('சரிபார்க்கிறது…', 'Checking…') : t('இப்போது சரிபார்', 'Check My Eligibility')}
+              </button>
+            ) : (
+              <div>
+                <div style={{
+                  background: checkResult.is_eligible ? '#F0FDF4' : '#FEF2F2',
+                  border: `1px solid ${checkResult.is_eligible ? '#A7F3D0' : '#FECACA'}`,
+                  borderRadius: 12, padding: '12px 14px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: checkResult.llm_response ? 8 : 0 }}>
+                    <CheckCircle2 size={16} color={checkResult.is_eligible ? '#0A5C47' : '#DC2626'} />
+                    <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: checkResult.is_eligible ? '#0A5C47' : '#DC2626' }}>
+                      {checkResult.is_eligible ? t('நீங்கள் தகுதியுடையவர்!', 'You are eligible!') : t('தகுதியில்லை', 'Not eligible')}
+                    </p>
+                  </div>
+                  {checkResult.llm_response && (
+                    <p style={{ margin: 0, fontSize: 12, color: '#374151', lineHeight: 1.5 }}>{checkResult.llm_response}</p>
+                  )}
+                </div>
+                <button onClick={() => setCheckResult(null)} style={{ marginTop: 8, fontSize: 11, color: '#94A3B8', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                  {t('மீண்டும் சரிபார்', 'Check again')}
+                </button>
               </div>
             )}
           </div>
 
-          <div className="px-4 pb-36 space-y-3 pt-4">
-            {/* Benefit */}
-            {detail.benefit_amount && (
-              <div className="rounded-2xl bg-saffron-50 border border-saffron-200 p-4">
-                <p className="text-xs text-saffron-700 font-semibold uppercase tracking-wide mb-1">
-                  {t('நலன்', 'Benefit')}
-                </p>
-                <p className="text-saffron-900 font-bold text-xl">
-                  {lang === 'ta' ? (detail.benefit_amount_ta ?? detail.benefit_amount) : detail.benefit_amount}
-                </p>
-              </div>
-            )}
-
-            {/* Description */}
-            {(detail.description_ta || detail.description_en) && (
-              <div className="card p-4">
-                <p className="text-xs text-gray-500 font-semibold mb-2">{t('விளக்கம்', 'Description')}</p>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  {lang === 'ta'
-                    ? detail.description_ta
-                    : (detail.description_en || detail.description_ta)}
-                </p>
-              </div>
-            )}
-
-            {/* Eligibility */}
-            {(detail.eligibility_ta || detail.eligibility_en) && (
-              <div className="card p-4">
-                <p className="text-xs text-gray-500 font-semibold mb-2">{t('தகுதி நிபந்தனைகள்', 'Eligibility Criteria')}</p>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  {lang === 'ta' ? detail.eligibility_ta : (detail.eligibility_en || detail.eligibility_ta)}
-                </p>
-              </div>
-            )}
-
-            {/* Application info */}
-            {(detail.application_mode || detail.application_portal_name || detail.application_process_summary) && (
-              <div className="card p-4 space-y-3">
-                <p className="text-xs text-gray-500 font-semibold">{t('விண்ணப்பிக்கும் முறை', 'How to Apply')}</p>
-
-                {detail.application_mode && (
-                  <div className="flex items-center gap-2">
-                    <span className={cn(
-                      'text-xs font-semibold px-3 py-1 rounded-full',
-                      detail.application_mode === 'HYBRID'
-                        ? 'bg-primary-100 text-primary-800'
-                        : 'bg-gray-100 text-gray-700',
-                    )}>
-                      {detail.application_mode === 'HYBRID'
-                        ? t('🌐 ஆன்லைன் / நேரில்', '🌐 Online / In-person')
-                        : t('🏢 நேரில் மட்டும்', '🏢 In-person only')}
-                    </span>
-                  </div>
-                )}
-
-                {detail.application_portal_name && (
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">{t('போர்டல்', 'Portal')}</p>
-                    <p className="text-sm text-gray-800 font-medium">{detail.application_portal_name}</p>
-                  </div>
-                )}
-
-                {detail.application_process_summary && (
-                  <div>
-                    <p className="text-xs text-gray-400 mb-1">{t('செயல்முறை', 'Process')}</p>
-                    <p className="text-sm text-gray-700 leading-relaxed">{detail.application_process_summary}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Deadline */}
-            {detail.application_deadline && (
-              <div className={cn(
-                'card p-4 flex items-center gap-3',
-                detail.deadline_urgent && 'border-orange-200 bg-orange-50',
-              )}>
-                <span className="text-2xl">{detail.deadline_urgent ? '⏰' : '📅'}</span>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold">{t('கடைசி தேதி', 'Application Deadline')}</p>
-                  <p className={cn('text-sm font-bold', detail.deadline_urgent ? 'text-orange-700' : 'text-gray-800')}>
-                    {detail.application_deadline}
+          {/* ── Required Documents ────────────────────────────────────────────── */}
+          {docs.length > 0 && (
+            <div style={{ background: '#FFFBF0', borderRadius: 16, padding: '16px', border: '1px solid #FDE68A' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <FileText size={16} color="#D97706" />
+                  <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#B45309', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    {t('தேவையான ஆவணங்கள்', 'Required Documents')}
                   </p>
                 </div>
+                <span style={{ fontSize: 12, fontWeight: 700, color: docsChecked === docs.length ? '#0A5C47' : '#D97706' }}>
+                  {docsChecked}/{docs.length}
+                </span>
               </div>
-            )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {docs.map((doc) => {
+                  const checked = isDocChecked(detail.scheme_id, doc)
+                  return (
+                    <button
+                      key={doc}
+                      onClick={() => toggleDoc(detail.scheme_id, doc)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 12,
+                        background: checked ? '#F0FDF4' : '#F8FAFC',
+                        border: `1px solid ${checked ? '#A7F3D0' : '#E2E8F0'}`,
+                        borderRadius: 10, padding: '10px 12px', cursor: 'pointer', textAlign: 'left',
+                      }}
+                    >
+                      <div style={{
+                        width: 20, height: 20, borderRadius: 6, flexShrink: 0,
+                        background: checked ? '#0A5C47' : 'transparent',
+                        border: `2px solid ${checked ? '#0A5C47' : '#CBD5E1'}`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        {checked && <CheckCircle2 size={12} color="white" />}
+                      </div>
+                      <span style={{ fontSize: 13, color: checked ? '#0A5C47' : '#374151', fontWeight: checked ? 600 : 400 }}>{doc}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
-            {/* Eligibility check */}
-            <div className="card p-4">
-              <p className="text-xs text-gray-500 font-semibold mb-2">{t('தகுதி சரிபார்ப்பு', 'Eligibility Check')}</p>
-              {!checkResult ? (
-                <button
-                  onClick={runCheck}
-                  disabled={checkLoading}
-                  className="btn-primary text-sm w-full py-3"
-                >
-                  {checkLoading ? t('சரிபார்க்கிறது…', 'Checking…') : t('இப்போது சரிபார்', 'Check Now')}
-                </button>
-              ) : (
-                <div>
-                  <div className={cn(
-                    'rounded-xl px-4 py-3 mb-2',
-                    checkResult.is_eligible
-                      ? 'bg-primary-50 border border-primary-200'
-                      : 'bg-red-50 border border-red-200',
-                  )}>
-                    <p className={cn('font-semibold text-sm', checkResult.is_eligible ? 'text-primary-800' : 'text-red-800')}>
-                      {checkResult.is_eligible
-                        ? t('✓ நீங்கள் தகுதியுள்ளவர்!', '✓ You are eligible!')
-                        : t('✗ தகுதியில்லை', '✗ Not eligible')}
-                    </p>
-                    {checkResult.llm_response && (
-                      <p className="text-gray-700 text-xs mt-2 leading-relaxed">{checkResult.llm_response}</p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => setCheckResult(null)}
-                    className="text-xs text-gray-400 underline"
-                  >
-                    {t('மீண்டும் சரிபார்', 'Check again')}
-                  </button>
+          {/* ── How to Apply ──────────────────────────────────────────────────── */}
+          {(detail.application_mode || detail.application_portal_name || detail.application_process_summary) && (
+            <div style={{ background: 'white', borderRadius: 16, padding: '16px', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+              <p style={{ margin: '0 0 12px', fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {t('விண்ணப்பிக்கும் முறை', 'How to Apply')}
+              </p>
+              {detail.application_mode && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                  {detail.application_mode === 'HYBRID' ? <Globe size={15} color="#0A5C47" /> : <Building2 size={15} color="#475569" />}
+                  <span style={{ fontSize: 13, fontWeight: 600, color: detail.application_mode === 'HYBRID' ? '#0A5C47' : '#475569' }}>
+                    {detail.application_mode === 'HYBRID'
+                      ? t('ஆன்லைன் அல்லது நேரில்', 'Online or In-person')
+                      : t('நேரில் மட்டும்', 'In-person only')}
+                  </span>
                 </div>
               )}
+              {detail.application_portal_name && (
+                <p style={{ margin: '0 0 8px', fontSize: 12, color: '#64748B' }}>
+                  <span style={{ fontWeight: 600 }}>{t('போர்டல்: ', 'Portal: ')}</span>{detail.application_portal_name}
+                </p>
+              )}
+              {detail.application_process_summary && (
+                <p style={{ margin: 0, fontSize: 13, color: '#374151', lineHeight: 1.5 }}>{detail.application_process_summary}</p>
+              )}
             </div>
+          )}
 
-            {/* Document checklist */}
-            {docs.length > 0 && (
-              <div className="card p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-xs text-gray-500 font-semibold">{t('தேவையான ஆவணங்கள்', 'Required Documents')}</p>
-                  <span className="text-xs font-semibold text-primary-700">{docsChecked}/{docs.length}</span>
-                </div>
-                <div className="space-y-2">
-                  {docs.map((doc) => {
-                    const checked = isDocChecked(detail.scheme_id, doc)
-                    return (
-                      <button
-                        key={doc}
-                        onClick={() => toggleDoc(detail.scheme_id, doc)}
-                        className={cn(
-                          'w-full flex items-center gap-3 p-2.5 rounded-xl border text-left transition-colors',
-                          checked
-                            ? 'bg-primary-50 border-primary-200 text-primary-800'
-                            : 'bg-gray-50 border-gray-200 text-gray-700',
-                        )}
-                      >
-                        <span className={cn(
-                          'w-5 h-5 rounded-md border flex items-center justify-center text-xs shrink-0',
-                          checked ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-400',
-                        )}>
-                          {checked && '✓'}
-                        </span>
-                        <span className="text-sm">{doc}</span>
-                      </button>
-                    )
-                  })}
-                </div>
+          {/* ── Deadline ──────────────────────────────────────────────────────── */}
+          {detail.application_deadline && (
+            <div style={{
+              background: detail.deadline_urgent ? '#FFF7ED' : 'white',
+              border: `1px solid ${detail.deadline_urgent ? '#FED7AA' : '#E2E8F0'}`,
+              borderRadius: 14, padding: '12px 16px',
+              display: 'flex', alignItems: 'center', gap: 12,
+            }}>
+              <div style={{ width: 44, height: 44, borderRadius: 22, background: detail.deadline_urgent ? '#FEF3C7' : '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Calendar size={20} color={detail.deadline_urgent ? '#EA580C' : '#94A3B8'} />
               </div>
-            )}
-
-            {/* Year / Source */}
-            {(detail.year || detail.source_url) && (
-              <div className="card p-4 space-y-1">
-                {detail.year && (
-                  <p className="text-xs text-gray-500">{t('திட்டம் தொடங்கிய ஆண்டு:', 'Launched:')} <span className="text-gray-700 font-medium">{detail.year}</span></p>
-                )}
-                {detail.source_url && (
-                  <p className="text-xs text-gray-500">
-                    {t('ஆதாரம்:', 'Source:')} <a href={detail.source_url} target="_blank" rel="noopener noreferrer" className="text-primary-600 underline">{detail.source_url}</a>
-                  </p>
-                )}
+              <div>
+                <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  {t('கடைசி தேதி', 'Application Deadline')}
+                </p>
+                <p style={{ margin: '2px 0 0', fontSize: 14, fontWeight: 700, color: detail.deadline_urgent ? '#C2410C' : '#1E293B' }}>
+                  {detail.application_deadline}
+                </p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Chat FAB — sits above action bar + BottomNav */}
-          <ChatFAB bottomOffset={144} />
-
-          {/* Sticky bottom bar — sits above BottomNav (bottom-14 = 56px) */}
-          <div className="fixed bottom-14 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-40">
-            {detail.application_url ? (
-              <a
-                href={detail.application_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 btn-primary text-sm text-center py-3"
-              >
-                {t('விண்ணப்பிக்கவும்', 'Apply Now')} →
+          {/* Source */}
+          {detail.source_url && (
+            <p style={{ fontSize: 11, color: '#CBD5E1', textAlign: 'center' }}>
+              {t('ஆதாரம்: ', 'Source: ')}
+              <a href={detail.source_url} target="_blank" rel="noopener noreferrer" style={{ color: '#94A3B8' }}>
+                {detail.source_url}
               </a>
-            ) : (
-              <button className="flex-1 btn-primary text-sm py-3 opacity-70" disabled>
-                {t('மாவட்ட அலுவலகத்தில் விண்ணப்பிக்கவும்', 'Apply at District Office')}
-              </button>
-            )}
-            {!applied && (
-              <button
-                onClick={() => markApplied(detail.scheme_id)}
-                className="flex-1 btn-secondary text-sm py-3"
-              >
-                {t('விண்ணப்பித்தது என்று குறி', 'Mark as Applied')}
-              </button>
-            )}
-          </div>
-        </>
+            </p>
+          )}
+        </div>
       )}
+
+      <ChatFAB bottomOffset={130} />
+
+      {/* ── STICKY BOTTOM BAR ──────────────────────────────────────────────── */}
+      {!loading && !error && detail && (
+        <div style={{
+          position: 'fixed', bottom: 56, left: '50%', transform: 'translateX(-50%)',
+          width: '100%', maxWidth: 480, background: 'white',
+          borderTop: '1px solid #F1F5F9', padding: '12px 16px',
+          display: 'flex', gap: 10, zIndex: 40,
+        }}>
+          {detail.application_url ? (
+            <a
+              href={detail.application_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ flex: 1, background: '#0A5C47', color: 'white', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, textAlign: 'center', textDecoration: 'none', display: 'block' }}
+            >
+              {t('இப்போது விண்ணப்பிக்கவும்', 'Apply Now')} →
+            </a>
+          ) : (
+            <button disabled style={{ flex: 1, background: '#0A5C47', color: 'white', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, border: 'none', opacity: 0.6, cursor: 'not-allowed' }}>
+              {t('மாவட்ட அலுவலகத்தில் விண்ணப்பிக்கவும்', 'Apply at District Office')}
+            </button>
+          )}
+          {!applied && (
+            <button
+              onClick={() => markApplied(detail.scheme_id)}
+              style={{ flex: 1, background: '#F0FDF4', color: '#0A5C47', borderRadius: 14, padding: '14px', fontSize: 13, fontWeight: 700, border: '1px solid #A7F3D0', cursor: 'pointer' }}
+            >
+              {t('விண்ணப்பித்தது என்று குறி', 'Mark as Applied')}
+            </button>
+          )}
+        </div>
+      )}
+
       <BottomNav />
     </div>
+  )
+}
+
+// ─── Info card ────────────────────────────────────────────────────────────────
+
+function InfoCard({
+  title, body,
+  bg = 'white', labelColor = '#94A3B8', bodyColor = '#374151', borderColor,
+}: {
+  title: string; body: string
+  bg?: string; labelColor?: string; bodyColor?: string; borderColor?: string
+}) {
+  return (
+    <div style={{
+      background: bg, borderRadius: 16, padding: '16px',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+      border: borderColor ? `1px solid ${borderColor}` : 'none',
+    }}>
+      <p style={{ margin: '0 0 8px', fontSize: 11, fontWeight: 700, color: labelColor, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{title}</p>
+      <p style={{ margin: 0, fontSize: 13, color: bodyColor, lineHeight: 1.6 }}>{body}</p>
     </div>
   )
 }

@@ -1,12 +1,11 @@
 import { useState } from 'react'
+import { AlertTriangle, Camera, CheckCircle2, Leaf, FlaskConical, Sprout, Share2, ArrowLeft, Info, MapPin, IndianRupee, Lightbulb, Stethoscope } from 'lucide-react'
 import type { DiagnoseResponse, SimilarDisease } from '@/types/diagnose'
-import { cn } from '@/lib/utils'
 
 type Lang = 'ta' | 'en'
 
 const L = {
   ta: {
-    // ── similar_diseases state ──────────────────────────────────────────────
     similar_title:    'நோயை உறுதியாக கண்டறிய முடியவில்லை',
     similar_sub:      'நம்பகமான நோய் கண்டறிவுக்கு படத்தில் போதுமான தகவல் இல்லை.',
     possible_matches: 'சாத்தியமான நோய்கள்',
@@ -19,17 +18,15 @@ const L = {
       'மங்கலான படம் வேண்டாம்',
       'முழு செடியை காட்ட வேண்டாம்',
     ],
-    retake_similar:   '📷 நெருக்கமான படம் எடுக்கவும்',
-    // ── image_quality state ─────────────────────────────────────────────────
+    retake_similar:   'நெருக்கமான படம் எடுக்கவும்',
     unclear:          'படத்தை சரியாக எடுக்கவில்லை',
-    retake_quality:   '📷 மீண்டும் எடுக்கவும்',
-    // ── confident result ────────────────────────────────────────────────────
+    retake_quality:   'மீண்டும் எடுக்கவும்',
     high_conf:        'AI கண்டறிந்தது',
     medium_conf:      'சாத்தியமான நோய்',
     medium_confirm:   'உறுதிப்படுத்த இன்னொரு நெருக்கமான படம் எடுக்கவும்.',
     source_ml:        'AI படம் பகுப்பாய்வு',
     source_symptom:   'அறிகுறி பொருத்தம் மூலம் கண்டறிந்தது',
-    crop_label:       'பயிர்:',
+    crop_label:       'பயிர்',
     modern:           'நவீன சிகிச்சை',
     traditional:      'இயற்கை வழி',
     chemical:         'மருந்து',
@@ -39,15 +36,14 @@ const L = {
     remedy_name:      'தீர்வு',
     method:           'முறை',
     heatmap_why:      'AI இந்த பகுதியை ஏன் கவனித்தது?',
-    scan_another:     '← புதிய படம்',
+    scan_another:     'புதிய படம்',
     share:            'பகிர்',
-    copied:           'நகலெடுக்கப்பட்டது ✓',
+    copied:           'நகலெடுக்கப்பட்டது',
     healthy:          'ஆரோக்கியமான பயிர்',
     healthy_sub:      'குறிப்பிடத்தக்க நோய் எதுவும் கண்டறியவில்லை.',
     mismatch_note:    'குறிப்பு: AI வேறு பயிர் வடிவை கண்டறிந்தது. முடிவு சரியாக இல்லாமல் போகலாம்.',
   },
   en: {
-    // ── similar_diseases state ──────────────────────────────────────────────
     similar_title:    'Unable to confidently identify the disease',
     similar_sub:      'The image does not contain enough information for a reliable diagnosis.',
     possible_matches: 'Possible matches',
@@ -60,17 +56,15 @@ const L = {
       'Avoid blurry images',
       'Avoid showing the entire plant',
     ],
-    retake_similar:   '📷 Take a closer photo',
-    // ── image_quality state ─────────────────────────────────────────────────
+    retake_similar:   'Take a closer photo',
     unclear:          'Poor image quality',
-    retake_quality:   '📷 Retake Photo',
-    // ── confident result ────────────────────────────────────────────────────
+    retake_quality:   'Retake Photo',
     high_conf:        'Identified',
     medium_conf:      'Possible match',
     medium_confirm:   'Take one more close photo of the leaf to confirm this diagnosis.',
     source_ml:        'Identified from photo analysis',
     source_symptom:   'Identified from symptoms you selected',
-    crop_label:       'Crop:',
+    crop_label:       'Crop',
     modern:           'Modern Treatment',
     traditional:      'Traditional Remedy',
     chemical:         'Chemical',
@@ -80,9 +74,9 @@ const L = {
     remedy_name:      'Remedy',
     method:           'Method',
     heatmap_why:      'Why did the app flag this area?',
-    scan_another:     '← Scan another',
+    scan_another:     'New Scan',
     share:            'Share',
-    copied:           'Copied ✓',
+    copied:           'Copied',
     healthy:          'Healthy Crop',
     healthy_sub:      'No significant disease detected.',
     mismatch_note:    'Note: our model detected a different crop pattern. Result may not be accurate.',
@@ -94,7 +88,7 @@ interface Props {
   response: DiagnoseResponse
   preview: string
   cropName: string
-  hasMismatch?: boolean   // high-confidence result but wrong crop — show caution note
+  hasMismatch?: boolean
   onReset: () => void
 }
 
@@ -103,121 +97,95 @@ export function DiagnosisResult({ lang, response, preview, cropName, hasMismatch
   const [treatmentTab, setTreatmentTab] = useState<'modern' | 'traditional'>('modern')
   const [copyMsg, setCopyMsg] = useState(false)
 
-  const {
-    disease,
-    confidence_level,
-    source,
-    heatmap_url,
-    shap_label_ta,
-    treatment,
-    low_confidence_prompt_ta,
-    low_confidence_prompt_en,
-    rejection_reason,
-    similar_diseases,
-  } = response
+  const { disease, confidence_level, source, heatmap_url, shap_label_ta, treatment,
+    low_confidence_prompt_ta, low_confidence_prompt_en, rejection_reason, similar_diseases } = response
 
   // ── CASE A1: Similar diseases ─────────────────────────────────────────────
-  // Model sees something but cannot distinguish between close candidates.
-  // Show possible disease names (no percentages) and photo guidance.
   if (confidence_level === 'low' && rejection_reason === 'similar_diseases') {
     const candidates: SimilarDisease[] = similar_diseases ?? []
     return (
-      <div className="space-y-3">
-
-        {/* Header */}
-        <div className="rounded-2xl border border-amber-200 bg-white overflow-hidden shadow-sm">
-          <div className="px-4 pt-4 pb-3">
-            <p className="text-base font-bold text-gray-900 leading-snug">
-              {t.similar_title}
-            </p>
-            <p className="text-sm text-gray-500 mt-1 leading-relaxed">
-              {t.similar_sub}
-            </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', borderLeft: '3px solid #F59E0B' }}>
+          <div style={{ padding: '16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <div style={{ width: 40, height: 40, borderRadius: 20, background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <AlertTriangle size={20} color="#D97706" />
+            </div>
+            <div>
+              <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#1E293B' }}>{t.similar_title}</p>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: '#64748B', lineHeight: 1.5 }}>{t.similar_sub}</p>
+            </div>
           </div>
-
-          {/* Possible matches — names only, no % */}
           {candidates.length > 0 && (
-            <div className="border-t border-amber-100 px-4 pt-3 pb-1">
-              <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-2">
-                {t.possible_matches}
-              </p>
-              <ul className="space-y-1.5 mb-3">
+            <div style={{ borderTop: '1px solid #FEF9C3', padding: '12px 16px' }}>
+              <p style={{ margin: '0 0 8px', fontSize: 11, fontWeight: 700, color: '#D97706', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.possible_matches}</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {candidates.map((d, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                    <span className="text-sm text-gray-800">
-                      {lang === 'ta' ? d.name_ta : d.name_en}
-                    </span>
-                  </li>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: 3, background: '#F59E0B', flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, color: '#374151' }}>{lang === 'ta' ? d.name_ta : d.name_en}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Next action card */}
-        <div className="rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm">
-          <div className="px-4 py-3 border-b border-gray-100" style={{ background: '#F0FDF4' }}>
-            <p className="text-xs font-semibold text-green-800 uppercase tracking-wide">
-              {t.next_action}
-            </p>
+        <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', borderLeft: '3px solid #0A5C47' }}>
+          <div style={{ padding: '10px 14px', background: '#F0FDF4', borderBottom: '1px solid #DCFCE7', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Lightbulb size={14} color="#0A5C47" />
+            <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#0A5C47', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.next_action}</p>
           </div>
-          <div className="px-4 py-3">
-            <p className="text-sm font-semibold text-gray-900 mb-3">
-              {t.next_action_text}
-            </p>
-            <ul className="space-y-2">
+          <div style={{ padding: '12px 16px' }}>
+            <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 700, color: '#1E293B' }}>{t.next_action_text}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
               {t.tips.map((tip, i) => (
-                <li key={i} className="flex items-center gap-2.5">
-                  <span className="text-green-600 font-bold text-sm shrink-0">✓</span>
-                  <span className="text-sm text-gray-700">{tip}</span>
-                </li>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckCircle2 size={14} color="#0A5C47" />
+                  <span style={{ fontSize: 13, color: '#374151' }}>{tip}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
 
-        {/* Action button */}
-        <button
-          onClick={onReset}
-          className="w-full py-3 rounded-xl text-sm font-bold text-white"
-          style={{ background: '#1B4332' }}
-        >
+        <button onClick={onReset}
+          style={{ width: '100%', background: '#0A5C47', color: 'white', border: 'none', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <Camera size={16} color="white" />
           {t.retake_similar}
         </button>
       </div>
     )
   }
 
-  // ── CASE A2: Image quality — truly unclear / bad photo ───────────────────
+  // ── CASE A2: Poor image quality ───────────────────────────────────────────
   if (confidence_level === 'low') {
     const prompt = lang === 'ta' ? low_confidence_prompt_ta : low_confidence_prompt_en
     return (
-      <div className="space-y-4">
-        <div className="rounded-2xl overflow-hidden border border-orange-200 shadow-sm bg-white">
-          <div className="px-4 py-4 flex items-start gap-3 bg-orange-50">
-            <span className="text-3xl shrink-0">⚠️</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ background: '#FFF5F5', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', borderLeft: '3px solid #EF4444' }}>
+          <div style={{ padding: '16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <div style={{ width: 40, height: 40, borderRadius: 20, background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <AlertTriangle size={20} color="#DC2626" />
+            </div>
             <div>
-              <p className="text-base font-bold text-orange-900">{t.unclear}</p>
-              {prompt && <p className="text-sm text-orange-800 mt-1 leading-relaxed">{prompt}</p>}
+              <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#991B1B' }}>{t.unclear}</p>
+              {prompt && <p style={{ margin: '4px 0 0', fontSize: 12, color: '#B91C1C', lineHeight: 1.5 }}>{prompt}</p>}
             </div>
           </div>
         </div>
-        <button
-          onClick={onReset}
-          className="w-full py-3 rounded-xl text-sm font-bold text-white"
-          style={{ background: '#1B4332' }}
-        >
+        <button onClick={onReset}
+          style={{ width: '100%', background: '#0A5C47', color: 'white', border: 'none', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <Camera size={16} color="white" />
           {t.retake_quality}
         </button>
       </div>
     )
   }
 
-  // ── CASE B: Confident result (high or medium) ────────────────────────────
-  const isHealthy  = !disease || disease.id?.includes('healthy') || disease.name_en?.toLowerCase().includes('healthy')
+  // ── CASE B: Confident result ──────────────────────────────────────────────
+  const isHealthy   = !disease || disease.id?.includes('healthy') || disease.name_en?.toLowerCase().includes('healthy')
   const diseaseName = lang === 'ta' ? (disease?.name_ta || disease?.name_en) : disease?.name_en
-  const isHigh     = confidence_level === 'high'
+  const isHigh      = confidence_level === 'high'
 
   async function handleShare() {
     const name = diseaseName ?? (lang === 'ta' ? 'நோய் கண்டறியப்பட்டது' : 'Disease detected')
@@ -235,8 +203,6 @@ export function DiagnosisResult({ lang, response, preview, cropName, hasMismatch
     }
   }
 
-  // Derive detected crop from disease.id (e.g. "tomato_early_blight" → "tomato").
-  // Gemini disease IDs are disease-only (e.g. "early_blight"), so skip parsing for Gemini.
   const TN_CROP_LABELS: Record<string, { ta: string; en: string }> = {
     rice:       { ta: 'நெல்',            en: 'Rice' },
     tomato:     { ta: 'தக்காளி',         en: 'Tomato' },
@@ -261,131 +227,118 @@ export function DiagnosisResult({ lang, response, preview, cropName, hasMismatch
     blueberry:  { ta: 'நீலக்கனி',         en: 'Blueberry' },
   }
   const detectedCropKey = (source === 'gemini_vision' || source === 'symptom_match')
-    ? ''
+    ? cropName.toLowerCase()
     : (disease?.id?.split('_')[0] ?? '')
   const cropLabel =
     TN_CROP_LABELS[detectedCropKey]?.[lang] ||
+    TN_CROP_LABELS[cropName.toLowerCase()]?.[lang] ||
     (detectedCropKey ? detectedCropKey.charAt(0).toUpperCase() + detectedCropKey.slice(1) : cropName)
 
-  // Badge: label only, no %. Medium uses "Possible match" framing.
-  const badgeBg    = isHigh ? '#D1FAE5' : '#FEF3C7'
-  const badgeColor = isHigh ? '#065F46' : '#92400E'
-  const badgeLabel = isHigh ? t.high_conf : t.medium_conf
+  const confidenceBg    = isHigh ? '#DCFCE7' : '#FEF3C7'
+  const confidenceColor = isHigh ? '#166534' : '#92400E'
+  const borderColor     = isHigh ? '#0A5C47' : '#F59E0B'
 
   return (
-    <div className="space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-      {/* ── Mismatch caution note (high-confidence but wrong crop) ─────────── */}
+      {/* Mismatch caution */}
       {hasMismatch && (
-        <div className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 flex items-start gap-2.5">
-          <span className="text-base shrink-0 mt-0.5">⚠️</span>
-          <p className="text-xs text-orange-800 leading-relaxed">{t.mismatch_note}</p>
+        <div style={{ background: '#FFF7ED', borderRadius: 12, padding: '11px 14px', border: '1px solid #FED7AA', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+          <AlertTriangle size={14} color="#C2410C" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ margin: 0, fontSize: 12, color: '#9A3412', lineHeight: 1.5 }}>{t.mismatch_note}</p>
         </div>
       )}
 
-      {/* ── Disease header ────────────────────────────────────────────────── */}
-      <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-white">
-        <div className="flex gap-3 px-4 py-4">
+      {/* Disease header card */}
+      <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', borderLeft: `3px solid ${borderColor}` }}>
+        <div style={{ display: 'flex', gap: 14, padding: '16px' }}>
           {preview ? (
-            <img
-              src={preview}
-              alt="scanned leaf"
-              className="w-20 h-20 rounded-xl object-cover shrink-0 border border-gray-200"
-            />
+            <img src={preview} alt="scanned leaf" style={{ width: 80, height: 80, borderRadius: 12, objectFit: 'cover', flexShrink: 0, border: '1px solid #E2E8F0' }} />
           ) : (
-            <div className="w-20 h-20 rounded-xl bg-green-100 flex items-center justify-center shrink-0 text-3xl">
-              🌿
+            <div style={{ width: 80, height: 80, borderRadius: 12, background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Leaf size={32} color="#0A5C47" />
             </div>
           )}
-          <div className="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
-            <p className="text-base font-bold text-gray-900 leading-tight">
+          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 5, justifyContent: 'center' }}>
+            <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: '#1E293B', lineHeight: 1.3 }}>
               {isHealthy ? t.healthy : diseaseName}
             </p>
-            {isHealthy && (
-              <p className="text-xs text-green-700">{t.healthy_sub}</p>
-            )}
-            {/* Badge — label only, confidence % kept internal */}
+            {isHealthy && <p style={{ margin: 0, fontSize: 12, color: '#16A34A' }}>{t.healthy_sub}</p>}
             {!isHealthy && (
-              <span
-                className="self-start text-xs font-semibold px-2.5 py-1 rounded-full"
-                style={{ background: badgeBg, color: badgeColor }}
-              >
-                {badgeLabel}
+              <span style={{ alignSelf: 'flex-start', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: confidenceBg, color: confidenceColor }}>
+                {isHigh ? t.high_conf : t.medium_conf}
               </span>
             )}
-            <p className="text-xs text-gray-500">
-              {source === 'symptom_match' ? t.source_symptom : t.source_ml}
-            </p>
-            <p className="text-xs text-gray-500">
-              {t.crop_label}{' '}
-              <span className="font-semibold text-gray-700">{cropLabel}</span>
-            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <Stethoscope size={11} color="#94A3B8" />
+              <p style={{ margin: 0, fontSize: 11, color: '#94A3B8' }}>{source === 'symptom_match' ? t.source_symptom : t.source_ml}</p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <Sprout size={11} color="#94A3B8" />
+              <p style={{ margin: 0, fontSize: 11, color: '#64748B' }}>{t.crop_label}: <span style={{ fontWeight: 700, color: '#374151' }}>{cropLabel}</span></p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Medium-confidence confirmation nudge ─────────────────────────── */}
+      {/* Medium-confidence nudge */}
       {!isHigh && !isHealthy && (
-        <div className="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 flex items-start gap-2.5">
-          <span className="text-base shrink-0 mt-0.5">📷</span>
-          <p className="text-xs text-amber-800 leading-relaxed">{t.medium_confirm}</p>
+        <div style={{ background: '#FFFBF0', borderRadius: 12, padding: '11px 14px', border: '1px solid #FDE68A', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+          <Camera size={14} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
+          <p style={{ margin: 0, fontSize: 12, color: '#92400E', lineHeight: 1.5 }}>{t.medium_confirm}</p>
         </div>
       )}
 
-      {/* ── Treatment tabs ────────────────────────────────────────────────── */}
+      {/* Treatment tabs */}
       {!isHealthy && treatment && (
-        <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-          <div className="flex border-b border-gray-100" style={{ background: '#F8F9FA' }}>
+        <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+          <div style={{ display: 'flex', background: '#F8F9FA', borderBottom: '1px solid #E2E8F0' }}>
             {(['modern', 'traditional'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setTreatmentTab(tab)}
-                className={cn(
-                  'flex-1 text-xs font-semibold py-3 border-b-2 transition-colors',
-                  treatmentTab === tab
-                    ? 'border-green-700 text-green-800'
-                    : 'border-transparent text-gray-500 hover:text-gray-700',
-                )}
-              >
-                {tab === 'modern' ? `💊 ${t.modern}` : `🌿 ${t.traditional}`}
+              <button key={tab} onClick={() => setTreatmentTab(tab)}
+                style={{
+                  flex: 1, padding: '12px 8px', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700,
+                  background: treatmentTab === tab ? 'white' : 'transparent',
+                  color: treatmentTab === tab ? '#0A5C47' : '#94A3B8',
+                  borderBottom: treatmentTab === tab ? '2px solid #0A5C47' : '2px solid transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  transition: 'all 0.15s',
+                }}>
+                {tab === 'modern'
+                  ? <><FlaskConical size={13} color={treatmentTab === 'modern' ? '#0A5C47' : '#94A3B8'} />{t.modern}</>
+                  : <><Sprout size={13} color={treatmentTab === 'traditional' ? '#0A5C47' : '#94A3B8'} />{t.traditional}</>}
               </button>
             ))}
           </div>
 
           {treatmentTab === 'modern' && treatment.modern && (
-            <div className="bg-white px-4 py-4 space-y-3">
+            <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
               {treatment.modern.chemical && (
-                <TreatmentRow label={t.chemical} value={treatment.modern.chemical} />
+                <InfoRow icon={<FlaskConical size={13} color="#6D28D9" />} bg="#F5F3FF" label={t.chemical} value={treatment.modern.chemical} valueColor="#1E293B" />
               )}
               {treatment.modern.dosage && (
-                <TreatmentRow label={t.dosage} value={treatment.modern.dosage} />
+                <InfoRow icon={<Info size={13} color="#1D4ED8" />} bg="#EFF6FF" label={t.dosage} value={treatment.modern.dosage} valueColor="#1E293B" />
               )}
               {treatment.modern.cost_per_acre != null && (
-                <TreatmentRow
-                  label={t.cost}
-                  value={`₹${treatment.modern.cost_per_acre}`}
-                  highlight
-                />
+                <InfoRow icon={<IndianRupee size={13} color="#0A5C47" />} bg="#F0FDF4" label={t.cost} value={`₹${treatment.modern.cost_per_acre}`} valueColor="#0A5C47" bold />
               )}
               {treatment.modern.supply_note && (
-                <div className="rounded-xl bg-blue-50 border border-blue-100 px-3 py-2.5">
-                  <p className="text-xs text-blue-700 leading-relaxed italic">
-                    {treatment.modern.supply_note}
-                  </p>
+                <div style={{ background: '#EFF6FF', borderRadius: 10, padding: '10px 12px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                  <MapPin size={13} color="#1D4ED8" style={{ flexShrink: 0, marginTop: 1 }} />
+                  <p style={{ margin: 0, fontSize: 12, color: '#1E40AF', fontStyle: 'italic', lineHeight: 1.5 }}>{treatment.modern.supply_note}</p>
                 </div>
               )}
             </div>
           )}
 
           {treatmentTab === 'traditional' && treatment.indigenous && (
-            <div className="bg-white px-4 py-4 space-y-3">
+            <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
               {treatment.indigenous.name && (
-                <TreatmentRow label={t.remedy_name} value={treatment.indigenous.name} />
+                <InfoRow icon={<Sprout size={13} color="#0A5C47" />} bg="#F0FDF4" label={t.remedy_name} value={treatment.indigenous.name} valueColor="#1E293B" />
               )}
               {(lang === 'ta' ? treatment.indigenous.preparation_ta : treatment.indigenous.method) && (
-                <div>
-                  <p className="text-xs text-gray-500 mb-1">{t.method}</p>
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                <div style={{ background: '#F8FAF8', borderRadius: 10, padding: '10px 12px' }}>
+                  <p style={{ margin: '0 0 5px', fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.method}</p>
+                  <p style={{ margin: 0, fontSize: 13, color: '#374151', lineHeight: 1.6 }}>
                     {lang === 'ta' ? treatment.indigenous.preparation_ta : treatment.indigenous.method}
                   </p>
                 </div>
@@ -395,42 +348,36 @@ export function DiagnosisResult({ lang, response, preview, cropName, hasMismatch
         </div>
       )}
 
-      {/* ── SHAP heatmap ─────────────────────────────────────────────────── */}
+      {/* SHAP heatmap */}
       {heatmap_url && (
-        <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-          <div className="px-4 py-3 border-b border-gray-100" style={{ background: '#F8F9FA' }}>
-            <p className="text-xs font-semibold text-gray-600">{t.heatmap_why}</p>
+        <div style={{ background: 'white', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
+          <div style={{ padding: '10px 14px', background: '#F8F9FA', borderBottom: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Info size={13} color="#64748B" />
+            <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#64748B' }}>{t.heatmap_why}</p>
           </div>
-          <div className="bg-black">
-            <img
-              src={heatmap_url}
-              alt="AI attention heatmap"
-              className="w-full max-h-64 object-contain"
-            />
+          <div style={{ background: 'black' }}>
+            <img src={heatmap_url} alt="AI attention heatmap" style={{ width: '100%', maxHeight: 240, objectFit: 'contain', display: 'block' }} />
           </div>
           {shap_label_ta && (
-            <div className="bg-white px-4 py-2.5">
-              <p className="text-xs text-gray-500 italic">{shap_label_ta}</p>
+            <div style={{ padding: '10px 14px' }}>
+              <p style={{ margin: 0, fontSize: 12, color: '#94A3B8', fontStyle: 'italic' }}>{shap_label_ta}</p>
             </div>
           )}
         </div>
       )}
 
-      {/* ── Action row ───────────────────────────────────────────────────── */}
-      <div className="flex gap-3">
-        <button
-          onClick={onReset}
-          className="flex-1 py-3 rounded-xl border-2 border-green-700 text-green-800 text-sm font-bold hover:bg-green-50 transition-colors"
-        >
+      {/* Action row */}
+      <div style={{ display: 'flex', gap: 10 }}>
+        <button onClick={onReset}
+          style={{ flex: 1, background: 'white', color: '#0A5C47', border: '1.5px solid #A7F3D0', borderRadius: 14, padding: '13px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+          <ArrowLeft size={15} color="#0A5C47" />
           {t.scan_another}
         </button>
         {!isHealthy && (
-          <button
-            onClick={handleShare}
-            className="flex-1 py-3 rounded-xl text-sm font-bold text-white transition-colors"
-            style={{ background: '#1B4332' }}
-          >
-            {copyMsg ? t.copied : `📤 ${t.share}`}
+          <button onClick={handleShare}
+            style={{ flex: 1, background: '#0A5C47', color: 'white', border: 'none', borderRadius: 14, padding: '13px', fontSize: 13, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+            <Share2 size={15} color="white" />
+            {copyMsg ? t.copied : t.share}
           </button>
         )}
       </div>
@@ -438,26 +385,16 @@ export function DiagnosisResult({ lang, response, preview, cropName, hasMismatch
   )
 }
 
-function TreatmentRow({
-  label,
-  value,
-  highlight,
-}: {
-  label: string
-  value: string
-  highlight?: boolean
+function InfoRow({ icon, bg, label, value, valueColor, bold }: {
+  icon: React.ReactNode; bg: string; label: string; value: string; valueColor: string; bold?: boolean
 }) {
   return (
-    <div className="flex items-start justify-between gap-4">
-      <span className="text-xs text-gray-500 shrink-0 mt-0.5">{label}</span>
-      <span
-        className={cn(
-          'text-sm text-right',
-          highlight ? 'font-bold text-green-700' : 'font-medium text-gray-800',
-        )}
-      >
-        {value}
-      </span>
+    <div style={{ background: bg, borderRadius: 10, padding: '10px 12px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+        {icon}
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>{label}</span>
+      </div>
+      <span style={{ fontSize: 13, fontWeight: bold ? 800 : 600, color: valueColor, textAlign: 'right' as const, lineHeight: 1.4 }}>{value}</span>
     </div>
   )
 }

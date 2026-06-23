@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, CheckCircle2, Pencil, RefreshCw, Globe } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Pencil, RefreshCw } from 'lucide-react'
 import { useProfileStore } from '@/store/profileStore'
-import { useSchemeStore } from '@/store/schemeStore'
 import { useFarmerStore } from '@/store/farmerStore'
 import { syncProfileToBackend } from '@/api/farmer'
 import { TN_CROPS } from '@/data/tn-options'
@@ -73,12 +72,12 @@ export default function ProfilePage() {
   const navigate = useNavigate()
   const { profile, completionPct, markServerSynced } = useProfileStore()
   const isLoggedIn = useFarmerStore((s) => s.isLoggedIn())
-  const { lang, toggleLang } = useSchemeStore()
 
   const [syncing, setSyncing] = useState(false)
   const [syncMsg, setSyncMsg] = useState<string | null>(null)
 
-  const t = (ta: string, en: string) => lang === 'ta' ? ta : en
+  const lang: 'ta' | 'en' = 'ta'
+  const t = (ta: string, _en: string) => ta
 
   async function handleSync() {
     if (!isLoggedIn) return
@@ -112,13 +111,6 @@ export default function ProfilePage() {
         <h1 className="flex-1 font-semibold text-sm" style={{ color: '#0A5C47' }}>
           {t('என் சுயவிவரம்', 'My Profile')}
         </h1>
-        <button
-          onClick={toggleLang}
-          className="flex items-center gap-1 border rounded-full px-2.5 py-1 text-xs"
-          style={{ borderColor: '#D1D5DB', color: '#6B7280' }}
-        >
-          <Globe size={12} /> {lang === 'ta' ? 'En' : 'த'}
-        </button>
         <Link
           to="/profile/onboarding"
           className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white"
