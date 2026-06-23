@@ -1,0 +1,183 @@
+{
+  "source": "Allen RG, Pereira LS, Raes D, Smith M (1998) FAO Irrigation and Drainage Paper 56 — Crop evapotranspiration: Guidelines for computing crop water requirements. Table 12.",
+  "source_url": "https://www.fao.org/3/x0490e/x0490e00.htm",
+  "note": "Stage durations adjusted for Tamil Nadu agroclimatic conditions and standard crop calendars in the state.",
+  "crop_coefficients": [
+    {
+      "crop": "rice",
+      "crop_ta": "நெல்",
+      "total_days": 140,
+      "stages": [
+        {"stage": "initial",     "duration_days": 20, "kc_value": 1.05, "description": "Transplanting to early tillering"},
+        {"stage": "development", "duration_days": 25, "kc_value": 1.05, "description": "Tillering to jointing"},
+        {"stage": "mid",         "duration_days": 65, "kc_value": 1.20, "description": "Heading to grain filling (highest water demand)"},
+        {"stage": "late",        "duration_days": 30, "kc_value": 0.90, "description": "Grain maturity to harvest"}
+      ]
+    },
+    {
+      "crop": "groundnut",
+      "crop_ta": "நிலக்கடலை",
+      "total_days": 120,
+      "stages": [
+        {"stage": "initial",     "duration_days": 25, "kc_value": 0.40, "description": "Germination to early vegetative"},
+        {"stage": "development", "duration_days": 35, "kc_value": 0.75, "description": "Vegetative to early flowering"},
+        {"stage": "mid",         "duration_days": 40, "kc_value": 1.05, "description": "Flowering to pod fill"},
+        {"stage": "late",        "duration_days": 20, "kc_value": 0.60, "description": "Pod maturity to harvest"}
+      ]
+    },
+    {
+      "crop": "cotton",
+      "crop_ta": "பருத்தி",
+      "total_days": 180,
+      "stages": [
+        {"stage": "initial",     "duration_days": 30, "kc_value": 0.35, "description": "Germination to square initiation"},
+        {"stage": "development", "duration_days": 50, "kc_value": 0.75, "description": "Squaring to first bloom"},
+        {"stage": "mid",         "duration_days": 55, "kc_value": 1.15, "description": "Peak bloom to boll opening"},
+        {"stage": "late",        "duration_days": 45, "kc_value": 0.70, "description": "Boll opening to harvest"}
+      ]
+    },
+    {
+      "crop": "sugarcane",
+      "crop_ta": "கரும்பு",
+      "total_days": 365,
+      "stages": [
+        {"stage": "initial",     "duration_days": 35,  "kc_value": 0.40, "description": "Germination and establishment"},
+        {"stage": "development", "duration_days": 60,  "kc_value": 0.80, "description": "Tillering to rapid elongation"},
+        {"stage": "mid",         "duration_days": 190, "kc_value": 1.25, "description": "Grand growth period"},
+        {"stage": "late",        "duration_days": 80,  "kc_value": 0.75, "description": "Maturation and ripening"}
+      ]
+    },
+    {
+      "crop": "banana",
+      "crop_ta": "வாழை",
+      "total_days": 360,
+      "stages": [
+        {"stage": "initial",     "duration_days": 120, "kc_value": 0.50, "description": "Establishment and early growth"},
+        {"stage": "development", "duration_days": 60,  "kc_value": 0.90, "description": "Rapid vegetative growth"},
+        {"stage": "mid",         "duration_days": 120, "kc_value": 1.10, "description": "Flowering and bunch development"},
+        {"stage": "late",        "duration_days": 60,  "kc_value": 1.00, "description": "Bunch filling to harvest"}
+      ]
+    },
+    {
+      "crop": "maize",
+      "crop_ta": "சோளம்",
+      "total_days": 130,
+      "stages": [
+        {"stage": "initial",     "duration_days": 25, "kc_value": 0.30, "description": "Germination to 6-leaf stage"},
+        {"stage": "development", "duration_days": 35, "kc_value": 0.70, "description": "6-leaf to tasselling"},
+        {"stage": "mid",         "duration_days": 40, "kc_value": 1.20, "description": "Silking to dough stage"},
+        {"stage": "late",        "duration_days": 30, "kc_value": 0.60, "description": "Dough to physiological maturity"}
+      ]
+    },
+    {
+      "crop": "onion",
+      "crop_ta": "வெங்காயம்",
+      "total_days": 150,
+      "stages": [
+        {"stage": "initial",     "duration_days": 15, "kc_value": 0.70, "description": "Transplanting to establishment"},
+        {"stage": "development", "duration_days": 25, "kc_value": 0.75, "description": "Vegetative growth"},
+        {"stage": "mid",         "duration_days": 70, "kc_value": 1.05, "description": "Bulb initiation to maturity"},
+        {"stage": "late",        "duration_days": 40, "kc_value": 0.75, "description": "Maturation and curing"}
+      ]
+    },
+    {
+      "crop": "tomato",
+      "crop_ta": "தக்காளி",
+      "total_days": 135,
+      "stages": [
+        {"stage": "initial",     "duration_days": 30, "kc_value": 0.60, "description": "Transplanting to first flower"},
+        {"stage": "development", "duration_days": 40, "kc_value": 0.75, "description": "Flowering to first fruit set"},
+        {"stage": "mid",         "duration_days": 40, "kc_value": 1.15, "description": "Fruit development to colour change"},
+        {"stage": "late",        "duration_days": 25, "kc_value": 0.80, "description": "Ripening to final harvest"}
+      ]
+    },
+    {
+      "crop": "turmeric",
+      "crop_ta": "மஞ்சள்",
+      "total_days": 270,
+      "stages": [
+        {"stage": "initial",     "duration_days": 60,  "kc_value": 0.50, "description": "Sprouting to early vegetative"},
+        {"stage": "development", "duration_days": 60,  "kc_value": 0.75, "description": "Rapid leaf canopy development"},
+        {"stage": "mid",         "duration_days": 100, "kc_value": 1.00, "description": "Peak growth and rhizome development"},
+        {"stage": "late",        "duration_days": 50,  "kc_value": 0.75, "description": "Maturation and leaf senescence"}
+      ]
+    },
+    {
+      "crop": "finger_millet",
+      "crop_ta": "கேழ்வரகு",
+      "total_days": 120,
+      "stages": [
+        {"stage": "initial",     "duration_days": 20, "kc_value": 0.30, "description": "Germination to seedling stage"},
+        {"stage": "development", "duration_days": 30, "kc_value": 0.65, "description": "Tillering and stem elongation"},
+        {"stage": "mid",         "duration_days": 50, "kc_value": 1.10, "description": "Heading to grain filling"},
+        {"stage": "late",        "duration_days": 20, "kc_value": 0.55, "description": "Grain maturity to harvest"}
+      ]
+    },
+    {
+      "crop": "sorghum",
+      "crop_ta": "கம்பு",
+      "total_days": 120,
+      "stages": [
+        {"stage": "initial",     "duration_days": 20, "kc_value": 0.30, "description": "Germination to 5-leaf stage"},
+        {"stage": "development", "duration_days": 30, "kc_value": 0.65, "description": "Vegetative growth to boot stage"},
+        {"stage": "mid",         "duration_days": 40, "kc_value": 1.05, "description": "Heading to soft dough stage"},
+        {"stage": "late",        "duration_days": 30, "kc_value": 0.55, "description": "Hard dough to physiological maturity"}
+      ]
+    },
+    {
+      "crop": "blackgram",
+      "crop_ta": "உளுந்து",
+      "total_days": 90,
+      "stages": [
+        {"stage": "initial",     "duration_days": 15, "kc_value": 0.40, "description": "Germination to first trifoliate"},
+        {"stage": "development", "duration_days": 25, "kc_value": 0.75, "description": "Vegetative to early flowering"},
+        {"stage": "mid",         "duration_days": 35, "kc_value": 1.05, "description": "Flowering to pod fill"},
+        {"stage": "late",        "duration_days": 15, "kc_value": 0.70, "description": "Pod maturity to harvest"}
+      ]
+    },
+    {
+      "crop": "greengram",
+      "crop_ta": "பாசிப்பயறு",
+      "total_days": 75,
+      "stages": [
+        {"stage": "initial",     "duration_days": 15, "kc_value": 0.40, "description": "Germination to first trifoliate"},
+        {"stage": "development", "duration_days": 20, "kc_value": 0.75, "description": "Vegetative growth"},
+        {"stage": "mid",         "duration_days": 25, "kc_value": 1.05, "description": "Flowering and pod development"},
+        {"stage": "late",        "duration_days": 15, "kc_value": 0.70, "description": "Pod maturity to harvest"}
+      ]
+    },
+    {
+      "crop": "sunflower",
+      "crop_ta": "சூரியகாந்தி",
+      "total_days": 120,
+      "stages": [
+        {"stage": "initial",     "duration_days": 25, "kc_value": 0.35, "description": "Germination to 4-leaf stage"},
+        {"stage": "development", "duration_days": 35, "kc_value": 0.75, "description": "Vegetative to bud stage"},
+        {"stage": "mid",         "duration_days": 35, "kc_value": 1.15, "description": "Flowering to seed fill"},
+        {"stage": "late",        "duration_days": 25, "kc_value": 0.35, "description": "Seed maturity to harvest"}
+      ]
+    },
+    {
+      "crop": "cassava",
+      "crop_ta": "மரவள்ளி",
+      "total_days": 300,
+      "stages": [
+        {"stage": "initial",     "duration_days": 60,  "kc_value": 0.30, "description": "Establishment to canopy closure"},
+        {"stage": "development", "duration_days": 90,  "kc_value": 0.70, "description": "Rapid canopy and root development"},
+        {"stage": "mid",         "duration_days": 120, "kc_value": 1.00, "description": "Peak tuber development"},
+        {"stage": "late",        "duration_days": 30,  "kc_value": 0.70, "description": "Tuber maturation"}
+      ]
+    },
+    {
+      "crop": "coconut",
+      "crop_ta": "தேங்காய்",
+      "total_days": 365,
+      "stages": [
+        {"stage": "initial",     "duration_days": 90,  "kc_value": 0.95, "description": "Canopy establishment / young palms"},
+        {"stage": "development", "duration_days": 90,  "kc_value": 0.95, "description": "Progressive canopy expansion"},
+        {"stage": "mid",         "duration_days": 150, "kc_value": 1.00, "description": "Full canopy — peak nut production period"},
+        {"stage": "late",        "duration_days": 35,  "kc_value": 1.00, "description": "Dry-season flush — Kc remains high (perennial)"}
+      ]
+    }
+  ]
+}

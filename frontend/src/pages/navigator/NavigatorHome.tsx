@@ -118,7 +118,7 @@ export default function NavigatorHome() {
   const primaryCrop = profile?.crops?.[0]?.crop
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center" style={{ backgroundColor: '#F9FAFB' }}>
     <div className="w-full max-w-[480px] flex flex-col min-h-screen">
       {/* Toast */}
       {toast && (
@@ -128,17 +128,18 @@ export default function NavigatorHome() {
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-primary-900 text-white px-4 pt-3 pb-3">
+      <header className="sticky top-0 z-30 px-4 pt-3 pb-3 text-white" style={{ background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)' }}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-bold text-base">{t('அரசு திட்ட வழிகாட்டி', 'Government Navigator')}</h1>
-            <p className="text-primary-300 text-xs mt-0.5">
+            <h1 className="font-semibold text-base text-white">{t('அரசு திட்ட வழிகாட்டி', 'Government Navigator')}</h1>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {t(`${schemes.length || 24} திட்டங்கள் கிடைக்கின்றன`, `${schemes.length || 24} schemes available`)}
             </p>
           </div>
           <button
             onClick={toggleLang}
-            className="text-xs border border-primary-400 text-primary-100 rounded-full px-3 py-1 bg-primary-800 shrink-0"
+            className="text-xs border rounded-full px-3 py-1 shrink-0"
+            style={{ borderColor: 'rgba(255,255,255,0.4)', color: 'rgba(255,255,255,0.9)', backgroundColor: 'rgba(0,0,0,0.15)' }}
           >
             {lang === 'ta' ? 'En' : 'த'}
           </button>
@@ -148,7 +149,8 @@ export default function NavigatorHome() {
         <div className="flex gap-2 mt-3">
           <Link
             to="/navigator/saved"
-            className="flex items-center justify-center gap-1.5 bg-primary-800 hover:bg-primary-700 rounded-xl py-2.5 px-4 text-xs font-semibold transition-colors relative"
+            className="flex items-center justify-center gap-1.5 rounded-xl py-2.5 px-4 text-xs font-semibold transition-colors relative"
+            style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
           >
             <span>🔖</span>
             {t('சேமித்தது', 'Saved')}

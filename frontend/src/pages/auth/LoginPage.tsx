@@ -30,13 +30,12 @@ export default function LoginPage() {
       resetProfile()
       resetUserData()
       setAuth(res.farmer_id, res.token, res.expires_at)
-      // Pre-populate local profile from server data (phone + all saved fields)
       try {
         const backendProfile = await farmerApi.getProfile()
         setProfile({ phone })
         useFarmerStore.getState().setProfile(backendProfile)
         useProfileStore.getState().seedFromServer(backendProfile)
-      } catch { /* non-fatal — profile will be filled in via onboarding */ }
+      } catch { /* non-fatal */ }
       navigate('/', { replace: true })
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'உள்நுழைவு தோல்வி'
@@ -47,24 +46,28 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary-50 flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ backgroundColor: '#F9FAFB' }}>
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🌾</div>
-          <h1 className="text-2xl font-bold text-primary-900">உழவர் AI</h1>
-          <p className="text-primary-700 text-sm mt-1">உங்கள் கைபேசி எண்ணை உள்ளிடவும்</p>
+        {/* Logo area */}
+        <div className="text-center mb-10">
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            style={{ backgroundColor: '#0A5C47' }}
+          >
+            <span className="text-white text-2xl font-bold">உ</span>
+          </div>
+          <h1 className="text-2xl font-bold" style={{ color: '#0A5C47' }}>உழவர் AI</h1>
+          <p className="text-sm mt-1" style={{ color: '#6B7280' }}>உங்கள் கைபேசி எண்ணை உள்ளிடவும்</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-              கைபேசி எண்
-            </label>
+            <label htmlFor="phone" className="label">கைபேசி எண்</label>
             <input
               id="phone"
               type="tel"
               inputMode="numeric"
-              className="input"
+              className="input w-full"
               placeholder="9876543210"
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
@@ -74,7 +77,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-red-600 text-sm">{error}</p>
+            <p className="text-sm" style={{ color: '#991B1B' }}>{error}</p>
           )}
 
           <Button type="submit" fullWidth loading={loading}>
@@ -82,9 +85,9 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="text-center text-sm mt-6" style={{ color: '#6B7280' }}>
           புதிய கணக்கு?{' '}
-          <Link to="/register" className="text-primary-600 font-medium">
+          <Link to="/register" className="font-medium" style={{ color: '#0A5C47' }}>
             பதிவு செய்க
           </Link>
         </p>

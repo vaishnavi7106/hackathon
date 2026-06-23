@@ -1,0 +1,74 @@
+{
+  "districts": [
+    {"id": 1,  "name": "Ariyalur",        "name_ta": "அரியலூர்",        "zone_id": 2, "lat": 11.14, "lon": 79.08},
+    {"id": 2,  "name": "Chengalpattu",    "name_ta": "செங்கல்பட்டு",    "zone_id": 2, "lat": 12.69, "lon": 80.02},
+    {"id": 3,  "name": "Chennai",         "name_ta": "சென்னை",          "zone_id": 2, "lat": 13.08, "lon": 80.27},
+    {"id": 4,  "name": "Coimbatore",      "name_ta": "கோயம்புத்தூர்",   "zone_id": 1, "lat": 11.00, "lon": 76.96},
+    {"id": 5,  "name": "Cuddalore",       "name_ta": "கடலூர்",           "zone_id": 2, "lat": 11.75, "lon": 79.77},
+    {"id": 6,  "name": "Dharmapuri",      "name_ta": "தர்மபுரி",         "zone_id": 2, "lat": 12.13, "lon": 78.16},
+    {"id": 7,  "name": "Dindigul",        "name_ta": "திண்டுக்கல்",     "zone_id": 3, "lat": 10.36, "lon": 77.98},
+    {"id": 8,  "name": "Erode",           "name_ta": "ஈரோடு",            "zone_id": 1, "lat": 11.34, "lon": 77.73},
+    {"id": 9,  "name": "Kallakurichi",    "name_ta": "கள்ளக்குறிச்சி",  "zone_id": 2, "lat": 11.73, "lon": 79.00},
+    {"id": 10, "name": "Kancheepuram",    "name_ta": "காஞ்சிபுரம்",      "zone_id": 2, "lat": 12.84, "lon": 79.70},
+    {"id": 11, "name": "Kanyakumari",     "name_ta": "கன்னியாகுமரி",    "zone_id": 4, "lat":  8.09, "lon": 77.55},
+    {"id": 12, "name": "Karur",           "name_ta": "கரூர்",            "zone_id": 1, "lat": 10.96, "lon": 78.08},
+    {"id": 13, "name": "Krishnagiri",     "name_ta": "கிருஷ்ணகிரி",     "zone_id": 2, "lat": 12.52, "lon": 78.21},
+    {"id": 14, "name": "Madurai",         "name_ta": "மதுரை",            "zone_id": 3, "lat":  9.93, "lon": 78.12},
+    {"id": 15, "name": "Mayiladuthurai",  "name_ta": "மயிலாடுதுறை",     "zone_id": 1, "lat": 11.10, "lon": 79.65},
+    {"id": 16, "name": "Nagapattinam",    "name_ta": "நாகப்பட்டினம்",   "zone_id": 1, "lat": 10.77, "lon": 79.84},
+    {"id": 17, "name": "Namakkal",        "name_ta": "நாமக்கல்",         "zone_id": 2, "lat": 11.22, "lon": 78.17},
+    {"id": 18, "name": "Nilgiris",        "name_ta": "நீலகிரி",          "zone_id": 2, "lat": 11.40, "lon": 76.72},
+    {"id": 19, "name": "Perambalur",      "name_ta": "பெரம்பலூர்",       "zone_id": 2, "lat": 11.23, "lon": 78.88},
+    {"id": 20, "name": "Pudukkottai",     "name_ta": "புதுக்கோட்டை",    "zone_id": 3, "lat": 10.38, "lon": 78.82},
+    {"id": 21, "name": "Ramanathapuram", "name_ta": "ராமநாதபுரம்",      "zone_id": 3, "lat":  9.37, "lon": 78.83},
+    {"id": 22, "name": "Ranipet",         "name_ta": "ராணிப்பேட்டை",    "zone_id": 2, "lat": 12.93, "lon": 79.33},
+    {"id": 23, "name": "Salem",           "name_ta": "சேலம்",            "zone_id": 2, "lat": 11.65, "lon": 78.16},
+    {"id": 24, "name": "Sivaganga",       "name_ta": "சிவகங்கை",         "zone_id": 3, "lat":  9.84, "lon": 78.48},
+    {"id": 25, "name": "Tenkasi",         "name_ta": "தென்காசி",         "zone_id": 4, "lat":  8.96, "lon": 77.32},
+    {"id": 26, "name": "Thanjavur",       "name_ta": "தஞ்சாவூர்",        "zone_id": 1, "lat": 10.79, "lon": 79.14},
+    {"id": 27, "name": "Theni",           "name_ta": "தேனி",             "zone_id": 3, "lat":  9.36, "lon": 77.49},
+    {"id": 28, "name": "Thoothukudi",     "name_ta": "தூத்துக்குடி",    "zone_id": 4, "lat":  8.79, "lon": 78.14},
+    {"id": 29, "name": "Tirunelveli",     "name_ta": "திருநெல்வேலி",    "zone_id": 4, "lat":  8.73, "lon": 77.71},
+    {"id": 30, "name": "Tirupattur",      "name_ta": "திருப்பத்தூர்",   "zone_id": 2, "lat": 12.50, "lon": 78.56},
+    {"id": 31, "name": "Tiruppur",        "name_ta": "திருப்பூர்",       "zone_id": 1, "lat": 11.11, "lon": 77.34},
+    {"id": 32, "name": "Tiruvannamalai",  "name_ta": "திருவண்ணாமலை",   "zone_id": 2, "lat": 12.22, "lon": 79.07},
+    {"id": 33, "name": "Tiruvarur",       "name_ta": "திருவாரூர்",       "zone_id": 1, "lat": 10.77, "lon": 79.64},
+    {"id": 34, "name": "Tiruchirappalli", "name_ta": "திருச்சிராப்பள்ளி","zone_id": 1, "lat": 10.80, "lon": 78.69},
+    {"id": 35, "name": "Vellore",         "name_ta": "வேலூர்",           "zone_id": 2, "lat": 12.92, "lon": 79.13},
+    {"id": 36, "name": "Villupuram",      "name_ta": "விழுப்புரம்",      "zone_id": 2, "lat": 11.94, "lon": 79.49},
+    {"id": 37, "name": "Virudhunagar",    "name_ta": "விருதுநகர்",       "zone_id": 3, "lat":  9.58, "lon": 77.96},
+    {"id": 38, "name": "Tiruvallur",      "name_ta": "திருவள்ளூர்",      "zone_id": 2, "lat": 13.14, "lon": 79.91}
+  ],
+  "zones": {
+    "0": {
+      "zone_id": 0,
+      "name": "All Zones",
+      "name_ta": "அனைத்து மண்டலங்கள்",
+      "description": "Zone-independent recommendation applicable across Tamil Nadu"
+    },
+    "1": {
+      "zone_id": 1,
+      "name": "Cauvery/Coimbatore Tract",
+      "name_ta": "காவிரி/கோயம்புத்தூர் மண்டலம்",
+      "description": "Cauvery delta and Coimbatore agroclimatic zone — high-intensity rice cultivation with canal irrigation"
+    },
+    "2": {
+      "zone_id": 2,
+      "name": "Northern Zone",
+      "name_ta": "வட மண்டலம்",
+      "description": "North and north-west Tamil Nadu — diverse crops including rice, groundnut, mango"
+    },
+    "3": {
+      "zone_id": 3,
+      "name": "Southern Zone",
+      "name_ta": "தென் மண்டலம்",
+      "description": "South central Tamil Nadu — groundnut, cotton, millets, dry-land farming dominant"
+    },
+    "4": {
+      "zone_id": 4,
+      "name": "Far Southern Zone",
+      "name_ta": "தென்கோடி மண்டலம்",
+      "description": "Extreme southern tip — high rainfall, coconut, banana, spices dominant"
+    }
+  }
+}

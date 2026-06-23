@@ -65,9 +65,100 @@ _DISTRICT_MANDIS: dict[str, list[str]] = {
 
 _FALLBACK_MANDI_IDS = ["CHN_MAIN", "CBE_MAIN", "MDU_MAIN"]
 
+# Approximate centroid coordinates for each district (lat, lon)
+_DISTRICT_CENTROIDS: dict[str, tuple[float, float]] = {
+    "Ariyalur":         (11.14, 79.08),
+    "Chengalpattu":     (12.69, 79.98),
+    "Chennai":          (13.08, 80.27),
+    "Coimbatore":       (11.02, 76.97),
+    "Cuddalore":        (11.75, 79.77),
+    "Dharmapuri":       (12.13, 78.16),
+    "Dindigul":         (10.36, 77.97),
+    "Erode":            (11.34, 77.73),
+    "Kallakurichi":     (11.74, 78.96),
+    "Kancheepuram":     (12.84, 79.70),
+    "Kanyakumari":      ( 8.09, 77.54),
+    "Karur":            (10.96, 78.08),
+    "Krishnagiri":      (12.52, 78.21),
+    "Madurai":          ( 9.92, 78.12),
+    "Mayiladuthurai":   (11.10, 79.65),
+    "Nagapattinam":     (10.76, 79.84),
+    "Namakkal":         (11.22, 78.17),
+    "Nilgiris":         (11.41, 76.69),
+    "Perambalur":       (11.23, 78.88),
+    "Pudukkottai":      (10.38, 78.82),
+    "Ramanathapuram":   ( 9.37, 78.83),
+    "Ranipet":          (12.93, 79.33),
+    "Salem":            (11.67, 78.15),
+    "Sivaganga":        ( 9.84, 78.48),
+    "Tenkasi":          ( 8.96, 77.32),
+    "Thanjavur":        (10.79, 79.14),
+    "Theni":            (10.01, 77.48),
+    "Thiruchirappalli": (10.80, 78.69),
+    "Thirunelveli":     ( 8.73, 77.70),
+    "Thirupathur":      (12.50, 78.56),
+    "Thirupur":         (11.11, 77.34),
+    "Thiruvannamalai":  (12.23, 79.07),
+    "Thiruvarur":       (10.77, 79.64),
+    "Thiruvellore":     (13.14, 79.91),
+    "Tuticorin":        ( 8.79, 78.14),
+    "Vellore":          (12.92, 79.13),
+    "Villupuram":       (11.94, 79.49),
+    "Virudhunagar":     ( 9.58, 77.96),
+}
+
+# Fallback mandi coordinates (used when DB lat/lon is NULL)
+_MANDI_COORDS: dict[str, tuple[float, float]] = {
+    "ARY_MAIN": (11.14, 79.08),
+    "CGP_MAIN": (12.69, 79.98),
+    "CBE_MAIN": (11.02, 76.97),
+    "CDL_MAIN": (11.75, 79.77),
+    "CHN_MAIN": (13.07, 80.21),
+    "DHP_MAIN": (12.13, 78.16),
+    "DGL_MAIN": (10.36, 77.97),
+    "ERD_MAIN": (11.34, 77.73),
+    "HSR_MAIN": (12.74, 77.83),
+    "KLK_MAIN": (11.74, 78.96),
+    "KCP_MAIN": (12.84, 79.70),
+    "KNY_MAIN": ( 8.09, 77.54),
+    "KMB_MAIN": (10.96, 79.39),
+    "KRR_MAIN": (10.96, 78.08),
+    "KRG_MAIN": (12.52, 78.21),
+    "MDU_MAIN": ( 9.92, 78.12),
+    "MLT_MAIN": (11.10, 79.65),
+    "NGP_MAIN": (10.76, 79.84),
+    "NMK_MAIN": (11.22, 78.17),
+    "NLG_MAIN": (11.41, 76.69),
+    "PDK_MAIN": (10.38, 78.82),
+    "PRM_MAIN": (11.23, 78.88),
+    "RMN_MAIN": ( 9.37, 78.83),
+    "RNP_MAIN": (12.93, 79.33),
+    "SLM_MAIN": (11.67, 78.15),
+    "SVG_MAIN": ( 9.84, 78.48),
+    "TJ_MAIN":  (10.79, 79.14),
+    "THN_MAIN": (10.01, 77.48),
+    "TCH_MAIN": (10.80, 78.69),
+    "TNK_MAIN": ( 8.96, 77.32),
+    "TNV_MAIN": ( 8.73, 77.70),
+    "TPT_MAIN": (12.50, 78.56),
+    "TPR_MAIN": (11.11, 77.34),
+    "TUT_MAIN": ( 8.79, 78.14),
+    "TVL_MAIN": (13.14, 79.91),
+    "TVN_MAIN": (12.23, 79.07),
+    "TVR_MAIN": (10.77, 79.64),
+    "VLR_MAIN": (12.92, 79.13),
+    "VLP_MAIN": (11.94, 79.49),
+    "VRN_MAIN": ( 9.58, 77.96),
+}
+
 
 def _canonical(district: str) -> str:
     return _DISTRICT_ALIASES.get(district.lower(), district)
+
+
+def get_district_centroid(district: str) -> tuple[float, float]:
+    canonical = _canonical(district)
+    return _DISTRICT_CENTROIDS.get(canonical, (13.08, 80.27))  # fallback: Chennai
 
 
 async def get_nearest_mandis(
@@ -146,6 +237,10 @@ def calc_storage_cost(storage_type: str, weeks: int) -> float:
 
 
 def calc_mandi_distance(mandi: Mandi, district_lat: float, district_lon: float) -> float:
-    if mandi.latitude is None or mandi.longitude is None:
-        return 50.0  # default estimate
-    return round(haversine((district_lat, district_lon), (float(mandi.latitude), float(mandi.longitude)), unit=Unit.KILOMETERS), 1)
+    if mandi.latitude is not None and mandi.longitude is not None:
+        mandi_lat, mandi_lon = float(mandi.latitude), float(mandi.longitude)
+    elif mandi.mandi_id in _MANDI_COORDS:
+        mandi_lat, mandi_lon = _MANDI_COORDS[mandi.mandi_id]
+    else:
+        return 50.0
+    return round(haversine((district_lat, district_lon), (mandi_lat, mandi_lon), unit=Unit.KILOMETERS), 1)

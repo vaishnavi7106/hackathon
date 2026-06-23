@@ -4,13 +4,14 @@
 
 @layer base {
   html {
-    font-family: 'Noto Sans Tamil', 'Noto Sans', system-ui, sans-serif;
+    font-family: 'Inter', 'Noto Sans Tamil', system-ui, sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
-    /* Bottom nav clearance */
+    @apply antialiased;
+    background-color: #F9FAFB;
+    color: #111827;
     padding-bottom: env(safe-area-inset-bottom);
   }
 
@@ -22,20 +23,25 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
            px-5 py-3 text-sm font-semibold text-white shadow-sm
-           hover:bg-primary-700 active:scale-95
-           disabled:opacity-50 disabled:cursor-not-allowed
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
            transition-all duration-150;
+    background-color: #0A5C47;
+    min-height: 48px;
   }
+  .btn-primary:hover { background-color: #084D3C; }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300
-           bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-sm
-           hover:bg-gray-50 active:scale-95
-           disabled:opacity-50 disabled:cursor-not-allowed
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border bg-white
+           px-5 py-3 text-sm font-semibold shadow-sm
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
            transition-all duration-150;
+    border-color: #0A5C47;
+    color: #0A5C47;
+    min-height: 48px;
   }
+  .btn-secondary:hover { background-color: #E8F5F1; }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-xl
@@ -45,19 +51,28 @@
   }
 
   .card {
-    @apply rounded-2xl bg-white shadow-sm border border-gray-100;
+    @apply rounded-xl bg-white border;
+    border-color: #D1D5DB;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
 
   .input {
-    @apply block w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm
-           placeholder-gray-400 shadow-sm
-           focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200
+    @apply block w-full rounded-lg border bg-white px-4 py-3 text-sm
+           placeholder-gray-400
+           focus:outline-none focus:ring-2
            disabled:bg-gray-50 disabled:text-gray-500
            transition-all duration-150;
+    border-color: #D1D5DB;
+    min-height: 48px;
+  }
+  .input:focus {
+    border-color: #0A5C47;
+    --tw-ring-color: #C5E8DC;
   }
 
   .label {
-    @apply block text-sm font-medium text-gray-700 mb-1.5;
+    @apply block text-sm font-medium mb-2;
+    color: #374151;
   }
 
   .badge-central {
