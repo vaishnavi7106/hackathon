@@ -23,7 +23,7 @@ def _get_client() -> genai.Client:
     return _client
 
 
-_MODEL = "gemini-2.5-flash-lite"
+_MODEL = "gemini-2.5-flash"
 
 _PROMPT = """You are an expert agricultural plant pathologist specialising in Tamil Nadu crops.
 
@@ -33,22 +33,24 @@ Analyse the leaf or plant in the photo carefully and identify any disease presen
 
 Respond ONLY with raw JSON. No markdown. No code fences. No explanation outside the JSON.
 
+IMPORTANT: Write ALL text fields in Tamil language EXCEPT "chemical" (keep brand name in English).
+
 {{
   "disease_name_en": "Early Blight",
   "disease_name_ta": "முற்கால இலைக்கருகல்",
   "confidence": 0.91,
   "confidence_level": "high",
   "is_healthy": false,
-  "symptoms_observed": "Concentric brown rings on lower leaves with yellow halo",
+  "symptoms_observed": "இலைகளில் மஞ்சள் வளையத்துடன் அடர்நிற வட்ட வளையங்கள் காணப்படுகின்றன",
   "modern_treatment": {{
     "chemical": "Mancozeb 75% WP",
-    "dosage": "2g per litre, spray 500L per acre",
+    "dosage": "1 லிட்டர் நீரில் 2 கிராம் கலந்து, ஏக்கருக்கு 500 லிட்டர் தெளிக்கவும்",
     "cost_per_acre": 180,
-    "supply_note": "Available at district agri input shop"
+    "supply_note": "மாவட்ட வேளாண்மை உள்ளீட்டு கடையில் கிடைக்கும்"
   }},
   "indigenous_treatment": {{
-    "name": "Neem oil spray",
-    "method": "Mix 5ml neem oil in 1L water. Spray on leaves.",
+    "name": "வேப்பெண்ணெய் தெளிப்பு",
+    "method": "வேப்பெண்ணெய் 5மிலி 1 லிட்டர் நீரில், சிறிதளவு சோப்பு அல்லது திரவ சலவை பவுடரை சேர்த்து கலக்கவும். இலைகளின் இருபுறமும் சமசாக தெளிக்கவும். தேவைப்பட்டால் 7-10 நாட்களுக்கு ஒருமுறை மீண்டும் செய்யவும்.",
     "preparation_ta": "வேப்பெண்ணெய் 5மிலி 1 லிட்டர் நீரில் கலக்கவும்"
   }}
 }}
@@ -73,8 +75,8 @@ If the photo is unclear, not a plant, or disease cannot be identified:
   modern_treatment: null
   indigenous_treatment: null
 
-Base treatment guidance on TNAU CPG 2020 recommendations where applicable.
-Always provide a Tamil translation of the disease name."""
+Base treatment guidance on TNAU CPG 2020 recommendations.
+Always write dosage, supply_note, indigenous name and method in Tamil."""
 
 _LOW_CONFIDENCE_FALLBACK: dict = {
     "disease_name_en":      "Unable to identify",

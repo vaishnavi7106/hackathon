@@ -59,6 +59,17 @@ async def lifespan(app: FastAPI):
         replace_existing=True,
     )
 
+    # In-app soil notifications — fire at 6am alongside push
+    from app.services.soil_notifier import create_soil_notifications
+    _scheduler.add_job(
+        create_soil_notifications,
+        "cron",
+        hour=6,
+        minute=0,
+        id="soil_in_app_notifications",
+        replace_existing=True,
+    )
+
     # Pillar 3 — Market Navigator pipeline
     from app.services.pipeline_runner import (
         live_features_age_hours,
@@ -135,7 +146,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 
 # Register routers
-from app.routers import auth, diagnose, farmer, forecast, health, outbreak, prescribe, push, schemes  # noqa: E402
+from app.routers import assistant, auth, diagnose, farmer, forecast, health, notification, outbreak, prescribe, push, schemes  # noqa: E402
 
 app.include_router(health.router, prefix="/v1")
 app.include_router(auth.router, prefix="/v1")
@@ -146,6 +157,8 @@ app.include_router(forecast.router, prefix="/v1")
 app.include_router(schemes.router, prefix="/v1")
 app.include_router(outbreak.router, prefix="/v1")
 app.include_router(push.router, prefix="/v1")
+app.include_router(notification.router, prefix="/v1")
+app.include_router(assistant.router, prefix="/v1")
 
 # Pillar 2 — Soil & Water Optimizer (no database dependency)
 from pillar2.router import router as pillar2_router  # noqa: E402

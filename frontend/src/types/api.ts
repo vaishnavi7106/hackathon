@@ -1,5 +1,28 @@
 // ── Auth ─────────────────────────────────────────────────────────────────────
 
+export interface SendOtpRequest {
+  phone: string
+}
+
+export interface SendOtpResponse {
+  success: boolean
+  expires_in: number
+}
+
+export interface VerifyOtpRequest {
+  phone: string
+  otp: string
+}
+
+export interface VerifyOtpResponse {
+  is_new_user: boolean
+  token?: string
+  farmer_id?: string
+  expires_at?: string
+  registration_token?: string
+  phone?: string
+}
+
 export interface RegisterRequest {
   name?: string
   phone?: string

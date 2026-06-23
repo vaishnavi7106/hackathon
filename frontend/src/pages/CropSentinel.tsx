@@ -459,44 +459,31 @@ export default function CropSentinel() {
   if (phase.kind === 'scanning' || phase.kind === 'scan_error') {
     const isError = phase.kind === 'scan_error'
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-          <h1 className="font-semibold text-gray-900 text-base">{t.title}</h1>
-        </header>
-
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6 pb-24">
-          <div className="relative">
-            <img
-              src={phase.preview}
-              alt="selected leaf"
-              className="w-52 h-52 rounded-2xl object-cover shadow-lg border-4 border-white"
-            />
+      <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto' }}>
+        <GradientHeader title={t.title} />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, padding: '48px 24px' }}>
+          <div style={{ position: 'relative' }}>
+            <img src={phase.preview} alt="selected leaf"
+              style={{ width: 200, height: 200, borderRadius: 20, objectFit: 'cover', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', border: '4px solid white' }} />
             {!isError && (
-              <div
-                className="absolute inset-0 rounded-2xl flex items-center justify-center"
-                style={{ background: 'rgba(0,0,0,0.35)' }}
-              >
-                <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin" />
+              <div style={{ position: 'absolute', inset: 0, borderRadius: 20, background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 40, height: 40, border: '4px solid white', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
               </div>
             )}
           </div>
-
           {isError ? (
-            <div className="w-full max-w-xs space-y-4 text-center">
-              <p className="text-sm text-red-700 font-medium">{phase.message}</p>
-              <button
-                onClick={() => handleFile(phase.file)}
-                className="w-full py-3 rounded-xl text-sm font-bold text-white"
-                style={{ background: '#0A5C47' }}
-              >
+            <div style={{ width: '100%', maxWidth: 280, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <p style={{ fontSize: 14, color: '#DC2626', fontWeight: 500 }}>{phase.message}</p>
+              <button onClick={() => handleFile(phase.file)}
+                style={{ width: '100%', background: '#0A5C47', color: 'white', border: 'none', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
                 {t.retry}
               </button>
-              <button onClick={goHome} className="text-sm underline" style={{ color: '#0A5C47' }}>
+              <button onClick={goHome} style={{ fontSize: 13, color: '#0A5C47', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
                 {t.retake_link}
               </button>
             </div>
           ) : (
-            <p className="text-sm text-gray-600 font-medium">{t.analysing}</p>
+            <p style={{ fontSize: 14, color: '#64748B', fontWeight: 500 }}>{t.analysing}</p>
           )}
         </div>
       </div>
@@ -512,44 +499,29 @@ export default function CropSentinel() {
     const localSymptoms: SymptomOption[] = SYMPTOM_MAP[phase.selectedCropId]?.symptoms ?? []
 
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-          <h1 className="font-semibold text-base" style={{ color: '#111827' }}>{t.title}</h1>
-        </header>
-
-        <div className="flex-1 flex flex-col items-center justify-center gap-5 px-6 pb-24 text-center">
-          <p className="text-base font-bold leading-snug" style={{ color: '#111827' }}>
+      <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto' }}>
+        <GradientHeader title={t.title} onBack={goHome} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, padding: '40px 24px', textAlign: 'center' }}>
+          <div style={{ width: 56, height: 56, borderRadius: 28, background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>🔍</div>
+          <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: '#1E293B', lineHeight: 1.4 }}>
             {lang === 'ta'
               ? `இந்த படத்தில் ${cropLabel} நோயை தெளிவாக கண்டறிய முடியவில்லை.`
               : `We couldn't clearly identify a ${cropLabel} disease in this photo.`}
           </p>
-
-          <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+          <p style={{ margin: 0, fontSize: 13, color: '#64748B', lineHeight: 1.6, maxWidth: 280 }}>
             {lang === 'ta'
               ? 'நெருக்கமான தெளிவான படம் எடுக்கவும், அல்லது அறிகுறிகளை விவரிக்கவும்.'
               : 'Try a closer, clearer photo — or describe what you see on the leaf.'}
           </p>
-
-          <div className="w-full max-w-xs space-y-3 mt-2">
-            <button
-              onClick={goHome}
-              className="w-full py-3 rounded-xl text-sm font-bold text-white"
-              style={{ background: '#1B4332' }}
-            >
+          <div style={{ width: '100%', maxWidth: 300, display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+            <button onClick={goHome}
+              style={{ width: '100%', background: '#0A5C47', color: 'white', border: 'none', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
               {t.mismatch_try_photo}
             </button>
-
             {localSymptoms.length > 0 && (
               <button
-                onClick={() =>
-                  setPhase({
-                    kind:    'symptom_check_local',
-                    cropId:  phase.selectedCropId,
-                    preview: phase.preview,
-                  })
-                }
-                className="w-full py-3 rounded-xl text-sm font-bold border-2 border-amber-600 text-amber-800 bg-amber-50"
-              >
+                onClick={() => setPhase({ kind: 'symptom_check_local', cropId: phase.selectedCropId, preview: phase.preview })}
+                style={{ width: '100%', background: '#FFFBF0', color: '#92400E', border: '1px solid #FDE68A', borderRadius: 14, padding: '14px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
                 {t.mismatch_symptoms}
               </button>
             )}
@@ -560,34 +532,20 @@ export default function CropSentinel() {
   }
 
   // ══════════════════════════════════════════════════════════════════════
-  // SCREEN 3a — Rice backend symptom checker (existing, unchanged)
+  // SCREEN 3a — Rice backend symptom checker
   // ══════════════════════════════════════════════════════════════════════
   if (phase.kind === 'symptom_check') {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-          <h1 className="font-semibold text-gray-900 text-base">
-            {lang === 'ta' ? 'நோயை கண்டறிக' : 'Identify the Disease'}
-          </h1>
-        </header>
-
-        <div className="flex-1 px-4 py-5 pb-28 overflow-y-auto">
-          <SymptomSelector
-            lang={lang}
-            promptText={lang === 'ta' ? phase.promptTa : phase.promptEn}
-            symptoms={phase.symptoms}
-            loading={phase.sympLoading}
-            onSubmit={handleSymptomSubmit}
-          />
-
+      <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto' }}>
+        <GradientHeader title={lang === 'ta' ? 'நோயை கண்டறிக' : 'Identify the Disease'} onBack={goHome} />
+        <div style={{ padding: '16px 16px', paddingBottom: 112 }}>
+          <SymptomSelector lang={lang} promptText={lang === 'ta' ? phase.promptTa : phase.promptEn}
+            symptoms={phase.symptoms} loading={phase.sympLoading} onSubmit={handleSymptomSubmit} />
           {phase.sympError && (
-            <p className="text-xs text-red-600 text-center mt-3">{phase.sympError}</p>
+            <p style={{ fontSize: 12, color: '#DC2626', textAlign: 'center', marginTop: 12 }}>{phase.sympError}</p>
           )}
-
-          <div className="mt-5 text-center">
-            <button onClick={goHome} className="text-sm underline" style={{ color: '#0A5C47' }}>
-              {t.retake_link}
-            </button>
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <button onClick={goHome} style={{ fontSize: 13, color: '#0A5C47', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>{t.retake_link}</button>
           </div>
         </div>
       </div>
@@ -595,37 +553,21 @@ export default function CropSentinel() {
   }
 
   // ══════════════════════════════════════════════════════════════════════
-  // SCREEN 3b — Frontend-only symptom checker (all 6 crops from mismatch)
+  // SCREEN 3b — Frontend-only symptom checker
   // ══════════════════════════════════════════════════════════════════════
   if (phase.kind === 'symptom_check_local') {
-    const cropInfo    = MODEL_CROPS.find(c => c.id === phase.cropId)
-    const cropLabel   = lang === 'ta' ? cropInfo?.ta : cropInfo?.en
+    const cropInfo  = MODEL_CROPS.find(c => c.id === phase.cropId)
+    const cropLabel = lang === 'ta' ? cropInfo?.ta : cropInfo?.en
     const localSymptoms: SymptomOption[] = SYMPTOM_MAP[phase.cropId]?.symptoms ?? []
 
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-          <h1 className="font-semibold text-gray-900 text-base">
-            {lang === 'ta' ? 'நோயை கண்டறிக' : 'Identify the Disease'}
-          </h1>
-          {cropLabel && (
-            <p className="text-xs mt-0.5" style={{ color: '#6B7280' }}>{cropLabel}</p>
-          )}
-        </header>
-
-        <div className="flex-1 px-4 py-5 pb-28 overflow-y-auto">
-          <SymptomSelector
-            lang={lang}
-            promptText={lang === 'ta' ? t.symp_prompt : t.symp_prompt}
-            symptoms={localSymptoms}
-            loading={false}
-            onSubmit={handleLocalSymptomSubmit}
-          />
-
-          <div className="mt-5 text-center">
-            <button onClick={goHome} className="text-sm underline" style={{ color: '#0A5C47' }}>
-              {t.retake_link}
-            </button>
+      <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto' }}>
+        <GradientHeader title={lang === 'ta' ? 'நோயை கண்டறிக' : 'Identify the Disease'} subtitle={cropLabel} onBack={goHome} />
+        <div style={{ padding: '16px 16px', paddingBottom: 112 }}>
+          <SymptomSelector lang={lang} promptText={t.symp_prompt}
+            symptoms={localSymptoms} loading={false} onSubmit={handleLocalSymptomSubmit} />
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <button onClick={goHome} style={{ fontSize: 13, color: '#0A5C47', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>{t.retake_link}</button>
           </div>
         </div>
       </div>
@@ -637,198 +579,163 @@ export default function CropSentinel() {
   // ══════════════════════════════════════════════════════════════════════
   if (phase.kind === 'result') {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-          <h1 className="font-semibold text-gray-900 text-base">
-            {lang === 'ta' ? 'கண்டறிதல் முடிவு' : 'Diagnosis Result'}
-          </h1>
-        </header>
-
-        <div className="flex-1 px-4 py-5 pb-28 overflow-y-auto">
-          <DiagnosisResult
-            lang={lang}
-            response={phase.response}
-            preview={phase.preview}
-            cropName={phase.cropName}
-            hasMismatch={phase.hasMismatch}
-            onReset={goHome}
-          />
+      <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto' }}>
+        <GradientHeader title={lang === 'ta' ? 'கண்டறிதல் முடிவு' : 'Diagnosis Result'} onBack={goHome} />
+        <div style={{ padding: '16px 16px', paddingBottom: 112 }}>
+          <DiagnosisResult lang={lang} response={phase.response} preview={phase.preview}
+            cropName={phase.cropName} hasMismatch={phase.hasMismatch} onReset={goHome} />
         </div>
       </div>
     )
   }
 
   // ══════════════════════════════════════════════════════════════════════
-  // SCREEN 1 — Home (2-step crop selection → photo upload)
+  // SCREEN 1 — Home
   // ══════════════════════════════════════════════════════════════════════
   const activeCropInfo = MODEL_CROPS.find(c => c.id === selectedCrop)
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 py-3">
-        <h1 className="font-semibold text-base" style={{ color: '#111827' }}>{t.title}</h1>
-        <p className="text-xs text-gray-500 mt-0.5">{t.subtitle}</p>
+    <div style={{ backgroundColor: '#F5F6F5', minHeight: '100dvh', maxWidth: 480, margin: '0 auto', paddingBottom: 90 }}>
+
+      {/* Header */}
+      <header style={{ background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)', padding: '16px 16px 20px' }}>
+        <h1 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: '-0.3px' }}>{t.title}</h1>
+        <p style={{ margin: '4px 0 0', fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>{t.subtitle}</p>
       </header>
 
-      <div className="flex-1 px-4 py-5 pb-28 overflow-y-auto space-y-6">
+      <div style={{ padding: '16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
 
         {/* File error */}
         {fileError && (
-          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3">
-            <p className="text-sm text-red-700">{fileError}</p>
+          <div style={{ background: '#FEF2F2', borderRadius: 12, padding: '12px 14px', border: '1px solid #FECACA' }}>
+            <p style={{ margin: 0, fontSize: 13, color: '#DC2626' }}>{fileError}</p>
           </div>
         )}
 
-        {/* ── STEP 1: Crop grid — show when no crop is selected ───────── */}
+        {/* ── STEP 1: Crop grid ──────────────────────────────────────────── */}
         {!selectedCrop && (
-          <div className="space-y-3">
-            <p className="text-sm font-bold text-gray-700">{t.pick_crop}</p>
-            <div className="grid grid-cols-2 gap-3">
+          <section>
+            <p style={{ margin: '0 0 10px', fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              {t.pick_crop}
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {MODEL_CROPS.map((crop) => (
-                <button
-                  key={crop.id}
-                  onClick={() => setSelectedCrop(crop.id)}
-                  className="rounded-xl border bg-white py-4 px-3 flex flex-col items-start gap-0.5 text-left transition-all active:scale-95"
-                  style={{ borderColor: '#D1D5DB', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}
-                >
-                  <span className="text-sm font-semibold" style={{ color: '#111827' }}>
-                    {lang === 'ta' ? crop.ta : crop.en}
-                  </span>
-                  <span className="text-xs" style={{ color: '#6B7280' }}>
-                    {lang === 'ta' ? crop.en : crop.ta}
-                  </span>
+                <button key={crop.id} onClick={() => setSelectedCrop(crop.id)}
+                  style={{ background: 'white', borderRadius: 14, border: '1.5px solid #E2E8F0', padding: '14px 12px', textAlign: 'left', cursor: 'pointer', boxShadow: '0 1px 4px rgba(0,0,0,0.05)', transition: 'all 0.15s' }}>
+                  <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#1E293B' }}>{lang === 'ta' ? crop.ta : crop.en}</p>
+                  <p style={{ margin: '2px 0 0', fontSize: 11, color: '#94A3B8' }}>{lang === 'ta' ? crop.en : crop.ta}</p>
                 </button>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        {/* ── STEP 2: Photo upload — show after crop is selected ──────── */}
+        {/* ── STEP 2: Selected crop + photo buttons ──────────────────────── */}
         {selectedCrop && activeCropInfo && (
-          <div className="space-y-4">
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {/* Selected crop banner */}
-            <div
-              className="rounded-xl px-4 py-3 flex items-center gap-3 border"
-              style={{ backgroundColor: '#E8F5F1', borderColor: '#0A5C47' }}
-            >
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#0A5C47', letterSpacing: '0.05em' }}>
-                  {t.selected_prefix}
-                </p>
-                <p className="text-base font-bold" style={{ color: '#0A5C47' }}>
+            <div style={{ background: '#F0FDF4', borderRadius: 14, padding: '13px 16px', border: '1px solid #A7F3D0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#0A5C47', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{t.selected_prefix}</p>
+                <p style={{ margin: '3px 0 0', fontSize: 16, fontWeight: 800, color: '#0A5C47' }}>
                   {lang === 'ta' ? activeCropInfo.ta : activeCropInfo.en}
-                  {lang !== 'ta' && (
-                    <span className="ml-2 text-sm font-normal" style={{ color: '#12A07A' }}>({activeCropInfo.ta})</span>
-                  )}
                 </p>
               </div>
-              <button
-                onClick={() => setSelectedCrop('')}
-                className="text-xs font-semibold border rounded-full px-3 py-1 shrink-0"
-                style={{ borderColor: '#0A5C47', color: '#0A5C47' }}
-              >
+              <button onClick={() => setSelectedCrop('')}
+                style={{ fontSize: 12, fontWeight: 700, color: '#0A5C47', background: 'white', border: '1px solid #A7F3D0', borderRadius: 20, padding: '5px 14px', cursor: 'pointer' }}>
                 {t.change}
               </button>
             </div>
 
-            {/* Photo buttons */}
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => cameraRef.current?.click()}
-                className="rounded-xl border-2 bg-white py-5 flex flex-col items-center gap-2 transition"
-                style={{ borderColor: '#0A5C47' }}
-              >
-                <Camera size={24} color="#0A5C47" />
-                <span className="text-xs font-semibold" style={{ color: '#0A5C47' }}>{t.take_photo}</span>
+            {/* Photo action buttons */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <button onClick={() => cameraRef.current?.click()}
+                style={{ background: 'white', borderRadius: 14, border: '1.5px solid #A7F3D0', padding: '20px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, cursor: 'pointer', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                <div style={{ width: 44, height: 44, borderRadius: 22, background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Camera size={22} color="#0A5C47" />
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#0A5C47' }}>{t.take_photo}</span>
               </button>
-
-              <button
-                onClick={() => galleryRef.current?.click()}
-                className="rounded-xl border-2 bg-white py-5 flex flex-col items-center gap-2 transition"
-                style={{ borderColor: '#0A5C47' }}
-              >
-                <ImageIcon size={24} color="#0A5C47" />
-                <span className="text-xs font-semibold" style={{ color: '#0A5C47' }}>{t.upload}</span>
+              <button onClick={() => galleryRef.current?.click()}
+                style={{ background: 'white', borderRadius: 14, border: '1.5px solid #A7F3D0', padding: '20px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, cursor: 'pointer', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                <div style={{ width: 44, height: 44, borderRadius: 22, background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ImageIcon size={22} color="#0A5C47" />
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#0A5C47' }}>{t.upload}</span>
               </button>
             </div>
-          </div>
+          </section>
         )}
 
         {/* Hidden file inputs */}
-        <input
-          ref={cameraRef}
-          type="file"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
-          capture="environment"
-          className="hidden"
-          onChange={onFileChange}
-        />
-        <input
-          ref={galleryRef}
-          type="file"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
-          className="hidden"
-          onChange={onFileChange}
-        />
+        <input ref={cameraRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp" capture="environment" style={{ display: 'none' }} onChange={onFileChange} />
+        <input ref={galleryRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp" style={{ display: 'none' }} onChange={onFileChange} />
 
-        {/* ── Recent scans ─────────────────────────────────────────────── */}
-        <div>
-          <p className="text-sm font-bold text-gray-700 mb-3">{t.recent}</p>
+        {/* ── Recent scans ──────────────────────────────────────────────────── */}
+        <section>
+          <p style={{ margin: '0 0 10px', fontSize: 11, fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            {t.recent}
+          </p>
 
           {fallbackHistory.length === 0 ? (
-            <div className="rounded-2xl bg-white border border-gray-100 px-4 py-8 text-center">
-              <p className="text-sm text-gray-400">{t.no_scans}</p>
+            <div style={{ background: 'white', borderRadius: 14, padding: '28px 16px', textAlign: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+              <p style={{ margin: 0, fontSize: 13, color: '#94A3B8' }}>{t.no_scans}</p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {displayedHistory.map((scan) => {
                 const badge = confBadgeStyle(scan.level)
                 const name  = lang === 'ta' ? (scan.nameTa ?? scan.nameEn) : scan.nameEn
                 return (
-                  <div
-                    key={scan.id}
-                    className="rounded-xl bg-white border border-gray-100 px-4 py-3 flex items-center gap-3 shadow-sm"
-                  >
+                  <div key={scan.id} style={{ background: 'white', borderRadius: 14, padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                     {scan.thumb ? (
-                      <img
-                        src={scan.thumb}
-                        alt=""
-                        className="w-11 h-11 rounded-lg object-cover shrink-0"
-                      />
+                      <img src={scan.thumb} alt="" style={{ width: 46, height: 46, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
                     ) : (
-                      <div className="w-11 h-11 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+                      <div style={{ width: 46, height: 46, borderRadius: 10, background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <ImageIcon size={18} color="#9CA3AF" />
                       </div>
                     )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-800 truncate">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#1E293B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {name ?? (lang === 'ta' ? 'கண்டறியப்பட்டது' : 'Diagnosed')}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">{formatDate(scan.date)}</p>
+                      <p style={{ margin: '2px 0 0', fontSize: 11, color: '#94A3B8' }}>{formatDate(scan.date)}</p>
                     </div>
-                    <span
-                      className="text-xs font-semibold px-2 py-1 rounded-full shrink-0"
-                      style={{ background: badge.bg, color: badge.color }}
-                    >
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: badge.bg, color: badge.color, flexShrink: 0 }}>
                       {confLabel(scan.level)}
                     </span>
                   </div>
                 )
               })}
-
               {fallbackHistory.length > 5 && !showAllHistory && (
-                <button
-                  onClick={() => setShowAllHistory(true)}
-                  className="w-full text-xs font-semibold py-2 text-center"
-                  style={{ color: '#0A5C47' }}
-                >
+                <button onClick={() => setShowAllHistory(true)}
+                  style={{ width: '100%', background: '#F0FDF4', border: '1px solid #A7F3D0', borderRadius: 12, padding: '10px', fontSize: 13, fontWeight: 700, color: '#0A5C47', cursor: 'pointer' }}>
                   {t.see_all} →
                 </button>
               )}
             </div>
           )}
-        </div>
+        </section>
       </div>
     </div>
+  )
+}
+
+// ─── Shared gradient header ────────────────────────────────────────────────────
+
+function GradientHeader({ title, subtitle, onBack }: { title: string; subtitle?: string; onBack?: () => void }) {
+  return (
+    <header style={{ background: 'linear-gradient(135deg, #0A5C47 0%, #12A07A 100%)', padding: '14px 16px 18px', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+      {onBack && (
+        <button onClick={onBack}
+          style={{ width: 34, height: 34, borderRadius: 17, background: 'rgba(255,255,255,0.15)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      )}
+      <div>
+        <h1 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: 'white', letterSpacing: '-0.2px' }}>{title}</h1>
+        {subtitle && <p style={{ margin: '3px 0 0', fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>{subtitle}</p>}
+      </div>
+    </header>
   )
 }
